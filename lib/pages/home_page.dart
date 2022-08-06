@@ -1,0 +1,196 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:invest_manager/controllers/auth.dart';
+import 'package:flutter/material.dart';
+import 'package:invest_manager/pages/add_stock.dart';
+import 'package:invest_manager/pages/login_register_page.dart';
+import 'package:invest_manager/pages/widget_tree.dart';
+import 'package:invest_manager/utils/read_json_file.dart';
+import 'package:invest_manager/widgets/stock_list.dart';
+import 'dart:io' as io;
+import '../models/sneaker.dart';
+
+enum Type{
+  sneaker,
+  electronic,
+  crypto
+}
+class HomePage extends StatefulWidget {
+  static const routeName = '/home';
+
+  HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Type dropDownValue = Type.sneaker;
+  late Future<List<Sneaker>> listSneakers;
+  final User? user = Auth().currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
+  }
+
+  String _checkTypeOfDropdownValue(Type kind){
+    switch(kind){
+      case Type.sneaker: {
+        return 'Sneakers';
+      }
+      case Type.electronic: {
+        return 'Electronics';
+      }
+      case Type.crypto: {
+        return 'Crypto';
+      }
+      default:{
+        return 'Error!!!';
+      }
+
+    }
+  }
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
+
+  Future<void> _showTypeDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Type of Inventory'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('what kind of stock are you adding to your inventory?'),
+                _dropDownTypesButton(),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                if(dropDownValue == Type.sneaker){
+                  Navigator.of(context).pushNamed(AddStock.routeName);
+                }
+
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _title() {
+    return const Text('Home');
+  }
+
+  Widget _userUid() {
+    return Text(user?.email ?? 'User Email');
+  }
+
+  Widget _signOutButton() {
+    return ElevatedButton(onPressed: signOut, child: const Text('Sign Out'));
+  }
+
+  Widget _dropDownTypesButton() {
+    String value = _checkTypeOfDropdownValue(this.dropDownValue);
+    return DropdownButtonFormField<String>(
+        items: const [
+          DropdownMenuItem(child: Text('Sneakers'), value: 'Sneakers'),
+          DropdownMenuItem(child: Text('Electronics'), value: 'Electronics'),
+          DropdownMenuItem(child: Text('Crypto'), value: 'Crypto'),
+        ],
+        value: value,
+        onChanged: (selectedValue) {
+          if (selectedValue is String) {
+            // check type of selected value
+            if(selectedValue == 'Sneakers'){
+              dropDownValue = Type.sneaker;
+            } else if( selectedValue == 'Electronics'){
+              dropDownValue = Type.electronic;
+            } else {
+              dropDownValue = Type.crypto;
+            }
+
+            setState(() {
+              dropDownValue;
+            });
+          }
+        });
+  }
+
+  Widget _HomeInventory(List<Sneaker> sneakers) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Text('Good Morninggg!!!'),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [Text('Total Products'), Text('1000')],
+                  ),
+                  Column(
+                    children: [Text('Products Sold'), Text('1000')],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              child: StockList(sneakers),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: _title(),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout_outlined),
+            onPressed: () {
+              signOut();
+              Navigator.of(context).pushReplacementNamed(WidgetTree.routeName);
+            },
+          )
+        ],
+      ),
+      body: FutureBuilder<List<Sneaker>>(
+        future: listSneakers,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _HomeInventory(snapshot.data!);
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _showTypeDialog();
+        },
+      ),
+    );
+  }
+}

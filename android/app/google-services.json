@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "504191070271",
+    "project_id": "investmanager-fa685",
+    "storage_bucket": "investmanager-fa685.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504191070271:android:fef125d0a80a88c640888a",
+        "android_client_info": {
+          "package_name": "com.gymlazy.invest_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504191070271-4g76ae45lnn55hefr1q3607pgj6q8h2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADgHrgm6ghuyc6IcUCBRSaYdkNVV-mZS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504191070271-4g76ae45lnn55hefr1q3607pgj6q8h2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
