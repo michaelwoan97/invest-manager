@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
+import 'package:invest_manager/widgets/sneaker_stock_list.dart';
 
 class AddStock extends StatefulWidget {
   static const routeName = '/add-stock';
@@ -32,6 +33,7 @@ class _AddStockState extends State<AddStock> {
       body: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: double.infinity,
@@ -85,7 +87,10 @@ class _AddStockState extends State<AddStock> {
                 ],
               ),
             ),
-
+            SizedBox(
+              height: 50,
+            ),
+            SneakerStockList()
           ],
         ),
       ),
