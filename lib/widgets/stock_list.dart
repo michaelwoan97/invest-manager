@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:invest_manager/models/sneaker_manager.dart';
+import 'package:provider/provider.dart';
 
 import '../models/sneaker.dart';
 
 class StockList extends StatelessWidget {
   late List<Sneaker> arrSneakers;
 
-  StockList(List<Sneaker>? sneakers) {
+  StockList({List<Sneaker>? sneakers}) {
     if (sneakers != null) {
       arrSneakers = sneakers.isNotEmpty ? sneakers : [];
     } else {
@@ -28,6 +30,9 @@ class StockList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sneakersData = Provider.of<SneakerManager>(context);
+    arrSneakers = sneakersData.getListSneaker;
+
     return Container(
       child: Column(
         children: [
@@ -37,20 +42,21 @@ class StockList extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: arrSneakers.length,
-                itemBuilder: (context, index) {
-                  Sneaker sneaker = arrSneakers[index];
-                  return InkResponse(
+                itemBuilder: (context, index) => ChangeNotifierProvider.value(
+                  value: arrSneakers[index],
+                  child: InkResponse(
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(sneaker.getImgUrl),
+                          backgroundImage: NetworkImage(arrSneakers[index].getImgUrl),
                         ),
-                        title: Text(sneaker.getSneakerName),
+                        title: Text(arrSneakers[index].getSneakerName),
                         subtitle: Text(
                             'QTY: ' +
-                                sneaker.getAvailableStocks.length.toString()),
+                                arrSneakers[index].getAvailableStocks.length.toString()),
                         trailing: Icon(Icons.edit),
-                      ));
-                })
+                      )),
+                )
+            )
           ]
         ],
       ),

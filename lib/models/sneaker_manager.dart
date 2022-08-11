@@ -1,7 +1,8 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:invest_manager/models/sneaker.dart';
 
-class SneakerManager{
+class SneakerManager with ChangeNotifier{
   static final SneakerManager _instance = SneakerManager._internal();
   late List<Sneaker> _arrSneakers;
 
@@ -18,6 +19,6 @@ class SneakerManager{
   }
 
   set setListSneaker(List<Sneaker> arrSneakers ){
-    _arrSneakers = _arrSneakers;
+    _arrSneakers = List.from(arrSneakers);
   }
 }

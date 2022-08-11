@@ -1,4 +1,6 @@
-class SneakerDetail{
+import 'package:flutter/cupertino.dart';
+
+class SneakerDetail with ChangeNotifier{
   late String _sSeller;
   late String _sDate;
   late String _sSize;

@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invest_manager/controllers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:invest_manager/utils/read_json_file.dart';
 import 'package:invest_manager/widgets/stock_list.dart';
+import 'package:provider/provider.dart';
 import 'dart:io' as io;
 import '../models/sneaker.dart';
 
@@ -27,12 +29,15 @@ class _HomePageState extends State<HomePage> {
   Type dropDownValue = Type.sneaker;
   late Future<List<Sneaker>> listSneakers;
   final User? user = Auth().currentUser;
+  final SneakerManager sneakerManager = SneakerManager();
 
   @override
   void initState() {
     super.initState();
 
     listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
+
+
   }
 
   String _checkTypeOfDropdownValue(Type kind){
@@ -59,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _showTypeDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Type of Inventory'),
@@ -126,7 +131,7 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _HomeInventory(List<Sneaker> sneakers) {
+  Widget _HomeInventory() {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -149,7 +154,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              child: StockList(sneakers),
+              child: StockList(),
             )
           ],
         ),
@@ -172,18 +177,25 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: FutureBuilder<List<Sneaker>>(
-        future: listSneakers,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _HomeInventory(snapshot.data!);
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
+      body: ChangeNotifierProvider(
+        create: (_) => sneakerManager,
+        child: FutureBuilder<List<Sneaker>>(
+          future: listSneakers,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Sneaker> sneakers = snapshot.data!;
+              // add list to singleton provider
+              sneakerManager.setListSneaker = sneakers;
 
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
-        },
+              return _HomeInventory();
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

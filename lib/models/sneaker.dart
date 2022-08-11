@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
 
-class Sneaker {
+class Sneaker with ChangeNotifier {
   late String _id;
   late String _sName;
   late String _sNotes;
@@ -9,12 +10,12 @@ class Sneaker {
 
   Sneaker(
       {required String sID,
-      required String sName,
+        String? sName,
       String? sNotes,
       String? sImageUrl,
       List<SneakerDetail>? arrStockAvailable}) {
     _id = sID;
-    _sName = sName;
+    _sName = sName ?? '';
     _sNotes = sNotes ?? '';
     _sImgUrl = sImageUrl ?? '';
 
@@ -75,6 +76,8 @@ class Sneaker {
 
   set setImgUrl(String sImgUrl) {
     _sImgUrl = sImgUrl;
+    print('Image path is $_sImgUrl');
+    notifyListeners();
   }
 
   List<SneakerDetail> get getAvailableStocks {
