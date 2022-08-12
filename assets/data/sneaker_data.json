@@ -10,21 +10,24 @@
           "date": "2022-08-03",
           "size": "10",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1123"
         },
         {
           "seller": "foot locker ca",
           "date": "2022-08-04",
           "size": "9",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1123"
         },
         {
           "seller": "champs ca",
           "date": "2022-08-05",
           "size": "11",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "3223"
         }
       ]
     },
@@ -39,21 +42,24 @@
           "date": "2022-08-05",
           "size": "11",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1123"
         },
         {
           "seller": "foot locker ca",
           "date": "2022-08-04",
           "size": "9",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1234"
         },
         {
           "seller": "foot locker ca",
           "date": "2022-08-03",
           "size": "10",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1456"
         }
       ]
     },
@@ -68,7 +74,8 @@
           "date": "2022-08-04",
           "size": "9",
           "price": "1000",
-          "isSold": true
+          "isSold": true,
+          "priceSold": "1123"
         }
       ]
     },

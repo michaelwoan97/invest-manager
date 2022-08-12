@@ -76,7 +76,6 @@ class Sneaker with ChangeNotifier {
 
   set setImgUrl(String sImgUrl) {
     _sImgUrl = sImgUrl;
-    print('Image path is $_sImgUrl');
     notifyListeners();
   }
 
@@ -85,6 +84,23 @@ class Sneaker with ChangeNotifier {
   }
 
   set setAvailableStocks(List<SneakerDetail> arrAvailableStock) {
-    _arrAvailable = arrAvailableStock;
+    _arrAvailable = List.from(arrAvailableStock);
+    notifyListeners();
+  }
+
+  void modifyAvailableStocks(List<SneakerDetail> sneakerDetails){
+    // check whether the array of available stock is empty
+    if(_arrAvailable.isEmpty){
+      setAvailableStocks = sneakerDetails;
+    } else {
+      for(var e in sneakerDetails){
+        _arrAvailable.add(e);
+      }
+      notifyListeners();
+    }
+  }
+
+  void updateSneakerStockInfo(SneakerDetail sneaker,int pos){
+    _arrAvailable[pos].updateSneakerStock(sneaker);
   }
 }
