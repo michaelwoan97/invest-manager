@@ -27,8 +27,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
   final _priceController = TextEditingController();
   final soldAtController = TextEditingController();
 
-
-
   Future<void> _showAddStockDialog() async {
     return showDialog<void>(
       context: context,
@@ -161,6 +159,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                     if (selectedValue is String) {
                                       setState(() {
                                         sIsSold = selectedValue;
+                                        if(sIsSold == "No"){
+                                          soldAtController.text = "";
+                                        }
                                       });
                                     }
                                   }),
@@ -357,6 +358,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                     if (selectedValue is String) {
                                       setState(() {
                                         sIsSold = selectedValue;
+                                        if(sIsSold == "No"){
+                                          soldAtController.text = "";
+                                        }
                                       });
                                     }
                                   }),
@@ -406,7 +410,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       // call function to process data
                       _editSneakerStock(stock, position);
                       // Then, notify the list stock has changed
-                      // _formKey = GlobalKey<FormState>();
+
 
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.

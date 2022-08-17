@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
 import 'package:invest_manager/widgets/sneaker_stock_list.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class _AddStockState extends State<AddStock> {
   var uuid = Uuid();
 
   final _formKey = GlobalKey<FormState>();
+  final _sneakerNameController = TextEditingController();
+  final _sneakerNotesController = TextEditingController();
 
   @override
   void initState() {
@@ -36,6 +39,9 @@ class _AddStockState extends State<AddStock> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Stock Info'),
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.close_sharp))
+        ],
       ),
       body: ChangeNotifierProvider.value(
         value: widget.newSneaker,
@@ -56,6 +62,7 @@ class _AddStockState extends State<AddStock> {
                           SizedBox(
                             width:150,
                             child: TextFormField(
+                              controller: _sneakerNameController,
                               // The validator receives the text that the user has entered.
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -70,6 +77,7 @@ class _AddStockState extends State<AddStock> {
                             width:150,
 
                             child: TextFormField(
+                                controller: _sneakerNotesController,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 3,
                                 decoration: InputDecoration(labelText: "Notes")),
@@ -106,6 +114,24 @@ class _AddStockState extends State<AddStock> {
               ],
             ),
           ),
+        ),
+      ),
+      bottomSheet: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(left: 8, right: 8),
+        child: ElevatedButton(
+          onPressed: (){
+            widget.newSneaker.setSneakerName = _sneakerNameController.text;
+            if(_sneakerNotesController.text.isNotEmpty){
+              widget.newSneaker.setNotes = _sneakerNotesController.text;
+            }
+            SneakerManager().addNewSneakerToList(widget.newSneaker);
+            for(var e in SneakerManager().getListSneaker){
+              print('Sneaker name is ' + e.getSneakerName);
+            }
+            Navigator.of(context).pop();
+          },
+          child: Text("+ Add to the list"),
         ),
       ),
     );

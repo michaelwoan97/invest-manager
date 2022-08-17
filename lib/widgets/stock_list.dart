@@ -33,29 +33,32 @@ class StockList extends StatelessWidget {
     final sneakersData = Provider.of<SneakerManager>(context);
     arrSneakers = sneakersData.getListSneaker;
 
-    return Container(
+    return ChangeNotifierProvider.value(
+      value: SneakerManager(),
       child: Column(
         children: [
           Text("Inventory"),
           if (arrSneakers.isNotEmpty) ...[
-            ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: arrSneakers.length,
-                itemBuilder: (context, index) => ChangeNotifierProvider.value(
-                  value: arrSneakers[index],
-                  child: InkResponse(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(arrSneakers[index].getImgUrl),
-                        ),
-                        title: Text(arrSneakers[index].getSneakerName),
-                        subtitle: Text(
-                            'QTY: ' +
-                                arrSneakers[index].getAvailableStocks.length.toString()),
-                        trailing: Icon(Icons.edit),
-                      )),
-                )
+            Consumer<SneakerManager>(
+              builder: (ctx, sneakerManager, _) => ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: arrSneakers.length,
+                  itemBuilder: (context, index) => ChangeNotifierProvider.value(
+                    value: arrSneakers[index],
+                    child: InkResponse(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(arrSneakers[index].getImgUrl),
+                          ),
+                          title: Text(arrSneakers[index].getSneakerName),
+                          subtitle: Text(
+                              'QTY: ' +
+                                  arrSneakers[index].getAvailableStocks.length.toString()),
+                          trailing: Icon(Icons.edit),
+                        )),
+                  )
+              ),
             )
           ]
         ],

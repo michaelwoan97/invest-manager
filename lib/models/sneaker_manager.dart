@@ -21,4 +21,9 @@ class SneakerManager with ChangeNotifier{
   set setListSneaker(List<Sneaker> arrSneakers ){
     _arrSneakers = List.from(arrSneakers);
   }
+
+  void addNewSneakerToList(Sneaker newSneaker){
+    _arrSneakers.add(newSneaker);
+    notifyListeners();
+  }
 }
