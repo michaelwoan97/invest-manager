@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:uuid/uuid.dart';
 
 class SneakerDetail with ChangeNotifier{
+  late String _id;
   late String _sSeller;
   late String _sDate;
   late String _sSize;
@@ -9,14 +11,20 @@ class SneakerDetail with ChangeNotifier{
   late String _sPriceSold;
 
 
-  SneakerDetail({required sSeller, required String sDate, required String sSize, required String sPrice, bool? isSold, String? sPriceSold}){
+  SneakerDetail({String? id ,required sSeller, required String sDate, required String sSize, required String sPrice, bool? isSold, String? sPriceSold}){
+    if(id == null){
+      var uuid = Uuid();
+      _id = uuid.v1();
+    } else {
+      _id = id;
+    }
     _sSeller = sSeller;
     _sDate = sDate;
     _sSize = sSize;
     _sPrice = sPrice;
     if(isSold != null){
       _isSold = isSold;
-      _sPriceSold = sPriceSold!;
+      _sPriceSold = _isSold ? sPriceSold! : "";
     } else {
       _isSold = false;
       _sPriceSold = "";
@@ -26,6 +34,14 @@ class SneakerDetail with ChangeNotifier{
   factory SneakerDetail.fromJson(Map<String, dynamic> json){
     return SneakerDetail(sSeller: json['seller'], sDate: json['date'], sSize: json['size'], sPrice: json['price'] ,isSold: json['isSold'], sPriceSold: json['priceSold']);
   }
+
+
+  String get getStockID => _id;
+
+  set setStockID(String value) {
+    _id = value;
+  }
+
   String get getSellerName{
     return _sSeller;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
 
@@ -15,7 +16,7 @@ class SneakerStockList extends StatefulWidget {
 }
 
 class _SneakerStockListState extends State<SneakerStockList> {
-  final _formKey = GlobalKey<FormState>();
+  late GlobalKey<FormState> _formKey;
   String sIsSold = 'No';
 
   // controllers
@@ -25,6 +26,8 @@ class _SneakerStockListState extends State<SneakerStockList> {
   final _qtyController = TextEditingController();
   final _priceController = TextEditingController();
   final soldAtController = TextEditingController();
+
+
 
   Future<void> _showAddStockDialog() async {
     return showDialog<void>(
@@ -102,22 +105,22 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 50,
-                              child: TextFormField(
-                                controller: _qtyController,
-                                // The validator receives the text that the user has entered.
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  labelText: "QTY*",
-                                ),
-                              ),
-                            ),
+                            // SizedBox(
+                            //   width: 50,
+                            //   child: TextFormField(
+                            //     controller: _qtyController,
+                            //     // The validator receives the text that the user has entered.
+                            //     validator: (value) {
+                            //       if (value == null || value.isEmpty) {
+                            //         return '';
+                            //       }
+                            //       return null;
+                            //     },
+                            //     decoration: InputDecoration(
+                            //       labelText: "QTY*",
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
                               width: 50,
                               child: TextFormField(
@@ -134,6 +137,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              width: 50,
+                            )
                           ],
                         ),
                         Row(
@@ -204,6 +210,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       // call function to process data
                       _processNewAvailableStocks();
                       // Then, notify the list stock has changed
+                      // _formKey = GlobalKey<FormState>();
 
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
@@ -397,13 +404,14 @@ class _SneakerStockListState extends State<SneakerStockList> {
                     if (_formKey.currentState!.validate()) {
                       Navigator.of(context).pop();
                       // call function to process data
-                        _editStockInfoDialog(stock, position);
+                      _editSneakerStock(stock, position);
                       // Then, notify the list stock has changed
+                      // _formKey = GlobalKey<FormState>();
 
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
+                        const SnackBar(content: Text('Processing edit Data')),
                       );
                     }
                   },
@@ -422,15 +430,16 @@ class _SneakerStockListState extends State<SneakerStockList> {
     SneakerDetail newSneakerStock = SneakerDetail(sSeller: _purchasedFromController.text, sDate: _purchasedDateController.text, sSize: _sizeController.text, sPrice: _priceController.text, isSold: sIsSold == "Yes" ? true : false, sPriceSold: soldAtController.text );
     newStockAvailable.add(newSneakerStock);
 
+    // not working with the logic update each element but might take a look in a future
     //check whether the quantity is more than 1
-    int quantity = int.parse(_qtyController.text);
-    if( quantity > 1){
-      for(int i = 1; i < quantity; i++ ){
-        newStockAvailable.add(newSneakerStock);
-      }
-    }
+    // int quantity = int.parse(_qtyController.text);
+    // if( quantity > 1){
+    //   for(int i = 1; i < quantity; i++ ){
+    //     newStockAvailable.add(newSneakerStock);
+    //   }
+    // }
 
-    widget._sneakerAvailable = List.from(newStockAvailable);
+
     _purchasedFromController.text = '';
     _purchasedDateController.text = '';
     _sizeController.text = '';
@@ -440,7 +449,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     widget._newSneaker.modifyAvailableStocks(newStockAvailable);
   }
 
-  void _editSneakerStock(int position){
+  void _editSneakerStock(SneakerDetail stock, int position){
     SneakerDetail newSneakerStockInfo;
 
     // check whether it is sold or not
@@ -449,6 +458,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     } else {
       newSneakerStockInfo =  new SneakerDetail(sSeller: _purchasedFromController.text, sDate: _purchasedDateController.text, sSize: _sizeController.text, sPrice: _priceController.text, isSold: false);
     }
+
 
     _purchasedFromController.text = '';
     _purchasedDateController.text = '';
@@ -481,8 +491,16 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var uuid = Uuid();
     widget._newSneaker = Provider.of<Sneaker>(context);
     widget._sneakerAvailable = widget._newSneaker.getAvailableStocks;
     print('Sneaker id is ' + widget._newSneaker.getID);
@@ -503,10 +521,11 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       shrinkWrap: true,
                       itemCount: widget._sneakerAvailable.length,
                       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                          value: widget._sneakerAvailable[index],
+                          value: widget._newSneaker.getAvailableStocks[index],
                           child: Consumer<SneakerDetail>(
                               builder: (context, sneakerInfo, _) => _stockListTile(widget._sneakerAvailable[index], index)))),
                 )
+
               ],
             ],
           ),

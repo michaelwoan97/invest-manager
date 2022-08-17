@@ -30,11 +30,6 @@ class _AddStockState extends State<AddStock> {
     widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
   }
 
-  //var result = Navigator.of(context).pushNamed(TakePictureScreen.routeName);
-  Future<void> _takePictureForStock (BuildContext context) async {
-    result = await Navigator.of(context).pushNamed(TakePictureScreen.routeName);
-
-  }
 
   @override
   Widget build(BuildContext context) {
