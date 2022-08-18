@@ -509,6 +509,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     widget._sneakerAvailable = widget._newSneaker.getAvailableStocks;
     print('Sneaker id is ' + widget._newSneaker.getID);
     return Container(
+      margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: [
           Text('Stock Available'),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:provider/provider.dart';
@@ -40,24 +42,37 @@ class StockList extends StatelessWidget {
           Text("Inventory"),
           if (arrSneakers.isNotEmpty) ...[
             Consumer<SneakerManager>(
-              builder: (ctx, sneakerManager, _) => ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: arrSneakers.length,
-                  itemBuilder: (context, index) => ChangeNotifierProvider.value(
-                    value: arrSneakers[index],
-                    child: InkResponse(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(arrSneakers[index].getImgUrl),
+              builder: (ctx, sneakerManager, _) => Container(
+                height: 500,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: arrSneakers.length,
+                    itemBuilder: (context, index) =>
+                        ChangeNotifierProvider.value(
+                          value: arrSneakers[index],
+                          child: Card(
+                            child: InkResponse(
+                                child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: arrSneakers[index]
+                                        .getImgUrl
+                                        .contains("http")
+                                    ? NetworkImage(arrSneakers[index].getImgUrl)
+                                    : FileImage(
+                                            File(arrSneakers[index].getImgUrl))
+                                        as ImageProvider,
+                              ),
+                              title: Text(arrSneakers[index].getSneakerName),
+                              subtitle: Text('QTY: ' +
+                                  arrSneakers[index]
+                                      .getAvailableStocks
+                                      .length
+                                      .toString()),
+                              trailing: Icon(Icons.edit),
+                            )),
                           ),
-                          title: Text(arrSneakers[index].getSneakerName),
-                          subtitle: Text(
-                              'QTY: ' +
-                                  arrSneakers[index].getAvailableStocks.length.toString()),
-                          trailing: Icon(Icons.edit),
                         )),
-                  )
               ),
             )
           ]

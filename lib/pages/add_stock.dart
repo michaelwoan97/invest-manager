@@ -118,7 +118,7 @@ class _AddStockState extends State<AddStock> {
       ),
       bottomSheet: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(left: 8, right: 8),
+        margin: EdgeInsets.only(left: 20, right: 20),
         child: ElevatedButton(
           onPressed: (){
             widget.newSneaker.setSneakerName = _sneakerNameController.text;
