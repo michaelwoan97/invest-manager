@@ -9,11 +9,16 @@ import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
 
+enum Scenarios { add, edit }
+
 class AddStock extends StatefulWidget {
   static const routeName = '/add-stock';
   late Sneaker newSneaker;
+  late Scenarios scenarios;
 
-  AddStock({Key? key}) : super(key: key);
+  AddStock({Scenarios? scenario, Key? key}) {
+    scenarios = scenario ?? Scenarios.add;
+  }
 
   @override
   State<AddStock> createState() => _AddStockState();
@@ -30,18 +35,27 @@ class _AddStockState extends State<AddStock> {
   @override
   void initState() {
     super.initState();
-    widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
   }
-
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)!.settings.arguments == null) {
+      widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
+    } else {
+      final sneakerData = ModalRoute.of(context)!.settings.arguments as List;
+
+      widget.newSneaker = sneakerData[0] as Sneaker;
+      widget.scenarios = sneakerData[1] as Scenarios;
+      _sneakerNameController.text = widget.newSneaker.getSneakerName;
+      result = widget.newSneaker.getImgUrl;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Stock Info'),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.close_sharp))
-        ],
+        actions: [IconButton(onPressed: () {
+          Navigator.of(context).pop();
+        }, icon: Icon(Icons.close_sharp))],
       ),
       body: ChangeNotifierProvider.value(
         value: widget.newSneaker,
@@ -60,7 +74,7 @@ class _AddStockState extends State<AddStock> {
                       Column(
                         children: [
                           SizedBox(
-                            width:150,
+                            width: 150,
                             child: TextFormField(
                               controller: _sneakerNameController,
                               // The validator receives the text that the user has entered.
@@ -70,37 +84,55 @@ class _AddStockState extends State<AddStock> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(labelText: "Sneaker Name"),
+                              decoration:
+                                  InputDecoration(labelText: "Sneaker Name"),
                             ),
                           ),
                           SizedBox(
-                            width:150,
-
+                            width: 150,
                             child: TextFormField(
                                 controller: _sneakerNotesController,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 3,
-                                decoration: InputDecoration(labelText: "Notes")),
+                                decoration:
+                                    InputDecoration(labelText: "Notes")),
                           ),
-
                         ],
                       ),
                       Consumer<Sneaker>(
                         builder: (ctx, sneaker, _) => Column(
                           children: [
-                            if(result == null)...[
+                            if (result == null) ...[
                               Text('Use camera to take picture')
-                            ]
-                            else...[
-                              Image.file(File(result[0]), height: 160, width: 180, fit: BoxFit.cover,)
+                            ] else ...[
+                              if (result.toString().contains("http")) ...[
+                                Image.network(result.toString(),
+                                    height: 160, width: 180, fit: BoxFit.cover)
+                              ] else ...[
+                                Image.file(
+                                  File(result),
+                                  height: 160,
+                                  width: 180,
+                                  fit: BoxFit.cover,
+                                )
+                              ]
                             ],
-                            ElevatedButton(onPressed: () async {
-                              result = await Navigator.of(context).pushNamed(TakePictureScreen.routeName);
-                              sneaker.setImgUrl = result[0];
-                              print('Sneaker id is ' + sneaker.getID);
+                            ElevatedButton(
+                                onPressed: () async {
+                                  result = await Navigator.of(context)
+                                      .pushNamed(TakePictureScreen.routeName);
+                                  result = result[0].toString();
 
-                            }, child: Icon(Icons.camera))
+                                  // check scenario
+                                  if(widget.scenarios == Scenarios.edit){
+                                    sneaker.notifyWithoutUpdateData();
+                                  } else {
+                                    sneaker.updateImgURLNotify(result);
+                                  }
 
+                                  print('Sneaker id is ' + sneaker.getID);
+                                },
+                                child: Icon(Icons.camera))
                           ],
                         ),
                       )
@@ -120,18 +152,26 @@ class _AddStockState extends State<AddStock> {
         width: double.infinity,
         margin: EdgeInsets.only(left: 20, right: 20),
         child: ElevatedButton(
-          onPressed: (){
-            widget.newSneaker.setSneakerName = _sneakerNameController.text;
-            if(_sneakerNotesController.text.isNotEmpty){
-              widget.newSneaker.setNotes = _sneakerNotesController.text;
+          onPressed: () {
+            if(widget.scenarios == Scenarios.edit){
+              // update sneaker
+              // widget.newSneaker.updateSneaker(newSneakerName: _sneakerNameController.text, sNewNotes: _sneakerNotesController.text, sNewImgURL: result, availaleStock: )
+            } else {
+              widget.newSneaker.setSneakerName = _sneakerNameController.text;
+              if (_sneakerNotesController.text.isNotEmpty) {
+                widget.newSneaker.setNotes = _sneakerNotesController.text;
+              }
+              SneakerManager().addNewSneakerToList(widget.newSneaker);
             }
-            SneakerManager().addNewSneakerToList(widget.newSneaker);
-            for(var e in SneakerManager().getListSneaker){
-              print('Sneaker name is ' + e.getSneakerName);
-            }
+
             Navigator.of(context).pop();
           },
-          child: Text("+ Add to the list"),
+          child: widget.scenarios == Scenarios.add
+              ? Text("+ Add to the list")
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.edit), Text("Edit Sneaker Info!!")],
+                ),
         ),
       ),
     );

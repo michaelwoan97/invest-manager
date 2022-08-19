@@ -76,7 +76,6 @@ class Sneaker with ChangeNotifier {
 
   set setImgUrl(String sImgUrl) {
     _sImgUrl = sImgUrl;
-    notifyListeners();
   }
 
   List<SneakerDetail> get getAvailableStocks {
@@ -102,5 +101,32 @@ class Sneaker with ChangeNotifier {
 
   void updateSneakerStockInfo(SneakerDetail sneaker,int pos){
     _arrAvailable[pos].updateSneakerStock(sneaker);
+  }
+
+  void updateImgURLNotify(String imgURL){
+    _sImgUrl = imgURL;
+    notifyListeners();
+  }
+
+  void updateSneaker({required String newSneakerName, String? sNewNotes, String? sNewImgURL, List<SneakerDetail>? availaleStock}){
+    _sName = newSneakerName;
+    _sNotes = sNewNotes ?? "";
+    _sImgUrl = sNewImgURL ?? "";
+    if(availaleStock != null){
+      if(availaleStock.isNotEmpty){
+        if(_arrAvailable.isNotEmpty){
+          for(var e in availaleStock){
+            _arrAvailable.add(e);
+          }
+        } else {
+          _arrAvailable = List.from(availaleStock);
+        }
+      }
+    }
+    notifyListeners();
+  }
+
+  void notifyWithoutUpdateData(){
+    notifyListeners();
   }
 }

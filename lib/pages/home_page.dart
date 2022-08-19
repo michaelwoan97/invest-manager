@@ -136,24 +136,26 @@ class _HomePageState extends State<HomePage> {
       height: double.infinity,
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      child: Column(
-        children: <Widget>[
-          Text('Good Morninggg!!!'),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [Text('Total Products'), Text('1000')],
-                ),
-                Column(
-                  children: [Text('Products Sold'), Text('1000')],
-                )
-              ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Text('Good Morninggg!!!'),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [Text('Total Products'), Text('1000')],
+                  ),
+                  Column(
+                    children: [Text('Products Sold'), Text('1000')],
+                  )
+                ],
+              ),
             ),
-          ),
-          StockList()
-        ],
+            StockList()
+          ],
+        ),
       ),
     );
   }

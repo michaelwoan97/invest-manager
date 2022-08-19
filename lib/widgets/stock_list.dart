@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
+import 'package:invest_manager/pages/add_stock.dart';
 import 'package:provider/provider.dart';
 
 import '../models/sneaker.dart';
@@ -53,24 +54,33 @@ class StockList extends StatelessWidget {
                           value: arrSneakers[index],
                           child: Card(
                             child: InkResponse(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      AddStock.routeName,
+                                      arguments: [arrSneakers[index], Scenarios.edit]);
+                                },
                                 child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage: arrSneakers[index]
-                                        .getImgUrl
-                                        .contains("http")
-                                    ? NetworkImage(arrSneakers[index].getImgUrl)
-                                    : FileImage(
-                                            File(arrSneakers[index].getImgUrl))
-                                        as ImageProvider,
-                              ),
-                              title: Text(arrSneakers[index].getSneakerName),
-                              subtitle: Text('QTY: ' +
-                                  arrSneakers[index]
-                                      .getAvailableStocks
-                                      .length
-                                      .toString()),
-                              trailing: Icon(Icons.edit),
-                            )),
+                                  leading: Consumer<Sneaker>(
+                                    builder: (ctx, sneaker, _) => CircleAvatar(
+                                      backgroundImage: arrSneakers[index]
+                                              .getImgUrl
+                                              .contains("http")
+                                          ? NetworkImage(
+                                              arrSneakers[index].getImgUrl)
+                                          : FileImage(File(
+                                                  arrSneakers[index].getImgUrl))
+                                              as ImageProvider,
+                                    ),
+                                  ),
+                                  title:
+                                      Text(arrSneakers[index].getSneakerName),
+                                  subtitle: Text('QTY: ' +
+                                      arrSneakers[index]
+                                          .getAvailableStocks
+                                          .length
+                                          .toString()),
+                                  trailing: Icon(Icons.edit),
+                                )),
                           ),
                         )),
               ),
