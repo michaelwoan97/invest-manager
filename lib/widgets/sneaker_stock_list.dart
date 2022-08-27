@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
+import 'package:invest_manager/pages/add_stock.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
 
 class SneakerStockList extends StatefulWidget {
-  SneakerStockList({Key? key}) : super(key: key);
   late Sneaker _newSneaker;
   late List<SneakerDetail> _sneakerAvailable;
+  late Scenarios scenario;
+  late bool isCopied = false;
+
+  SneakerStockList({required Scenarios scenarioProcessing,Key? key}){
+    scenario = scenarioProcessing;
+  }
 
   @override
   State<SneakerStockList> createState() => _SneakerStockListState();
@@ -199,6 +205,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                 ElevatedButton(
                   child: const Text('Cancel'),
                   onPressed: () {
+                    clearForm();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -398,6 +405,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                 ElevatedButton(
                   child: const Text('Cancel'),
                   onPressed: () {
+                    clearForm();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -444,13 +452,24 @@ class _SneakerStockListState extends State<SneakerStockList> {
     // }
 
 
+    clearForm();
+
+
+    // check whether the user are adding or edditng the stock avaiable
+    if(widget.scenario == Scenarios.edit){
+      widget._newSneaker.addToAvailableStockExisted(newSneakerStock);
+    } else {
+      widget._newSneaker.modifyAvailableStocks(newStockAvailable);
+    }
+  }
+
+  void clearForm() {
     _purchasedFromController.text = '';
     _purchasedDateController.text = '';
     _sizeController.text = '';
     _priceController.text = '';
     sIsSold = 'No';
     soldAtController.text = '';
-    widget._newSneaker.modifyAvailableStocks(newStockAvailable);
   }
 
   void _editSneakerStock(SneakerDetail stock, int position){
@@ -464,13 +483,15 @@ class _SneakerStockListState extends State<SneakerStockList> {
     }
 
 
-    _purchasedFromController.text = '';
-    _purchasedDateController.text = '';
-    _sizeController.text = '';
-    _priceController.text = '';
-    sIsSold = 'No';
-    soldAtController.text = '';
-    widget._sneakerAvailable[position].updateSneakerStock(newSneakerStockInfo);
+    clearForm();
+
+    // check whether the user are adding or edditng the stock avaiable
+    if(widget.scenario == Scenarios.edit){
+      widget._sneakerAvailable[position].updateSneakerStockNoNotify(newSneakerStockInfo);
+    } else {
+      widget._newSneaker.addToAvailableStockExisted(newSneakerStockInfo);
+    }
+
   }
 
   Widget _stockListTile(SneakerDetail stock, int position){
@@ -506,7 +527,21 @@ class _SneakerStockListState extends State<SneakerStockList> {
   Widget build(BuildContext context) {
     var uuid = Uuid();
     widget._newSneaker = Provider.of<Sneaker>(context);
-    widget._sneakerAvailable = widget._newSneaker.getAvailableStocks;
+
+    // when edit
+    // check whether is adding stock or editting
+    // if editting tem
+    if(widget.scenario == Scenarios.edit){
+      // check whether it has been copy the current list of stock list info
+      if(!widget.isCopied){
+        widget._newSneaker.createCoptyOfStockList();
+        widget.isCopied = true;
+      }
+      widget._sneakerAvailable = widget._newSneaker.getNewAddedStockAvailable;
+    } else {
+      widget._sneakerAvailable = widget._newSneaker.getAvailableStocks;
+    }
+
     print('Sneaker id is ' + widget._newSneaker.getID);
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20),
@@ -526,7 +561,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       shrinkWrap: true,
                       itemCount: widget._sneakerAvailable.length,
                       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                          value: widget._newSneaker.getAvailableStocks[index],
+                          value: widget._sneakerAvailable[index],
                           child: Consumer<SneakerDetail>(
                               builder: (context, sneakerInfo, _) => _stockListTile(widget._sneakerAvailable[index], index)))),
                 )

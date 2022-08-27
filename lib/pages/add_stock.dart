@@ -54,6 +54,7 @@ class _AddStockState extends State<AddStock> {
       appBar: AppBar(
         title: Text('Stock Info'),
         actions: [IconButton(onPressed: () {
+          widget.newSneaker.clearAvailableStockExisted();
           Navigator.of(context).pop();
         }, icon: Icon(Icons.close_sharp))],
       ),
@@ -142,7 +143,12 @@ class _AddStockState extends State<AddStock> {
                 SizedBox(
                   height: 50,
                 ),
-                SneakerStockList()
+                if(widget.scenarios == Scenarios.edit)...[
+                  SneakerStockList(scenarioProcessing: Scenarios.edit)
+                ] else...[
+                  SneakerStockList(scenarioProcessing: Scenarios.add)
+                ]
+
               ],
             ),
           ),
@@ -155,7 +161,7 @@ class _AddStockState extends State<AddStock> {
           onPressed: () {
             if(widget.scenarios == Scenarios.edit){
               // update sneaker
-              // widget.newSneaker.updateSneaker(newSneakerName: _sneakerNameController.text, sNewNotes: _sneakerNotesController.text, sNewImgURL: result, availaleStock: )
+              widget.newSneaker.updateSneaker(newSneakerName: _sneakerNameController.text, sNewNotes: _sneakerNotesController.text, sNewImgURL: result);
             } else {
               widget.newSneaker.setSneakerName = _sneakerNameController.text;
               if (_sneakerNotesController.text.isNotEmpty) {
@@ -164,6 +170,7 @@ class _AddStockState extends State<AddStock> {
               SneakerManager().addNewSneakerToList(widget.newSneaker);
             }
 
+            widget.newSneaker.clearAvailableStockExisted();
             Navigator.of(context).pop();
           },
           child: widget.scenarios == Scenarios.add

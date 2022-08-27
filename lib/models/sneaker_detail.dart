@@ -93,13 +93,37 @@ class SneakerDetail with ChangeNotifier{
 
   }
 
+  /*
+  * the purpose of this function is to update the stock info
+  * of the sneaker and immediately notify the sneaker data provider
+  * about the change. So if this get call on the sneaker's stock info
+  * that already existed, it would change other places without user knowing it
+  * */
   void updateSneakerStock(SneakerDetail newSneakerStock){
+    updateSneakerStockNoNotify(newSneakerStock);
+    notifyListeners();
+  }
+
+  /*
+   * Same purpose with the updateSneakerStock but
+   * it will update and notify on the copy of the sneaker stock lit
+   * when user want to modify the current element of the existing list
+   */
+  // void updateCopiedSneakerStock(SneakerDetail newSneakerStock){
+  //
+  // }
+  /*
+
+
+  * The purpose of this function is to update info without notifying the provider
+  * */
+  void updateSneakerStockNoNotify(SneakerDetail newSneakerStock) {
     setSellerName = newSneakerStock.getSellerName;
     setDatePurchased = newSneakerStock.getDatePurchased;
     setSneakerSize = newSneakerStock.getSneakerSize;
     setSneakerPrice = newSneakerStock.getSneakerPrice;
     setIsSneakerSold = newSneakerStock.isSneakerSold;
     setSneakerSoldPrice = newSneakerStock.isSneakerSold ? newSneakerStock.getSneakerSoldPrice : "";
-    notifyListeners();
   }
+
 }

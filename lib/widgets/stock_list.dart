@@ -59,27 +59,27 @@ class StockList extends StatelessWidget {
                                       AddStock.routeName,
                                       arguments: [arrSneakers[index], Scenarios.edit]);
                                 },
-                                child: ListTile(
-                                  leading: Consumer<Sneaker>(
-                                    builder: (ctx, sneaker, _) => CircleAvatar(
+                                child: Consumer<Sneaker>(
+                                  builder: (ctx, sneaker, _) => ListTile(
+                                    leading: CircleAvatar(
                                       backgroundImage: arrSneakers[index]
-                                              .getImgUrl
-                                              .contains("http")
+                                          .getImgUrl
+                                          .contains("http")
                                           ? NetworkImage(
-                                              arrSneakers[index].getImgUrl)
+                                          arrSneakers[index].getImgUrl)
                                           : FileImage(File(
-                                                  arrSneakers[index].getImgUrl))
-                                              as ImageProvider,
+                                          arrSneakers[index].getImgUrl))
+                                      as ImageProvider,
                                     ),
+                                    title:
+                                        Text(arrSneakers[index].getSneakerName),
+                                    subtitle: Text('QTY: ' +
+                                        arrSneakers[index]
+                                            .getAvailableStocks
+                                            .length
+                                            .toString()),
+                                    trailing: Icon(Icons.edit),
                                   ),
-                                  title:
-                                      Text(arrSneakers[index].getSneakerName),
-                                  subtitle: Text('QTY: ' +
-                                      arrSneakers[index]
-                                          .getAvailableStocks
-                                          .length
-                                          .toString()),
-                                  trailing: Icon(Icons.edit),
                                 )),
                           ),
                         )),

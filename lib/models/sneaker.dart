@@ -6,7 +6,13 @@ class Sneaker with ChangeNotifier {
   late String _sName;
   late String _sNotes;
   late String _sImgUrl;
+
+  // the different between the two is one used for
+  // completely new sneaker about add to list
+  // the other one used for modifying and waiting whether user want to add
   late List<SneakerDetail> _arrAvailable;
+  late List<SneakerDetail> _newAddedStockAvailable = []; // temp list
+
 
   Sneaker(
       {required String sID,
@@ -18,7 +24,7 @@ class Sneaker with ChangeNotifier {
     _sName = sName ?? '';
     _sNotes = sNotes ?? '';
     _sImgUrl = sImageUrl ?? '';
-
+    _newAddedStockAvailable = [];
 
     if (arrStockAvailable != null) {
       _arrAvailable = arrStockAvailable;
@@ -82,11 +88,24 @@ class Sneaker with ChangeNotifier {
     return _arrAvailable;
   }
 
+
+  List<SneakerDetail> get getNewAddedStockAvailable => _newAddedStockAvailable;
+
+  set setNewAddedStockAvailable(List<SneakerDetail> value) {
+    _newAddedStockAvailable = List.from(value);
+  }
+
   set setAvailableStocks(List<SneakerDetail> arrAvailableStock) {
     _arrAvailable = List.from(arrAvailableStock);
     notifyListeners();
   }
 
+  /*
+  * The different functionality of this function is
+  * it will add the stock info list to the newly create sneaker
+  * then will notify the sneaker provider to change accordingly
+  * but it will not be added to the main list sneaker unless user accepted
+  * */
   void modifyAvailableStocks(List<SneakerDetail> sneakerDetails){
     // check whether the array of available stock is empty
     if(_arrAvailable.isEmpty){
@@ -99,6 +118,60 @@ class Sneaker with ChangeNotifier {
     }
   }
 
+  // The pupose if this function is to update the temporary stock info list
+  // which is created for the purpose of holding the new data until the user
+  // accepted to the new sneaker to main list sneaker
+  void addToAvailableStockExisted(SneakerDetail sneaker){
+    _newAddedStockAvailable.add(sneaker);
+    notifyListeners();
+  }
+  // used for update a list which already existed in the data
+  // provider then when user agree to merge it will with main list
+  void modifyAvailableStockExisted(List<SneakerDetail> sneakerDetails){
+    // check whether the array of available stock is empty
+    if(_newAddedStockAvailable.isEmpty){
+      setNewAddedStockAvailable = sneakerDetails;
+    } else {
+      for(var e in sneakerDetails){
+        _newAddedStockAvailable.add(e);
+      }
+    }
+    notifyListeners();
+  }
+
+  // used for editing elment in list but waiting for user agree to merge
+  // void modifyStockAvailableNotNotify
+  void _mergeTwoLists(){
+    if(_newAddedStockAvailable.isNotEmpty){
+      if(_arrAvailable.isNotEmpty){
+        for(var stock in _arrAvailable){
+          for(var e in _newAddedStockAvailable){
+            if(stock.getStockID != e.getStockID){
+              _arrAvailable.add(e);
+            } else {
+              stock.updateSneakerStockNoNotify(e);
+            }
+          }
+        }
+
+      } else {
+        _arrAvailable = List.from(_newAddedStockAvailable);
+      }
+    }
+  }
+
+  void createCoptyOfStockList(){
+    if(_arrAvailable.isNotEmpty){
+      setNewAddedStockAvailable = List.from(_arrAvailable);
+    }
+  }
+  void clearAvailableStockExisted(){
+    _newAddedStockAvailable.clear();
+    notifyListeners();
+  }
+
+
+
   void updateSneakerStockInfo(SneakerDetail sneaker,int pos){
     _arrAvailable[pos].updateSneakerStock(sneaker);
   }
@@ -108,21 +181,11 @@ class Sneaker with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSneaker({required String newSneakerName, String? sNewNotes, String? sNewImgURL, List<SneakerDetail>? availaleStock}){
+  void updateSneaker({required String newSneakerName, String? sNewNotes, String? sNewImgURL}){
     _sName = newSneakerName;
     _sNotes = sNewNotes ?? "";
     _sImgUrl = sNewImgURL ?? "";
-    if(availaleStock != null){
-      if(availaleStock.isNotEmpty){
-        if(_arrAvailable.isNotEmpty){
-          for(var e in availaleStock){
-            _arrAvailable.add(e);
-          }
-        } else {
-          _arrAvailable = List.from(availaleStock);
-        }
-      }
-    }
+    _mergeTwoLists();
     notifyListeners();
   }
 
