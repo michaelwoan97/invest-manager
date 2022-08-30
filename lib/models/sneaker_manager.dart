@@ -68,6 +68,44 @@ class SneakerManager with ChangeNotifier{
     notifyListeners();
   }
 
+  void deleteTotalAvaiSoldProducts(int iUpdatedQuantity, double iUpdatedPrice){
+    totalAvaiProducts -= iUpdatedQuantity;
+    totalSoldProducts -= iUpdatedPrice;
+    notifyListeners();
+  }
+
+  void deleteSneaker(String sneakerID){
+    int totalMinusProduct = 0;
+    double totalMinusSold = 0;
+    int removeIndex = 0;
+
+    if(totalAvaiProducts != 0 && totalSoldProducts != 0.0){
+      for(var i = 0; i < _arrSneakers.length; i++){
+        if(_arrSneakers[i].getID == sneakerID){
+          if(_arrSneakers[i].getID == sneakerID){
+
+            // minus total product and price
+            totalMinusProduct = _arrSneakers[i].getAvailableStocks.isNotEmpty ? _arrSneakers[i].getAvailableStocks.length : 0;
+            if(_arrSneakers[i].getAvailableStocks.isNotEmpty){
+              for(var stock in _arrSneakers[i].getAvailableStocks){
+                totalMinusSold += double.parse(stock.getSneakerSoldPrice);
+              }
+            }
+
+            removeIndex = i;
+            break;
+          }
+        }
+      }
+
+      // update
+      _arrSneakers.removeAt(removeIndex);
+      deleteTotalAvaiSoldProducts(totalMinusProduct, totalMinusSold);
+    }
+
+
+  }
+
   double get totalSoldProducts => _totalSoldProducts;
 
   set totalSoldProducts(double value) {

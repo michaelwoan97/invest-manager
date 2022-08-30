@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
-
   }
 
   String _checkTypeOfDropdownValue(Type kind){
@@ -185,7 +184,8 @@ class _HomePageState extends State<HomePage> {
               List<Sneaker> sneakers = snapshot.data!;
               // add list to singleton provider
               sneakerManager.setListSneaker = sneakers;
-
+              SneakerManager().calculateTotalProductSold();
+              SneakerManager().calculateTotalQuantityProducts();
               return _HomeInventory();
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');

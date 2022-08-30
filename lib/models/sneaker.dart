@@ -154,25 +154,7 @@ class Sneaker with ChangeNotifier {
       if(_arrAvailable.isNotEmpty){
 
         // update total avai products
-        int updateQuantity = _newAddedStockAvailable.length - _arrAvailable.length;
-
-        // update total price sold
-        double oldTotalSold = 0;
-        for(var e in _arrAvailable){
-          if(e.getSneakerSoldPrice.isNotEmpty){
-            oldTotalSold += double.parse(e.getSneakerSoldPrice);
-          }
-        }
-
-        double newTotalSold = 0;
-        for(var e in _newAddedStockAvailable){
-          if(e.getSneakerSoldPrice.isNotEmpty){
-            newTotalSold += double.parse(e.getSneakerSoldPrice);
-          }
-        }
-        double updateTotalSold = newTotalSold - oldTotalSold;
-
-        SneakerManager().updateTotalAvaiSoldProducts(updateQuantity, updateTotalSold);
+        updateTotalInfo();
 
         // copy new values from the copied and updated list
         // no need to traverse and upadte each element
@@ -181,9 +163,32 @@ class Sneaker with ChangeNotifier {
         _arrAvailable = List.from(_newAddedStockAvailable);
 
       } else {
+        updateTotalInfo();
         _arrAvailable = List.from(_newAddedStockAvailable);
       }
     }
+  }
+
+  void updateTotalInfo() {
+    int updateQuantity = _newAddedStockAvailable.length - _arrAvailable.length;
+
+    // update total price sold
+    double oldTotalSold = 0;
+    for(var e in _arrAvailable){
+      if(e.getSneakerSoldPrice.isNotEmpty){
+        oldTotalSold += double.parse(e.getSneakerSoldPrice);
+      }
+    }
+
+    double newTotalSold = 0;
+    for(var e in _newAddedStockAvailable){
+      if(e.getSneakerSoldPrice.isNotEmpty){
+        newTotalSold += double.parse(e.getSneakerSoldPrice);
+      }
+    }
+    double updateTotalSold = newTotalSold - oldTotalSold;
+
+    SneakerManager().updateTotalAvaiSoldProducts(updateQuantity, updateTotalSold);
   }
 
   void createCoptyOfStockList(){

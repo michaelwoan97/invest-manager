@@ -103,7 +103,7 @@ class _AddStockState extends State<AddStock> {
                       Consumer<Sneaker>(
                         builder: (ctx, sneaker, _) => Column(
                           children: [
-                            if (result == null) ...[
+                            if (result == null || widget.newSneaker.getImgUrl.isEmpty) ...[
                               Text('Use camera to take picture')
                             ] else ...[
                               if (result.toString().contains("http")) ...[
@@ -167,13 +167,19 @@ class _AddStockState extends State<AddStock> {
               if (_sneakerNotesController.text.isNotEmpty) {
                 widget.newSneaker.setNotes = _sneakerNotesController.text;
               }
+              //update new sneaker to total
+              double totalNewSneakerPrice = 0;
+              if(widget.newSneaker.getAvailableStocks.isNotEmpty){
+                for(var e in widget.newSneaker.getAvailableStocks){
+                  totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
+                }
+              }
+              SneakerManager().updateTotalAvaiSoldProducts(widget.newSneaker.getAvailableStocks.length, totalNewSneakerPrice);
               SneakerManager().addNewSneakerToList(widget.newSneaker);
 
             }
 
             widget.newSneaker.clearAvailableStockExisted();
-            SneakerManager().calculateTotalQuantityProducts();
-            SneakerManager().calculateTotalProductSold();
             Navigator.of(context).pop();
           },
           child: widget.scenarios == Scenarios.add

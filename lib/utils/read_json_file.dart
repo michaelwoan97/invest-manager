@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:invest_manager/models/sneaker.dart';
 
+import '../models/sneaker_manager.dart';
+
 class ReadJsonFile{
 
   static Future<List<Sneaker>> readJson(String filePath) async {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
 
@@ -52,35 +53,46 @@ class StockList extends StatelessWidget {
                     itemBuilder: (context, index) =>
                         ChangeNotifierProvider.value(
                           value: arrSneakers[index],
-                          child: Card(
-                            child: InkResponse(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      AddStock.routeName,
-                                      arguments: [arrSneakers[index], Scenarios.edit]);
-                                },
-                                child: Consumer<Sneaker>(
-                                  builder: (ctx, sneaker, _) => ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundImage: arrSneakers[index]
-                                          .getImgUrl
-                                          .contains("http")
-                                          ? NetworkImage(
-                                          arrSneakers[index].getImgUrl)
-                                          : FileImage(File(
-                                          arrSneakers[index].getImgUrl))
-                                      as ImageProvider,
+                          child: Dismissible(
+                            key: Key(Uuid().v1()),
+                            background: Container(color: Colors.red),
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) {
+                              SneakerManager().deleteSneaker(arrSneakers[index].getID);
+                              // Scaffold
+                              //     .of(context)
+                              //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                            },
+                            child: Card(
+                              child: InkResponse(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        AddStock.routeName,
+                                        arguments: [arrSneakers[index], Scenarios.edit]);
+                                  },
+                                  child: Consumer<Sneaker>(
+                                    builder: (ctx, sneaker, _) => ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage: arrSneakers[index]
+                                            .getImgUrl
+                                            .contains("http")
+                                            ? NetworkImage(
+                                            arrSneakers[index].getImgUrl)
+                                            : FileImage(File(
+                                            arrSneakers[index].getImgUrl))
+                                        as ImageProvider,
+                                      ),
+                                      title:
+                                          Text(arrSneakers[index].getSneakerName),
+                                      subtitle: Text('QTY: ' +
+                                          arrSneakers[index]
+                                              .getAvailableStocks
+                                              .length
+                                              .toString()),
+                                      trailing: Icon(Icons.edit),
                                     ),
-                                    title:
-                                        Text(arrSneakers[index].getSneakerName),
-                                    subtitle: Text('QTY: ' +
-                                        arrSneakers[index]
-                                            .getAvailableStocks
-                                            .length
-                                            .toString()),
-                                    trailing: Icon(Icons.edit),
-                                  ),
-                                )),
+                                  )),
+                            ),
                           ),
                         )),
               ),
