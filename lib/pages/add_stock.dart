@@ -168,9 +168,12 @@ class _AddStockState extends State<AddStock> {
                 widget.newSneaker.setNotes = _sneakerNotesController.text;
               }
               SneakerManager().addNewSneakerToList(widget.newSneaker);
+
             }
 
             widget.newSneaker.clearAvailableStockExisted();
+            SneakerManager().calculateTotalQuantityProducts();
+            SneakerManager().calculateTotalProductSold();
             Navigator.of(context).pop();
           },
           child: widget.scenarios == Scenarios.add

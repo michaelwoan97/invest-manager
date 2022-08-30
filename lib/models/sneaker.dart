@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
+import 'package:invest_manager/models/sneaker_manager.dart';
 
 class Sneaker with ChangeNotifier {
   late String _id;
@@ -92,7 +93,13 @@ class Sneaker with ChangeNotifier {
   List<SneakerDetail> get getNewAddedStockAvailable => _newAddedStockAvailable;
 
   set setNewAddedStockAvailable(List<SneakerDetail> value) {
-    _newAddedStockAvailable = List.from(value);
+    // _newAddedStockAvailable = SneakerDetail.map;
+
+    // List<SneakerDetail> copied = value.toList();
+    _newAddedStockAvailable = value.map((e) => SneakerDetail(id: e.getStockID ,sSeller: e.getSellerName, sDate: e.getDatePurchased, sSize: e.getSneakerSize, sPrice: e.getSneakerPrice, isSold: e.isSneakerSold, sPriceSold: e.getSneakerSoldPrice)).toList();
+    // for(var e in value){
+    //   _newAddedStockAvailable.add(e);
+    // }
   }
 
   set setAvailableStocks(List<SneakerDetail> arrAvailableStock) {
@@ -114,6 +121,7 @@ class Sneaker with ChangeNotifier {
       for(var e in sneakerDetails){
         _arrAvailable.add(e);
       }
+
       notifyListeners();
     }
   }
@@ -144,15 +152,33 @@ class Sneaker with ChangeNotifier {
   void _mergeTwoLists(){
     if(_newAddedStockAvailable.isNotEmpty){
       if(_arrAvailable.isNotEmpty){
-        for(var stock in _arrAvailable){
-          for(var e in _newAddedStockAvailable){
-            if(stock.getStockID != e.getStockID){
-              _arrAvailable.add(e);
-            } else {
-              stock.updateSneakerStockNoNotify(e);
-            }
+
+        // update total avai products
+        int updateQuantity = _newAddedStockAvailable.length - _arrAvailable.length;
+
+        // update total price sold
+        double oldTotalSold = 0;
+        for(var e in _arrAvailable){
+          if(e.getSneakerSoldPrice.isNotEmpty){
+            oldTotalSold += double.parse(e.getSneakerSoldPrice);
           }
         }
+
+        double newTotalSold = 0;
+        for(var e in _newAddedStockAvailable){
+          if(e.getSneakerSoldPrice.isNotEmpty){
+            newTotalSold += double.parse(e.getSneakerSoldPrice);
+          }
+        }
+        double updateTotalSold = newTotalSold - oldTotalSold;
+
+        SneakerManager().updateTotalAvaiSoldProducts(updateQuantity, updateTotalSold);
+
+        // copy new values from the copied and updated list
+        // no need to traverse and upadte each element
+        // since brand new copy contain old and updated values
+        _arrAvailable.clear();
+        _arrAvailable = List.from(_newAddedStockAvailable);
 
       } else {
         _arrAvailable = List.from(_newAddedStockAvailable);
@@ -162,7 +188,10 @@ class Sneaker with ChangeNotifier {
 
   void createCoptyOfStockList(){
     if(_arrAvailable.isNotEmpty){
-      setNewAddedStockAvailable = List.from(_arrAvailable);
+      setNewAddedStockAvailable = _arrAvailable;
+      // for(var e in _arrAvailable){
+      //   _newAddedStockAvailable.add(e);
+      // }
     }
   }
   void clearAvailableStockExisted(){

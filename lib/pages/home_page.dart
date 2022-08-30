@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
 
     listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
 
-
   }
 
   String _checkTypeOfDropdownValue(Type kind){
@@ -141,16 +140,18 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Text('Good Morninggg!!!'),
             Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [Text('Total Products'), Text('1000')],
-                  ),
-                  Column(
-                    children: [Text('Products Sold'), Text('1000')],
-                  )
-                ],
+              child: Consumer<SneakerManager>(
+                builder: (ctx, manager, _) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [Text('Total Products'), Text(SneakerManager().totalAvaiProducts.toString())],
+                    ),
+                    Column(
+                      children: [Text('Products Sold'), Text(SneakerManager().totalSoldProducts.toString())],
+                    )
+                  ],
+                ),
               ),
             ),
             StockList()
@@ -175,8 +176,8 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (_) => sneakerManager,
+      body: ChangeNotifierProvider.value(
+        value: sneakerManager,
         child: FutureBuilder<List<Sneaker>>(
           future: listSneakers,
           builder: (context, snapshot) {

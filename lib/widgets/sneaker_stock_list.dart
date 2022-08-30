@@ -487,7 +487,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
     // check whether the user are adding or edditng the stock avaiable
     if(widget.scenario == Scenarios.edit){
-      widget._sneakerAvailable[position].updateSneakerStockNoNotify(newSneakerStockInfo);
+      widget._newSneaker.getNewAddedStockAvailable[position].updateSneakerStock(newSneakerStockInfo);
     } else {
       widget._newSneaker.addToAvailableStockExisted(newSneakerStockInfo);
     }

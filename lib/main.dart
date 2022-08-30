@@ -6,6 +6,9 @@ import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+
+import 'models/sneaker_manager.dart';
 
 Future<void> main() async{
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -23,25 +26,44 @@ Future<void> main() async{
   runApp( MyApp(camera: firstCamera,));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final CameraDescription camera;
 
   MyApp({Key? key, required this.camera}) : super(key: key);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    SneakerManager().calculateTotalProductSold();
+    SneakerManager().calculateTotalQuantityProducts();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.orange
+
+    return ChangeNotifierProvider(
+      create: (ctx) => SneakerManager(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.orange
+        ),
+        home: WidgetTree(),
+        routes: {
+          WidgetTree.routeName: (context) => WidgetTree(),
+          HomePage.routeName: (context) => HomePage(),
+          AddStock.routeName: (context) => AddStock(),
+          TakePictureScreen.routeName: (context) => TakePictureScreen(camera: widget.camera)
+        },
       ),
-      home: WidgetTree(),
-      routes: {
-        WidgetTree.routeName: (context) => WidgetTree(),
-        HomePage.routeName: (context) => HomePage(),
-        AddStock.routeName: (context) => AddStock(),
-        TakePictureScreen.routeName: (context) => TakePictureScreen(camera: camera)
-      },
     );
   }
 }
