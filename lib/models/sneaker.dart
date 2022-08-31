@@ -12,7 +12,8 @@ class Sneaker with ChangeNotifier {
   // completely new sneaker about add to list
   // the other one used for modifying and waiting whether user want to add
   late List<SneakerDetail> _arrAvailable;
-  late List<SneakerDetail> _newAddedStockAvailable = []; // temp list
+  late List<SneakerDetail> _newAddedStockAvailable = []; // copied of the og list
+  late List<SneakerDetail> _stockToBeDeleted = [];
 
 
   Sneaker(
@@ -26,6 +27,7 @@ class Sneaker with ChangeNotifier {
     _sNotes = sNotes ?? '';
     _sImgUrl = sImageUrl ?? '';
     _newAddedStockAvailable = [];
+    _stockToBeDeleted = [];
 
     if (arrStockAvailable != null) {
       _arrAvailable = arrStockAvailable;
@@ -93,13 +95,7 @@ class Sneaker with ChangeNotifier {
   List<SneakerDetail> get getNewAddedStockAvailable => _newAddedStockAvailable;
 
   set setNewAddedStockAvailable(List<SneakerDetail> value) {
-    // _newAddedStockAvailable = SneakerDetail.map;
-
-    // List<SneakerDetail> copied = value.toList();
     _newAddedStockAvailable = value.map((e) => SneakerDetail(id: e.getStockID ,sSeller: e.getSellerName, sDate: e.getDatePurchased, sSize: e.getSneakerSize, sPrice: e.getSneakerPrice, isSold: e.isSneakerSold, sPriceSold: e.getSneakerSoldPrice)).toList();
-    // for(var e in value){
-    //   _newAddedStockAvailable.add(e);
-    // }
   }
 
   set setAvailableStocks(List<SneakerDetail> arrAvailableStock) {
@@ -111,7 +107,7 @@ class Sneaker with ChangeNotifier {
   * The different functionality of this function is
   * it will add the stock info list to the newly create sneaker
   * then will notify the sneaker provider to change accordingly
-  * but it will not be added to the main list sneaker unless user accepted
+  * but it will not be added to the main list sneaker unless user accept it
   * */
   void modifyAvailableStocks(List<SneakerDetail> sneakerDetails){
     // check whether the array of available stock is empty
@@ -133,6 +129,7 @@ class Sneaker with ChangeNotifier {
     _newAddedStockAvailable.add(sneaker);
     notifyListeners();
   }
+
   // used for update a list which already existed in the data
   // provider then when user agree to merge it will with main list
   void modifyAvailableStockExisted(List<SneakerDetail> sneakerDetails){
@@ -147,10 +144,16 @@ class Sneaker with ChangeNotifier {
     notifyListeners();
   }
 
-  // used for editing elment in list but waiting for user agree to merge
-  // void modifyStockAvailableNotNotify
+  /*
+  * The purpose of this function is to merge the og list and copied list
+  * when user agree to update
+  * */
   void _mergeTwoLists(){
-    if(_newAddedStockAvailable.isNotEmpty){
+    // check whether there are something to change to the list or not
+    // I think this _stockToBeDeleted.isNotEmpty help whether there are something
+    // need to change in the og array I already deleted the stuff before get in to this
+    // condition so their purpose is make sure to update accordingly
+    if(_newAddedStockAvailable.isNotEmpty || _stockToBeDeleted.isNotEmpty){
       if(_arrAvailable.isNotEmpty){
 
         // update total avai products
@@ -166,9 +169,21 @@ class Sneaker with ChangeNotifier {
         updateTotalInfo();
         _arrAvailable = List.from(_newAddedStockAvailable);
       }
+    } else {
+      // check for update og list
+      if(_arrAvailable.isNotEmpty){
+        _arrAvailable.clear();
+        updateTotalInfo();
+      }
     }
+
+
   }
 
+  /*
+   * The purpose of this function is to update total product available and sold products
+   * in the app
+   */
   void updateTotalInfo() {
     int updateQuantity = _newAddedStockAvailable.length - _arrAvailable.length;
 
@@ -191,6 +206,10 @@ class Sneaker with ChangeNotifier {
     SneakerManager().updateTotalAvaiSoldProducts(updateQuantity, updateTotalSold);
   }
 
+  /*
+  * create a temp copied list from og list
+  * to perform CRUD operation
+  * */
   void createCoptyOfStockList(){
     if(_arrAvailable.isNotEmpty){
       setNewAddedStockAvailable = _arrAvailable;
@@ -199,11 +218,16 @@ class Sneaker with ChangeNotifier {
       // }
     }
   }
+
+  /*
+  * The purpose of this function is clear every temp copied list
+  * when user decided to update it or not
+  * */
   void clearAvailableStockExisted(){
     _newAddedStockAvailable.clear();
+    _stockToBeDeleted.clear();
     notifyListeners();
   }
-
 
 
   void updateSneakerStockInfo(SneakerDetail sneaker,int pos){
@@ -225,5 +249,22 @@ class Sneaker with ChangeNotifier {
 
   void notifyWithoutUpdateData(){
     notifyListeners();
+  }
+
+  /*
+  * The purpose of this function is to delete a stock in the temp copied list
+  * and updating the copied list so user can see change immediately without
+  * chaning the og list
+  * */
+  void deleteStockCopiedList(int index){
+    SneakerDetail stockToBeDeleted;
+    if(_newAddedStockAvailable.isNotEmpty){
+      stockToBeDeleted = _newAddedStockAvailable[index];
+      if(stockToBeDeleted != null){
+        _stockToBeDeleted.add(stockToBeDeleted);
+        _newAddedStockAvailable.removeAt(index);
+        notifyListeners();
+      }
+    }
   }
 }

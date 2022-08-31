@@ -56,6 +56,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
   Future<void> signOut() async {
+    SneakerManager().totalAvaiProducts = 0;
+    SneakerManager().totalSoldProducts = 0.0;
     await Auth().signOut();
   }
 

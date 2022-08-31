@@ -10,7 +10,6 @@ class SneakerDetail with ChangeNotifier{
   late bool _isSold;
   late String _sPriceSold;
 
-
   SneakerDetail({String? id ,required sSeller, required String sDate, required String sSize, required String sPrice, bool? isSold, String? sPriceSold}){
     if(id == null){
       var uuid = Uuid();
@@ -104,18 +103,11 @@ class SneakerDetail with ChangeNotifier{
     notifyListeners();
   }
 
-  /*
-   * Same purpose with the updateSneakerStock but
-   * it will update and notify on the copy of the sneaker stock lit
-   * when user want to modify the current element of the existing list
-   */
-  // void updateCopiedSneakerStock(SneakerDetail newSneakerStock){
-  //
-  // }
-  /*
 
-
-  * The purpose of this function is to update info without notifying the provider
+  /*
+  * The purpose of this function is to update info without notifying the provider. In case editing of
+  * stock is already existed, user might want to update a stock info but dont want to change or update
+  * it yet
   * */
   void updateSneakerStockNoNotify(SneakerDetail newSneakerStock) {
     setSellerName = newSneakerStock.getSellerName;
@@ -125,5 +117,6 @@ class SneakerDetail with ChangeNotifier{
     setIsSneakerSold = newSneakerStock.isSneakerSold;
     setSneakerSoldPrice = newSneakerStock.isSneakerSold ? newSneakerStock.getSneakerSoldPrice : "";
   }
+
 
 }

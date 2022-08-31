@@ -2,6 +2,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:invest_manager/models/sneaker.dart';
 
+/*
+* class: SneakerManager
+* purpose: This class represent as a data provider for the whole app. It also a singleton object
+*           so it helps to manage the data of the app conveniently
+* */
 class SneakerManager with ChangeNotifier{
   static final SneakerManager _instance = SneakerManager._internal();
   late List<Sneaker> _arrSneakers;
@@ -48,16 +53,9 @@ class SneakerManager with ChangeNotifier{
   void calculateTotalProductSold(){
     for(var e in _arrSneakers){
       for(var stock in e.getAvailableStocks){
-        // check whether it is integer or double
-        // if(int.tryParse(stock.getSneakerSoldPrice) == true){
-        //   _totalSoldProducts += int.parse(stock.getSneakerSoldPrice);
-        // } else {
-        //   _totalSoldProducts += double.parse(stock.getSneakerSoldPrice);
-        // }
         if(stock.getSneakerSoldPrice.isNotEmpty){
           _totalSoldProducts += double.parse(stock.getSneakerSoldPrice);
         }
-
       }
     }
   }

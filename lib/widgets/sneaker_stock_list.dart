@@ -13,7 +13,7 @@ class SneakerStockList extends StatefulWidget {
   late Scenarios scenario;
   late bool isCopied = false;
 
-  SneakerStockList({required Scenarios scenarioProcessing,Key? key}){
+  SneakerStockList({required Scenarios scenarioProcessing, Key? key}) {
     scenario = scenarioProcessing;
   }
 
@@ -81,12 +81,14 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                       //DateTime.now() - not to allow to choose before today.
                                       lastDate: DateTime(2100));
                                   if (pickedDate != null) {
-                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                    setState((){
-                                      _purchasedDateController.text = formattedDate;
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(pickedDate);
+                                    setState(() {
+                                      _purchasedDateController.text =
+                                          formattedDate;
                                     });
                                   }
-
                                 },
                               )),
                         ),
@@ -165,7 +167,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                     if (selectedValue is String) {
                                       setState(() {
                                         sIsSold = selectedValue;
-                                        if(sIsSold == "No"){
+                                        if (sIsSold == "No") {
                                           soldAtController.text = "";
                                         }
                                       });
@@ -182,7 +184,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     // check whether it is sold or not
-                                    if(sIsSold == "Yes"){
+                                    if (sIsSold == "Yes") {
                                       return '';
                                     }
                                   }
@@ -241,7 +243,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     _purchasedDateController.text = stock.getDatePurchased;
     _sizeController.text = stock.getSneakerSize;
     _priceController.text = stock.getSneakerPrice;
-    if(stock.isSneakerSold){
+    if (stock.isSneakerSold) {
       sIsSold = 'Yes';
       soldAtController.text = stock.getSneakerSoldPrice;
     } else {
@@ -296,12 +298,14 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                       //DateTime.now() - not to allow to choose before today.
                                       lastDate: DateTime(2100));
                                   if (pickedDate != null) {
-                                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                    setState((){
-                                      _purchasedDateController.text = formattedDate;
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(pickedDate);
+                                    setState(() {
+                                      _purchasedDateController.text =
+                                          formattedDate;
                                     });
                                   }
-
                                 },
                               )),
                         ),
@@ -343,7 +347,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
                             SizedBox(
                               width: 50,
                             ),
-
                           ],
                         ),
                         Row(
@@ -353,7 +356,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                               width: 50,
                               child: DropdownButtonFormField<String>(
                                   decoration:
-                                  InputDecoration(labelText: "Is Sold?"),
+                                      InputDecoration(labelText: "Is Sold?"),
                                   items: const [
                                     DropdownMenuItem(
                                         child: Text('Yes'), value: 'Yes'),
@@ -365,7 +368,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                     if (selectedValue is String) {
                                       setState(() {
                                         sIsSold = selectedValue;
-                                        if(sIsSold == "No"){
+                                        if (sIsSold == "No") {
                                           soldAtController.text = "";
                                         }
                                       });
@@ -382,7 +385,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     // check whether it is sold or not
-                                    if(sIsSold == "Yes"){
+                                    if (sIsSold == "Yes") {
                                       return '';
                                     }
                                   }
@@ -419,7 +422,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       _editSneakerStock(stock, position);
                       // Then, notify the list stock has changed
 
-
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -436,10 +438,16 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
-  void _processNewAvailableStocks(){
+  void _processNewAvailableStocks() {
     List<SneakerDetail> newStockAvailable = [];
     // start adding to the available stock
-    SneakerDetail newSneakerStock = SneakerDetail(sSeller: _purchasedFromController.text, sDate: _purchasedDateController.text, sSize: _sizeController.text, sPrice: _priceController.text, isSold: sIsSold == "Yes" ? true : false, sPriceSold: soldAtController.text );
+    SneakerDetail newSneakerStock = SneakerDetail(
+        sSeller: _purchasedFromController.text,
+        sDate: _purchasedDateController.text,
+        sSize: _sizeController.text,
+        sPrice: _priceController.text,
+        isSold: sIsSold == "Yes" ? true : false,
+        sPriceSold: soldAtController.text);
     newStockAvailable.add(newSneakerStock);
 
     // not working with the logic update each element but might take a look in a future
@@ -451,12 +459,10 @@ class _SneakerStockListState extends State<SneakerStockList> {
     //   }
     // }
 
-
     clearForm();
 
-
     // check whether the user are adding or edditng the stock avaiable
-    if(widget.scenario == Scenarios.edit){
+    if (widget.scenario == Scenarios.edit) {
       widget._newSneaker.addToAvailableStockExisted(newSneakerStock);
     } else {
       widget._newSneaker.modifyAvailableStocks(newStockAvailable);
@@ -472,41 +478,50 @@ class _SneakerStockListState extends State<SneakerStockList> {
     soldAtController.text = '';
   }
 
-  void _editSneakerStock(SneakerDetail stock, int position){
+  void _editSneakerStock(SneakerDetail stock, int position) {
     SneakerDetail newSneakerStockInfo;
 
     // check whether it is sold or not
-    if(sIsSold == "Yes"){
-      newSneakerStockInfo = new SneakerDetail(sSeller: _purchasedFromController.text, sDate: _purchasedDateController.text, sSize: _sizeController.text, sPrice: _priceController.text, isSold: true, sPriceSold:  soldAtController.text);
+    if (sIsSold == "Yes") {
+      newSneakerStockInfo = new SneakerDetail(
+          sSeller: _purchasedFromController.text,
+          sDate: _purchasedDateController.text,
+          sSize: _sizeController.text,
+          sPrice: _priceController.text,
+          isSold: true,
+          sPriceSold: soldAtController.text);
     } else {
-      newSneakerStockInfo =  new SneakerDetail(sSeller: _purchasedFromController.text, sDate: _purchasedDateController.text, sSize: _sizeController.text, sPrice: _priceController.text, isSold: false);
+      newSneakerStockInfo = new SneakerDetail(
+          sSeller: _purchasedFromController.text,
+          sDate: _purchasedDateController.text,
+          sSize: _sizeController.text,
+          sPrice: _priceController.text,
+          isSold: false);
     }
-
 
     clearForm();
 
     // check whether the user are adding or edditng the stock avaiable
-    if(widget.scenario == Scenarios.edit){
-      widget._newSneaker.getNewAddedStockAvailable[position].updateSneakerStock(newSneakerStockInfo);
+    if (widget.scenario == Scenarios.edit) {
+      widget._newSneaker.getNewAddedStockAvailable[position]
+          .updateSneakerStock(newSneakerStockInfo);
     } else {
       widget._newSneaker.addToAvailableStockExisted(newSneakerStockInfo);
     }
-
   }
 
-  Widget _stockListTile(SneakerDetail stock, int position){
+  Widget _stockListTile(SneakerDetail stock, int position) {
     return Card(
       child: InkResponse(
-        onTap: () => {
-          _editStockInfoDialog(stock, position)
-        },
+        onTap: () => {_editStockInfoDialog(stock, position)},
         child: ListTile(
           leading: Text(stock.getSneakerSize),
-          title: Text(stock.getSellerName + " ( " + stock.getDatePurchased + ")"),
+          title:
+              Text(stock.getSellerName + " ( " + stock.getDatePurchased + ")"),
           subtitle: Text('Price: ' + stock.getSneakerPrice),
           trailing: TextButton(
-            onPressed: (){},
-            child: Text( stock.isSneakerSold ? "Sold" : "Active"),
+            onPressed: () {},
+            child: Text(stock.isSneakerSold ? "Sold" : "Active"),
             style: TextButton.styleFrom(
               primary: stock.isSneakerSold ? Colors.red : Colors.green,
             ),
@@ -515,7 +530,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
       ),
     );
   }
-
 
   @override
   void initState() {
@@ -531,9 +545,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     // when edit
     // check whether is adding stock or editting
     // if editting tem
-    if(widget.scenario == Scenarios.edit){
+    if (widget.scenario == Scenarios.edit) {
       // check whether it has been copy the current list of stock list info
-      if(!widget.isCopied){
+      if (!widget.isCopied) {
         widget._newSneaker.createCoptyOfStockList();
         widget.isCopied = true;
       }
@@ -550,10 +564,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
           Text('Stock Available'),
           Column(
             children: [
-              if(widget._sneakerAvailable.isEmpty)...[
+              if (widget._sneakerAvailable.isEmpty) ...[
                 Text('List')
-              ] else...[
-
+              ] else ...[
                 SizedBox(
                   height: 230,
                   child: ListView.builder(
@@ -563,9 +576,20 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
                           value: widget._sneakerAvailable[index],
                           child: Consumer<SneakerDetail>(
-                              builder: (context, sneakerInfo, _) => _stockListTile(widget._sneakerAvailable[index], index)))),
+                              builder: (context, sneakerInfo, _) => Dismissible(
+                                  key: Key(Uuid().v1()),
+                                  background: Container(color: Colors.red),
+                                  direction: DismissDirection.endToStart,
+                                  onDismissed: (direction) {
+                                    widget._newSneaker.deleteStockCopiedList(index);
+                                    // Scaffold
+                                    //     .of(context)
+                                    //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                                  },
+                                  child: _stockListTile(
+                                      widget._sneakerAvailable[index],
+                                      index))))),
                 )
-
               ],
             ],
           ),
@@ -589,7 +613,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 }
-
 
 // not use any more because cant update the sold at text field if not using
 // setState in the statefulbuilder
