@@ -51,7 +51,8 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.orange
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.grey[200]
         ),
         home: WidgetTree(),
         routes: {

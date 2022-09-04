@@ -37,12 +37,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title() {
-    return const Text('Firebase Auth');
+    return const Text('Invest Manager');
   }
 
   Widget _entryField(String title, TextEditingController controller) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      obscureText: title.toLowerCase() == "password" ? true : false,
       decoration: InputDecoration(
         labelText: title,
       ),
@@ -85,8 +86,10 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _entryField('email', _controllerEmail),
-            _entryField('password', _controllerPassword),
+            Image.asset("assets/images/invest-manager.png"),
+
+            _entryField('Email', _controllerEmail),
+            _entryField('Password', _controllerPassword),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton()

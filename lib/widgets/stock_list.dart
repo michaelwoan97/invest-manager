@@ -64,6 +64,7 @@ class StockList extends StatelessWidget {
                               //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
                             },
                             child: Card(
+                              elevation: 2,
                               child: InkResponse(
                                   onTap: () {
                                     Navigator.of(context).pushNamed(

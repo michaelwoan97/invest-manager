@@ -131,7 +131,6 @@ class _AddStockState extends State<AddStock> {
                                     sneaker.updateImgURLNotify(result);
                                   }
 
-                                  print('Sneaker id is ' + sneaker.getID);
                                 },
                                 child: Icon(Icons.camera))
                           ],
@@ -143,6 +142,9 @@ class _AddStockState extends State<AddStock> {
                 SizedBox(
                   height: 50,
                 ),
+                Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text('Stock Available')),
                 if(widget.scenarios == Scenarios.edit)...[
                   SneakerStockList(scenarioProcessing: Scenarios.edit)
                 ] else...[

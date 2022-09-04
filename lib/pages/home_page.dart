@@ -30,12 +30,27 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Sneaker>> listSneakers;
   final User? user = Auth().currentUser;
   final SneakerManager sneakerManager = SneakerManager();
+  late String greetingMsg;
 
   @override
   void initState() {
     super.initState();
 
     listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
+
+    DateTime now = DateTime.now();
+    int hours=now.hour;
+
+    if(hours>=1 && hours<=12){
+      greetingMsg = "Good Morning!";
+    } else if(hours>=12 && hours<=16){
+      greetingMsg = "Good Afternoon!";
+    } else if(hours>=16 && hours<=21){
+      greetingMsg = "Good Evening!";
+    } else if(hours>=21 && hours<=24){
+      greetingMsg = "Good Night!";
+    }
+
   }
 
   String _checkTypeOfDropdownValue(Type kind){
@@ -139,17 +154,29 @@ class _HomePageState extends State<HomePage> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Text('Good Morninggg!!!'),
+            Text(greetingMsg),
             Container(
               child: Consumer<SneakerManager>(
                 builder: (ctx, manager, _) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      children: [Text('Total Products'), Text(SneakerManager().totalAvaiProducts.toString())],
+                    Card(
+                      elevation: 2,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        child: Column(
+                          children: [Text('Total Products', style: TextStyle(color: Colors.green),), Text(SneakerManager().totalAvaiProducts.toString())],
+                        ),
+                      ),
                     ),
-                    Column(
-                      children: [Text('Products Sold'), Text(SneakerManager().totalSoldProducts.toString())],
+                    Card(
+                      elevation: 2,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        child: Column(
+                          children: [Text('Products Sold', style: TextStyle(color: Colors.red)), Text(SneakerManager().totalSoldProducts.toString())],
+                        ),
+                      ),
                     )
                   ],
                 ),
