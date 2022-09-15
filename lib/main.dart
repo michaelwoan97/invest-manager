@@ -54,9 +54,9 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.grey[200]
         ),
-        home: WidgetTree(),
+        home: LoginPage(),
         routes: {
-          WidgetTree.routeName: (context) => WidgetTree(),
+          LoginPage.routeName: (ctx) => LoginPage(),
           HomePage.routeName: (context) => HomePage(),
           AddStock.routeName: (context) => AddStock(),
           TakePictureScreen.routeName: (context) => TakePictureScreen(camera: widget.camera)

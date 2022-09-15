@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:invest_manager/controllers/custom_auth.dart';
+import 'package:invest_manager/pages/home_page.dart';
 import '../controllers/auth.dart';
 
 class LoginPage extends StatefulWidget {
+  static const routeName = '/login';
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -11,29 +15,73 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
+  String? token = "";
   bool isLogin = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth().signInWithEmailAndPassword(
-          email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
+  // Future<void> signInWithEmailAndPassword() async {
+  //   try {
+  //     await Auth().signInWithEmailAndPassword(
+  //         email: _controllerEmail.text, password: _controllerPassword.text);
+  //   } on FirebaseAuthException catch (e) {
+  //     setState(() {
+  //       errorMessage = e.message;
+  //     });
+  //   }
+  // }
+
+  // Future<void> signInWithEmailAndPassword() async {
+  //   try {
+  //     await Auth().signInWithEmailAndPassword(
+  //         email: _controllerEmail.text, password: _controllerPassword.text);
+  //   } on FirebaseAuthException catch (e) {
+  //     setState(() {
+  //       errorMessage = e.message;
+  //     });
+  //   }
+  // }
+
+
+
+  // Future<void> createUserWithEmailAndPassword() async {
+  //   try {
+  //     await Auth().createUserWithEmailAndPassword(
+  //         email: _controllerEmail.text, password: _controllerPassword.text);
+  //   } on FirebaseAuthException catch (e) {
+  //     errorMessage = e.message;
+  //   }
+  // }
+
+  void signInWithEmailAndPassword() {
+    AuthService().login(_controllerEmail.text, _controllerPassword.text).then( (val) {
+      if(val.data['success']){
+        token = val.data['token'];
+        Fluttertoast.showToast(msg: 'Authenticated',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+      }
+    });
   }
 
-  Future<void> createUserWithEmailAndPassword() async {
-    try {
-      await Auth().createUserWithEmailAndPassword(
-          email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch (e) {
-      errorMessage = e.message;
-    }
+  void addUser() {
+    AuthService().signUp(_controllerEmail.text, _controllerPassword.text).then( (val) {
+      if(val.data['success']){
+        Fluttertoast.showToast(msg: 'Successfully Created!!!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
   }
 
   Widget _title() {
@@ -43,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _entryField(String title, TextEditingController controller) {
     return TextFormField(
       controller: controller,
-      obscureText: title.toLowerCase() == "password" ? true : false,
+      obscureText: title.toLowerCase()  == "password" ? true : false,
       decoration: InputDecoration(
         labelText: title,
       ),
@@ -58,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
         onPressed: isLogin
             ? signInWithEmailAndPassword
-            : createUserWithEmailAndPassword,
+            : addUser,
         child: Text(isLogin ? 'Login' : 'Register'));
   }
 
