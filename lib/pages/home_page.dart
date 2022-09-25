@@ -5,6 +5,7 @@ import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
+import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/utils/read_json_file.dart';
 import 'package:invest_manager/widgets/stock_list.dart';
 import 'package:provider/provider.dart';
@@ -36,8 +37,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
-
+    // listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
+    listSneakers = ManagementAPI().getSneakers(SneakerManager().accessToken);
     DateTime now = DateTime.now();
     int hours=now.hour;
 

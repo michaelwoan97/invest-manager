@@ -13,6 +13,10 @@ class SneakerManager with ChangeNotifier{
   late int _totalAvaiProducts;
   late double _totalSoldProducts;
 
+  // Store token like this for now
+  late String _accessToken;
+  late String _refreshToken;
+
 
   factory SneakerManager(){
     return _instance;
@@ -22,6 +26,8 @@ class SneakerManager with ChangeNotifier{
     _arrSneakers = [];
     _totalAvaiProducts = 0;
     _totalSoldProducts = 0.0;
+    _accessToken = "";
+    _refreshToken = "";
   }
 
   List<Sneaker> get getListSneaker{
@@ -108,5 +114,17 @@ class SneakerManager with ChangeNotifier{
 
   set totalSoldProducts(double value) {
     _totalSoldProducts = value;
+  }
+
+  String get refreshToken => _refreshToken;
+
+  set refreshToken(String value) {
+    _refreshToken = value;
+  }
+
+  String get accessToken => _accessToken;
+
+  set accessToken(String value) {
+    _accessToken = value;
   }
 }

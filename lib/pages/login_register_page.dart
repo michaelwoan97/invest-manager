@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/controllers/custom_auth.dart';
+import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import '../controllers/auth.dart';
 
@@ -15,7 +18,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
-  String? token = "";
   bool isLogin = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
@@ -55,9 +57,11 @@ class _LoginPageState extends State<LoginPage> {
   // }
 
   void signInWithEmailAndPassword() {
-    AuthService().login(_controllerEmail.text, _controllerPassword.text).then( (val) {
-      if(val.data['success']){
-        token = val.data['token'];
+    AuthService().login(_controllerEmail.text, _controllerPassword.text).then( (val) async {
+      final res = await json.decode(val.data);
+      if(res['success']){
+        SneakerManager().accessToken = res['token'];
+        SneakerManager().refreshToken = res['refreshToken'];
         Fluttertoast.showToast(msg: 'Authenticated',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
