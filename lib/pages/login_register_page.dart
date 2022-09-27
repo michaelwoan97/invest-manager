@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/controllers/custom_auth.dart';
+import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import '../controllers/auth.dart';
@@ -62,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
       if(res['success']){
         SneakerManager().accessToken = res['token'];
         SneakerManager().refreshToken = res['refreshToken'];
+        ManagementAPI().getUserID(SneakerManager().accessToken); // save user id to sneaker_manager singleton
         Fluttertoast.showToast(msg: 'Authenticated',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,

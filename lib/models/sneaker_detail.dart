@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
-class SneakerDetail with ChangeNotifier{
+class SneakerDetail with ChangeNotifier {
   late String _id;
   late String _sSeller;
   late String _sDate;
@@ -10,8 +10,15 @@ class SneakerDetail with ChangeNotifier{
   late bool _isSold;
   late String _sPriceSold;
 
-  SneakerDetail({String? id ,required sSeller, required String sDate, required String sSize, required String sPrice, bool? isSold, String? sPriceSold}){
-    if(id == null){
+  SneakerDetail(
+      {String? id,
+      required sSeller,
+      required String sDate,
+      required String sSize,
+      required String sPrice,
+      bool? isSold,
+      String? sPriceSold}) {
+    if (id == null) {
       var uuid = Uuid();
       _id = uuid.v1();
     } else {
@@ -21,7 +28,7 @@ class SneakerDetail with ChangeNotifier{
     _sDate = sDate;
     _sSize = sSize;
     _sPrice = sPrice;
-    if(isSold != null){
+    if (isSold != null) {
       _isSold = isSold;
       _sPriceSold = _isSold ? sPriceSold! : "";
     } else {
@@ -30,10 +37,26 @@ class SneakerDetail with ChangeNotifier{
     }
   }
 
-  factory SneakerDetail.fromJson(Map<String, dynamic> json){
-    return SneakerDetail(sSeller: json['seller'], sDate: json['date'], sSize: json['size'], sPrice: json['price'] ,isSold: json['isSold'], sPriceSold: json['priceSold']);
+  factory SneakerDetail.fromJson(Map<String, dynamic> json) {
+    return SneakerDetail(
+        id: json['_id'],
+        sSeller: json['seller'],
+        sDate: json['date'],
+        sSize: json['size'],
+        sPrice: json['price'],
+        isSold: json['isSold'],
+        sPriceSold: json['priceSold']);
   }
 
+  Map toJson() => {
+        // _id; will be created new user id from server
+        "seller": _sSeller,
+        "date": _sDate,
+        "size": _sSize,
+        "price": _sPrice,
+        "isSold": _isSold,
+        "priceSold": _sPriceSold
+      };
 
   String get getStockID => _id;
 
@@ -41,55 +64,48 @@ class SneakerDetail with ChangeNotifier{
     _id = value;
   }
 
-  String get getSellerName{
+  String get getSellerName {
     return _sSeller;
   }
 
-  set setSellerName (String sSellerName){
+  set setSellerName(String sSellerName) {
     _sSeller = sSellerName;
-
   }
 
-  String get getDatePurchased{
+  String get getDatePurchased {
     return _sDate;
   }
 
-  set setDatePurchased(String sDate){
+  set setDatePurchased(String sDate) {
     _sDate = sDate;
-
   }
 
-  String get getSneakerSize{
+  String get getSneakerSize {
     return _sSize;
   }
 
-  set setSneakerSize(String sSneakerSize){
+  set setSneakerSize(String sSneakerSize) {
     _sSize = sSneakerSize;
-
   }
-
 
   String get getSneakerPrice => _sPrice;
 
   set setSneakerPrice(String value) {
     _sPrice = value;
-
   }
 
-  bool get isSneakerSold{
+  bool get isSneakerSold {
     return _isSold;
   }
 
-  set setIsSneakerSold(bool isSneakerSold){
+  set setIsSneakerSold(bool isSneakerSold) {
     _isSold = isSneakerSold;
-
   }
 
   String get getSneakerSoldPrice => _sPriceSold;
 
   set setSneakerSoldPrice(String value) {
     _sPriceSold = value;
-
   }
 
   /*
@@ -98,11 +114,10 @@ class SneakerDetail with ChangeNotifier{
   * about the change. So if this get call on the sneaker's stock info
   * that already existed, it would change other places without user knowing it
   * */
-  void updateSneakerStock(SneakerDetail newSneakerStock){
+  void updateSneakerStock(SneakerDetail newSneakerStock) {
     updateSneakerStockNoNotify(newSneakerStock);
     notifyListeners();
   }
-
 
   /*
   * The purpose of this function is to update info without notifying the provider. In case editing of
@@ -115,8 +130,8 @@ class SneakerDetail with ChangeNotifier{
     setSneakerSize = newSneakerStock.getSneakerSize;
     setSneakerPrice = newSneakerStock.getSneakerPrice;
     setIsSneakerSold = newSneakerStock.isSneakerSold;
-    setSneakerSoldPrice = newSneakerStock.isSneakerSold ? newSneakerStock.getSneakerSoldPrice : "";
+    setSneakerSoldPrice = newSneakerStock.isSneakerSold
+        ? newSneakerStock.getSneakerSoldPrice
+        : "";
   }
-
-
 }

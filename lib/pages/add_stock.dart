@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
 import 'package:invest_manager/widgets/sneaker_stock_list.dart';
@@ -164,6 +165,8 @@ class _AddStockState extends State<AddStock> {
             if(widget.scenarios == Scenarios.edit){
               // update sneaker
               widget.newSneaker.updateSneaker(newSneakerName: _sneakerNameController.text, sNewNotes: _sneakerNotesController.text, sNewImgURL: result);
+              ManagementAPI().updateSneaker(SneakerManager().accessToken, SneakerManager().userID, widget.newSneaker.getID, widget.newSneaker);
+
             } else {
               widget.newSneaker.setSneakerName = _sneakerNameController.text;
               if (_sneakerNotesController.text.isNotEmpty) {
@@ -173,11 +176,15 @@ class _AddStockState extends State<AddStock> {
               double totalNewSneakerPrice = 0;
               if(widget.newSneaker.getAvailableStocks.isNotEmpty){
                 for(var e in widget.newSneaker.getAvailableStocks){
+                  if(e.getSneakerSoldPrice.isEmpty){
+                    continue;
+                  }
                   totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
                 }
               }
               SneakerManager().updateTotalAvaiSoldProducts(widget.newSneaker.getAvailableStocks.length, totalNewSneakerPrice);
               SneakerManager().addNewSneakerToList(widget.newSneaker);
+              ManagementAPI().addSneaker(SneakerManager().accessToken, SneakerManager().userID, widget.newSneaker);
 
             }
 

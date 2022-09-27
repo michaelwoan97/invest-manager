@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,9 @@ class StockList extends StatelessWidget {
                             background: Container(color: Colors.red),
                             direction: DismissDirection.endToStart,
                             onDismissed: (direction) {
+                              ManagementAPI().removeSneaker(SneakerManager().accessToken, SneakerManager().userID, arrSneakers[index].getID);
                               SneakerManager().deleteSneaker(arrSneakers[index].getID);
+
                               // Scaffold
                               //     .of(context)
                               //     .showSnackBar(SnackBar(content: Text("$item dismissed")));

@@ -48,12 +48,20 @@ class Sneaker with ChangeNotifier {
     }
 
     return Sneaker(
-        sID: json['id'],
+        sID: json['_id'],
         sName: json['name'],
         sNotes: json['notes'],
         sImageUrl: json['img'],
         arrStockAvailable: arrAvailableSizes);
   }
+
+  Map toJson() => {
+    "id": _id,
+    "name": _sName,
+    "notes": _sNotes,
+    "img": _sImgUrl,
+    "available": _arrAvailable
+  };
 
   String get getID {
     return _id;

@@ -14,6 +14,7 @@ class SneakerManager with ChangeNotifier{
   late double _totalSoldProducts;
 
   // Store token like this for now
+  late String _userID;
   late String _accessToken;
   late String _refreshToken;
 
@@ -28,6 +29,7 @@ class SneakerManager with ChangeNotifier{
     _totalSoldProducts = 0.0;
     _accessToken = "";
     _refreshToken = "";
+    _userID = "";
   }
 
   List<Sneaker> get getListSneaker{
@@ -92,6 +94,9 @@ class SneakerManager with ChangeNotifier{
             totalMinusProduct = _arrSneakers[i].getAvailableStocks.isNotEmpty ? _arrSneakers[i].getAvailableStocks.length : 0;
             if(_arrSneakers[i].getAvailableStocks.isNotEmpty){
               for(var stock in _arrSneakers[i].getAvailableStocks){
+                if(stock.getSneakerSoldPrice.isEmpty){
+                  continue;
+                }
                 totalMinusSold += double.parse(stock.getSneakerSoldPrice);
               }
             }
@@ -126,5 +131,11 @@ class SneakerManager with ChangeNotifier{
 
   set accessToken(String value) {
     _accessToken = value;
+  }
+
+  String get userID => _userID;
+
+  set userID(String value) {
+    _userID = value;
   }
 }
