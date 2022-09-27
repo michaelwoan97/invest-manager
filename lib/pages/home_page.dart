@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invest_manager/controllers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_manager/controllers/custom_auth.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
-    await Auth().signOut();
+    await AuthService().logOut(SneakerManager().refreshToken);
   }
 
   Future<void> _showTypeDialog() async {

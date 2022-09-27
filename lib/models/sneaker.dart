@@ -48,7 +48,7 @@ class Sneaker with ChangeNotifier {
     }
 
     return Sneaker(
-        sID: json['_id'],
+        sID: json['id'],
         sName: json['name'],
         sNotes: json['notes'],
         sImageUrl: json['img'],
