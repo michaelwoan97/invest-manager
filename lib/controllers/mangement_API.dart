@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:invest_manager/controllers/interceptor_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:path/path.dart';
 
@@ -19,14 +20,35 @@ class ManagementAPI {
 
   ManagementAPI._internal();
 
+  // Future<List<Sneaker>> getSneakers(token) async {
+  //   List<Sneaker> arrSneakers = [];
+  //
+  //   try {
+  //     await dio
+  //         .get("$_url/getdata/sneaker",
+  //             options: Options(headers: {"Authorization": "Bearer $token"}))
+  //         .then((val) {
+  //       final res = json.decode(val.data);
+  //       final data = res['msg'];
+  //
+  //       for (var e in data) {
+  //         arrSneakers.add(Sneaker.fromJson(e));
+  //       }
+  //     });
+  //   } on DioError catch (err) {
+  //     rethrow;
+  //   }
+  //   return arrSneakers;
+  // }
+
   Future<List<Sneaker>> getSneakers(token) async {
     List<Sneaker> arrSneakers = [];
 
     try {
       await dio
           .get("$_url/getdata/sneaker",
-              options: Options(headers: {"Authorization": "Bearer $token"}))
-          .then((val){
+              options: Options(headers: {"requiresToken": true}))
+          .then((val) {
         final res = json.decode(val.data);
         final data = res['msg'];
 
@@ -44,10 +66,11 @@ class ManagementAPI {
     try {
       await dio
           .get("$_url/getdata/info",
-              options: Options(headers: {"Authorization": "Bearer $token"}))
+              options: Options(headers: {"requiresToken": true}))
           .then((val) {
         final res = json.decode(val.data);
-        SneakerManager().userID = res['msg']["_id"]; // can move to sneaker manager to do some process parseing
+        SneakerManager().userID = res['msg']
+            ["_id"]; // can move to sneaker manager to do some process parseing
       });
     } on DioError catch (e) {
       rethrow;
@@ -62,7 +85,7 @@ class ManagementAPI {
         "$_url/updatedata/addsneaker",
         data: {"userID": userID, "newSneaker": encodedSneaker},
         options: Options(
-            headers: {"Authorization": "Bearer $token"},
+            headers: {"requiresToken": true},
             contentType: Headers.formUrlEncodedContentType),
       );
     } on DioError catch (e) {
@@ -72,11 +95,10 @@ class ManagementAPI {
 
   removeSneaker(token, userID, sneakerID) async {
     try {
-      return await dio.post(
-          "$_url/updatedata/removesneaker",
+      return await dio.post("$_url/updatedata/removesneaker",
           data: {"userID": userID, "sneakerID": sneakerID},
           options: Options(
-              headers: {"Authorization": "Bearer $token"},
+              headers: {"requiresToken": true},
               contentType: Headers.formUrlEncodedContentType));
     } on DioError catch (e) {
       rethrow;
@@ -87,14 +109,49 @@ class ManagementAPI {
     String encodedSneaker = jsonEncode(updateStockInfo);
 
     try {
-      return await dio.post(
-          "$_url/updatedata/updatesneaker",
-          data: {"userID": userID, "sneakerID": sneakerID, "updateStockInfo": encodedSneaker},
+      return await dio.post("$_url/updatedata/updatesneaker",
+          data: {
+            "userID": userID,
+            "sneakerID": sneakerID,
+            "updateStockInfo": encodedSneaker
+          },
           options: Options(
-              headers: {"Authorization": "Bearer $token"},
+              headers: {"requiresToken": true},
               contentType: Headers.formUrlEncodedContentType));
     } on DioError catch (e) {
       rethrow;
     }
   }
+
+  // refersh token
+  refreshToken(token) async {
+    try {
+      return await dio.post("$_url/token",
+          data: {"token": token},
+          options: Options(contentType: Headers.formUrlEncodedContentType));
+    } on DioError catch (e) {
+      rethrow;
+    }
+  }
+
+// refreshToken(token) async {
+//   try {
+//     await dio
+//         .post("$_url/token",
+//             data: {"token": token},
+//             options: Options(contentType: Headers.formUrlEncodedContentType))
+//         .then((val) {
+//       final res = json.decode(val.data);
+//       if(res['success']){
+//         print("success refresh token");
+//         SneakerManager().refreshToken = res['msg'];
+//
+//       } else {
+//         print('failed refresh token');
+//       }
+//     });
+//   } on DioError catch (e) {
+//     rethrow;
+//   }
+// }
 }

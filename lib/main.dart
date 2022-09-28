@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
@@ -8,7 +10,10 @@ import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
+import 'controllers/interceptor_API.dart';
 import 'models/sneaker_manager.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async{
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -28,7 +33,6 @@ Future<void> main() async{
 
 class MyApp extends StatefulWidget {
   final CameraDescription camera;
-
   MyApp({Key? key, required this.camera}) : super(key: key);
 
   @override
@@ -41,6 +45,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    // test
+    ManagementAPI().dio.interceptors.add(InterceptorAPI(ManagementAPI().dio));
   }
 
   @override
@@ -49,6 +55,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider(
       create: (ctx) => SneakerManager(),
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,

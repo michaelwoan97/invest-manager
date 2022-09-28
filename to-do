@@ -16,6 +16,11 @@ working on with the rest feature of api
 developing from localhost done
 
 working on refesh sneaker data when something add to the list so It could be deleted done
+
+woring on refresh token from the app done
+
+working on storing token scretly and secure
+    get interceptor working for management api
 working on app presentations
     Theme,responsive,animation try a bit but focus on bayby step
 clean up, optimize
@@ -23,3 +28,4 @@ test unit
 
 wishlist
 having loading screen for login
+store token secure
