@@ -21,6 +21,7 @@ woring on refresh token from the app done
 
 working on storing token scretly and secure
     get interceptor working for management api
+    combine with save last screen
 working on app presentations
     Theme,responsive,animation try a bit but focus on bayby step
 clean up, optimize

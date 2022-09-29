@@ -7,6 +7,7 @@ import 'package:invest_manager/controllers/custom_auth.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/home_page.dart';
+import 'package:invest_manager/utils/mange_token.dart';
 import '../controllers/auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,8 +62,16 @@ class _LoginPageState extends State<LoginPage> {
     AuthService().login(_controllerEmail.text, _controllerPassword.text).then( (val) async {
       final res = await json.decode(val.data);
       if(res['success']){
-        SneakerManager().accessToken = res['token'];
-        SneakerManager().refreshToken = res['refreshToken'];
+
+        // save tokens
+        ManageToken.saveAccessToken(res['token']);
+        ManageToken.saveRefreshToken(res['refreshToken']);
+        final accessToken = await ManageToken.getAccessToken();
+        final refreshToken = await ManageToken.getRefreshToken();
+
+        SneakerManager().accessToken = accessToken;
+        SneakerManager().refreshToken = refreshToken;
+
         ManagementAPI().getUserID(SneakerManager().accessToken); // save user id to sneaker_manager singleton
         Fluttertoast.showToast(msg: 'Authenticated',
         toastLength: Toast.LENGTH_SHORT,
