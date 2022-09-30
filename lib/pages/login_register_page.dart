@@ -8,6 +8,7 @@ import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/utils/mange_token.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,6 +26,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    navigateToLastPage();
+  }
   // Future<void> signInWithEmailAndPassword() async {
   //   try {
   //     await Auth().signInWithEmailAndPassword(
@@ -61,16 +68,15 @@ class _LoginPageState extends State<LoginPage> {
   void signInWithEmailAndPassword() {
     AuthService().login(_controllerEmail.text, _controllerPassword.text).then( (val) async {
       final res = await json.decode(val.data);
+      // final res = val.data;
       if(res['success']){
 
         // save tokens
-        ManageToken.saveAccessToken(res['token']);
-        ManageToken.saveRefreshToken(res['refreshToken']);
-        final accessToken = await ManageToken.getAccessToken();
-        final refreshToken = await ManageToken.getRefreshToken();
+        // await token to be saved before continue
+        await ManageToken.saveAccessToken(res['token']);
+        await ManageToken.saveRefreshToken(res['refreshToken']);
 
-        SneakerManager().accessToken = accessToken;
-        SneakerManager().refreshToken = refreshToken;
+        // print("Refresh Token for authenticate is " + res['refreshToken']);
 
         ManagementAPI().getUserID(SneakerManager().accessToken); // save user id to sneaker_manager singleton
         Fluttertoast.showToast(msg: 'Authenticated',
@@ -160,5 +166,20 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void navigateToLastPage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? lastRoute = prefs.getString("last_route");
+
+    // no need to push to another screen, if the last route was root
+    if(lastRoute!.isNotEmpty && lastRoute != "/login"){
+      if(lastRoute == "/home"){
+        Navigator.of(context).pushReplacementNamed(lastRoute);
+      } else {
+        Navigator.of(context).pushNamed(lastRoute);
+      }
+
+    }
   }
 }

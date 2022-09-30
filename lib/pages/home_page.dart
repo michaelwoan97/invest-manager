@@ -12,12 +12,10 @@ import 'package:invest_manager/widgets/stock_list.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' as io;
 import '../models/sneaker.dart';
+import '../utils/mange_token.dart';
 
-enum Type{
-  sneaker,
-  electronic,
-  crypto
-}
+enum Type { sneaker, electronic, crypto }
+
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
 
@@ -41,37 +39,40 @@ class _HomePageState extends State<HomePage> {
     // listSneakers = ReadJsonFile.readJson("../../assets/data/sneaker_data.json");
     listSneakers = ManagementAPI().getSneakers(SneakerManager().accessToken);
     DateTime now = DateTime.now();
-    int hours=now.hour;
+    int hours = now.hour;
 
-    if(hours>=1 && hours<=12){
+    if (hours >= 1 && hours <= 12) {
       greetingMsg = "Good Morning!";
-    } else if(hours>=12 && hours<=16){
+    } else if (hours >= 12 && hours <= 16) {
       greetingMsg = "Good Afternoon!";
-    } else if(hours>=16 && hours<=21){
+    } else if (hours >= 16 && hours <= 21) {
       greetingMsg = "Good Evening!";
-    } else if(hours>=21 && hours<=24){
+    } else if (hours >= 21 && hours <= 24) {
       greetingMsg = "Good Night!";
     }
-
   }
 
-  String _checkTypeOfDropdownValue(Type kind){
-    switch(kind){
-      case Type.sneaker: {
-        return 'Sneakers';
-      }
-      case Type.electronic: {
-        return 'Electronics';
-      }
-      case Type.crypto: {
-        return 'Crypto';
-      }
-      default:{
-        return 'Error!!!';
-      }
-
+  String _checkTypeOfDropdownValue(Type kind) {
+    switch (kind) {
+      case Type.sneaker:
+        {
+          return 'Sneakers';
+        }
+      case Type.electronic:
+        {
+          return 'Electronics';
+        }
+      case Type.crypto:
+        {
+          return 'Crypto';
+        }
+      default:
+        {
+          return 'Error!!!';
+        }
     }
   }
+
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
@@ -97,10 +98,9 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: const Text('Approve'),
               onPressed: () {
-                if(dropDownValue == Type.sneaker){
+                if (dropDownValue == Type.sneaker) {
                   Navigator.of(context).pushNamed(AddStock.routeName);
                 }
-
               },
             ),
           ],
@@ -133,9 +133,9 @@ class _HomePageState extends State<HomePage> {
         onChanged: (selectedValue) {
           if (selectedValue is String) {
             // check type of selected value
-            if(selectedValue == 'Sneakers'){
+            if (selectedValue == 'Sneakers') {
               dropDownValue = Type.sneaker;
-            } else if( selectedValue == 'Electronics'){
+            } else if (selectedValue == 'Electronics') {
               dropDownValue = Type.electronic;
             } else {
               dropDownValue = Type.crypto;
@@ -165,18 +165,30 @@ class _HomePageState extends State<HomePage> {
                     Card(
                       elevation: 2,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                         child: Column(
-                          children: [Text('Total Products', style: TextStyle(color: Colors.green),), Text(SneakerManager().totalAvaiProducts.toString())],
+                          children: [
+                            Text(
+                              'Total Products',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                            Text(SneakerManager().totalAvaiProducts.toString())
+                          ],
                         ),
                       ),
                     ),
                     Card(
                       elevation: 2,
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                         child: Column(
-                          children: [Text('Products Sold', style: TextStyle(color: Colors.red)), Text(SneakerManager().totalSoldProducts.toString())],
+                          children: [
+                            Text('Products Sold',
+                                style: TextStyle(color: Colors.red)),
+                            Text(SneakerManager().totalSoldProducts.toString())
+                          ],
                         ),
                       ),
                     )

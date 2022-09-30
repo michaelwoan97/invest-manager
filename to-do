@@ -20,13 +20,27 @@ working on refesh sneaker data when something add to the list so It could be del
 woring on refresh token from the app done
 
 working on storing token scretly and secure
-    get interceptor working for management api
-    combine with save last screen
+    get interceptor working for management api done
+    combine with save last screen done
+
+        something going on with server especially token
+
+           found issue
+                wrong sent back refresh token
+                    fixed from server wrong parse token
+    still need to complete save last screen for add stock screen
+
 working on app presentations
     Theme,responsive,animation try a bit but focus on bayby step
+add more meaningfull log for errors and exceptions
 clean up, optimize
 test unit
 
 wishlist
 having loading screen for login
 store token secure
+
+doubt
+future might not come back in time for usage
+change one little thing in architect might affect everything else
+use debugger for backend

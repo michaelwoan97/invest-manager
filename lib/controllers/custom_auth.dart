@@ -7,7 +7,7 @@ import 'package:invest_manager/models/sneaker_manager.dart';
 
 class AuthService {
   Dio dio = new Dio();
-  final String _url = "https://invest-manager-app.herokuapp.com";
+  final String _url = "http://192.168.0.43:3000";
 
   login(name,password) async{
     print("$_url/authenticate");

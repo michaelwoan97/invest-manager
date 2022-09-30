@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
+import 'package:invest_manager/controllers/my_route_observer.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
@@ -56,6 +57,9 @@ class _MyAppState extends State<MyApp> {
       create: (ctx) => SneakerManager(),
       child: MaterialApp(
         navigatorKey: navigatorKey,
+        navigatorObservers: [
+          MyRouteObserver()
+        ],
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,

@@ -7,6 +7,7 @@ import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/main.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
+import 'package:invest_manager/utils/mange_token.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 enum TokenErrorType{
@@ -19,6 +20,7 @@ class InterceptorAPI extends Interceptor{
   final Dio _dio;
 
   final _sneakerManager = SneakerManager();
+  static final String _url = "http://192.168.0.43:3000";
 
   InterceptorAPI(this._dio);
 
@@ -32,8 +34,9 @@ class InterceptorAPI extends Interceptor{
     }
 
     // get token from singleton
-    final accessToken = SneakerManager().accessToken;
-    final refreshToken = SneakerManager().refreshToken;
+    // await to get token before continue
+    final accessToken = await ManageToken.getAccessToken();
+    final refreshToken = await ManageToken.getRefreshToken();
 
     if(accessToken == null || refreshToken ==null ){
       _performLogout(_dio);
@@ -68,9 +71,10 @@ class InterceptorAPI extends Interceptor{
     }
 
     if(_refreshed){
+      final securedAccessToken = await ManageToken.getAccessToken();
       // add access token to the request header
-      print("Token to used is " + SneakerManager().accessToken);
-      options.headers["Authorization"] = "Bearer " + SneakerManager().accessToken;
+      // print("Token to used is " + securedAccessToken);
+      options.headers["Authorization"] = "Bearer " + securedAccessToken;
       return handler.next(options);
     } else {
       // create custom dio error
@@ -102,8 +106,8 @@ class InterceptorAPI extends Interceptor{
     _dio.interceptors.requestLock.lock();
 
     // remove tokens
-    SneakerManager().accessToken = "";
-    SneakerManager().refreshToken = "";
+    // SneakerManager().accessToken = "";
+    // SneakerManager().refreshToken = "";
 
     // back to login page without using context
     // check this https://stackoverflow.com/a/53397266/9101876
@@ -117,18 +121,18 @@ class InterceptorAPI extends Interceptor{
       var dio = Dio();// should create new dio instance because the request interceptor is being locked
 
       // get refresh token from the singleton or storage
-      final refreshToken = SneakerManager().refreshToken;
-
+      final refreshToken = await ManageToken.getRefreshToken();
       // make request to server to get the access token from server using refresh token
-      final response = await dio.post("https://invest-manager-app.herokuapp.com/token",
+      final response = await dio.post("$_url/token",
           data: {"token": refreshToken},
           options: Options(contentType: Headers.formUrlEncodedContentType));
 
       if(response.statusCode == 200 || response.statusCode == 201){
         final data = json.decode(response.data);
+        // final data = response.data;
         final newAccessToken = data["msg"]; // parse data based on your JSON structure
         print("New access token is " + newAccessToken);
-        SneakerManager().accessToken = newAccessToken; // save to singleton
+        await ManageToken.saveAccessToken(newAccessToken); // await to save token
         return true;
       } else if (response.statusCode == 401 || response.statusCode == 403){
         // it means your refresh token no longer valid now, it may be revoked by the backend
