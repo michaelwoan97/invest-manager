@@ -10,6 +10,7 @@ import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/utils/read_json_file.dart';
 import 'package:invest_manager/widgets/stock_list.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' as io;
 import '../models/sneaker.dart';
 import '../utils/mange_token.dart';
@@ -247,4 +248,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 }

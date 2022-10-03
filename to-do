@@ -19,7 +19,7 @@ working on refesh sneaker data when something add to the list so It could be del
 
 woring on refresh token from the app done
 
-working on storing token scretly and secure
+working on storing token scretly and secure done
     get interceptor working for management api done
     combine with save last screen done
 
@@ -28,8 +28,10 @@ working on storing token scretly and secure
            found issue
                 wrong sent back refresh token
                     fixed from server wrong parse token
-    still need to complete save last screen for add stock screen
+    still need to complete save last screen for add stock screen done
 
+
+take a look at storing token in the server
 working on app presentations
     Theme,responsive,animation try a bit but focus on bayby step
 add more meaningfull log for errors and exceptions

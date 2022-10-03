@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/controllers/custom_auth.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
+import 'package:invest_manager/models/sneaker.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
+import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/utils/mange_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -168,18 +171,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // purpose: used for save and navigate to the last screen
   void navigateToLastPage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? lastRoute = prefs.getString("last_route");
 
     // no need to push to another screen, if the last route was root
-    if(lastRoute!.isNotEmpty && lastRoute != "/login"){
-      if(lastRoute == "/home"){
-        Navigator.of(context).pushReplacementNamed(lastRoute);
+    if(lastRoute!.isNotEmpty && lastRoute != LoginPage.routeName){
+      if(lastRoute == AddStock.routeName){
+        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+
+        // check whether there are arguments
+        if(prefs.containsKey("sneaker")){
+          Sneaker sneaker = Sneaker.fromJson(json.decode(prefs.getString("sneaker")!));
+          final scenarios = EnumToString.fromString(Scenarios.values, prefs.getString("scenario")!);
+          Navigator.of(context).pushNamed(lastRoute, arguments: [sneaker, scenarios]);
+        } else {
+          Navigator.of(context).pushNamed(lastRoute);
+        }
+
       } else {
-        Navigator.of(context).pushNamed(lastRoute);
+        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }
 
     }
   }
+
 }

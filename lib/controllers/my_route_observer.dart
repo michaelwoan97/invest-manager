@@ -1,16 +1,45 @@
+import 'dart:convert';
+
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_manager/pages/add_stock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyRouteObserver extends RouteObserver{
+// purpose: the purpose of this class is to observe the change
+//          in route stack and apply logic accordingly
+class MyRouteObserver extends RouteObserver {
   void saveLastRoute(Route lastRoute) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('last_route', lastRoute.settings.name!);
+
+    // check whether there are arguments in the route
+    // if(lastRoute.settings.arguments != null){
+    // check route
+    if (lastRoute.settings.name == AddStock.routeName) {
+      final data = lastRoute.settings.arguments as List;
+      String scenario = EnumToString.convertToString(data[1] as Scenarios);
+      prefs.setString('sneaker', jsonEncode(data[0]));
+      prefs.setString('scenario', scenario);
+    }
+  }
+
+  // purpose: delete the route that has arguments when popping
+  deleteArguments(String routeName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // check whether it is popping the add-stock route with arguments
+    if (routeName == AddStock.routeName) {
+      prefs.remove("sneaker");
+      prefs.remove("scenario");
+    }
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
     // TODO: implement didPop
-    saveLastRoute(route);
+    saveLastRoute(previousRoute!);
+
+    deleteArguments(route.settings.name!);
     super.didPop(route, previousRoute);
   }
 
