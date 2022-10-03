@@ -120,11 +120,11 @@ class InterceptorAPI extends Interceptor{
     try{
       var dio = Dio();// should create new dio instance because the request interceptor is being locked
 
-      // get refresh token from the singleton or storage
-      final refreshToken = await ManageToken.getRefreshToken();
+      // get userID from the singleton or storage
+      final userID = await ManageToken.getUserID();
       // make request to server to get the access token from server using refresh token
       final response = await dio.post("$_url/token",
-          data: {"token": refreshToken},
+          data: {"userID": userID},
           options: Options(contentType: Headers.formUrlEncodedContentType));
 
       if(response.statusCode == 200 || response.statusCode == 201){

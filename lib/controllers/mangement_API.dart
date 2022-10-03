@@ -127,10 +127,10 @@ class ManagementAPI {
   }
 
   // refersh token
-  refreshToken(token) async {
+  refreshToken(userID) async {
     try {
       return await dio.post("$_url/token",
-          data: {"token": token},
+          data: {"userID": userID},
           options: Options(contentType: Headers.formUrlEncodedContentType));
     } on DioError catch (e) {
       rethrow;

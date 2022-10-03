@@ -26,4 +26,17 @@ class ManageToken {
     var value = await storage.read(key: "refreshToken");
     return value;
   }
+
+  static saveUserID(val) async {
+    const storage = FlutterSecureStorage();
+
+    await storage.write(key: "userID", value: val);
+  }
+
+  static getUserID() async{
+    const storage = FlutterSecureStorage();
+
+    var value = await storage.read(key: "userID");
+    return value;
+  }
 }

@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
         // await token to be saved before continue
         await ManageToken.saveAccessToken(res['token']);
         await ManageToken.saveRefreshToken(res['refreshToken']);
+        await ManageToken.saveUserID(res['userID']);
 
         // print("Refresh Token for authenticate is " + res['refreshToken']);
 
