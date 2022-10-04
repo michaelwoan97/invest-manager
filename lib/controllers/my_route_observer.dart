@@ -10,12 +10,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MyRouteObserver extends RouteObserver {
   void saveLastRoute(Route lastRoute) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if(lastRoute.settings.name == null){
+      return;
+    }
     prefs.setString('last_route', lastRoute.settings.name!);
 
     // check whether there are arguments in the route
     // if(lastRoute.settings.arguments != null){
     // check route
     if (lastRoute.settings.name == AddStock.routeName) {
+      if(lastRoute.settings.arguments == null){
+        return;
+      }
       final data = lastRoute.settings.arguments as List;
       String scenario = EnumToString.convertToString(data[1] as Scenarios);
       prefs.setString('sneaker', jsonEncode(data[0]));
@@ -29,8 +36,11 @@ class MyRouteObserver extends RouteObserver {
 
     // check whether it is popping the add-stock route with arguments
     if (routeName == AddStock.routeName) {
-      prefs.remove("sneaker");
-      prefs.remove("scenario");
+      if(prefs.containsKey("sneaker") && prefs.containsKey("scenario")){
+        prefs.remove("sneaker");
+        prefs.remove("scenario");
+      }
+
     }
   }
 
@@ -39,7 +49,11 @@ class MyRouteObserver extends RouteObserver {
     // TODO: implement didPop
     saveLastRoute(previousRoute!);
 
-    deleteArguments(route.settings.name!);
+    if(route.settings.name != null){
+      deleteArguments(route.settings.name!);
+    }
+
+
     super.didPop(route, previousRoute);
   }
 

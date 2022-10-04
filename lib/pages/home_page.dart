@@ -99,6 +99,7 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: const Text('Approve'),
               onPressed: () {
+                Navigator.of(context).pop();
                 if (dropDownValue == Type.sneaker) {
                   Navigator.of(context).pushNamed(AddStock.routeName);
                 }

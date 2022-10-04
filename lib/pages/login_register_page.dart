@@ -177,6 +177,8 @@ class _LoginPageState extends State<LoginPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? lastRoute = prefs.getString("last_route");
 
+    if(lastRoute == null) return;
+
     // no need to push to another screen, if the last route was root
     if(lastRoute!.isNotEmpty && lastRoute != LoginPage.routeName){
       if(lastRoute == AddStock.routeName){

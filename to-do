@@ -33,6 +33,12 @@ working on storing token scretly and secure done
 
 take a look at storing token in the server done
 
+fix bug
+    The problem is that when navigate back to homepage from add-stock the precious route is gone
+fix error and exception
+writing unit test
+optimize
+
 working on app presentations
     Theme,responsive,animation try a bit but focus on bayby step
 add more meaningfull log for errors and exceptions
