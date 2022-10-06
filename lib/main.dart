@@ -9,6 +9,7 @@ import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:invest_manager/styles/theme_styles.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/interceptor_API.dart';
@@ -61,10 +62,7 @@ class _MyAppState extends State<MyApp> {
           MyRouteObserver()
         ],
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.grey[200]
-        ),
+        theme: AppTheme.lightTheme,
         home: LoginPage(),
         routes: {
           LoginPage.routeName: (ctx) => LoginPage(),

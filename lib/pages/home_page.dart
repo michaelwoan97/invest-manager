@@ -7,6 +7,7 @@ import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
+import 'package:invest_manager/styles/theme_styles.dart';
 import 'package:invest_manager/utils/read_json_file.dart';
 import 'package:invest_manager/widgets/stock_list.dart';
 import 'package:provider/provider.dart';
@@ -158,8 +159,12 @@ class _HomePageState extends State<HomePage> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Text(greetingMsg),
+            Text(
+              greetingMsg,
+              style: Theme.of(context).textTheme.headline5,
+            ),
             Container(
+              margin: AppTheme.spaceBetweenInListTop(),
               child: Consumer<SneakerManager>(
                 builder: (ctx, manager, _) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,11 +176,20 @@ class _HomePageState extends State<HomePage> {
                             EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                         child: Column(
                           children: [
-                            Text(
-                              'Total Products',
-                              style: TextStyle(color: Colors.green),
+                            Container(
+                              margin: AppTheme.spaceBetweenInListBottom(),
+                              child: Text(
+                                'Total Products',
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.green),
+                              ),
                             ),
-                            Text(SneakerManager().totalAvaiProducts.toString())
+                            Text(SneakerManager().totalAvaiProducts.toString(),
+                                style: Theme.of(ctx)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                        fontSize: AppTheme.fontSizeDisplay()))
                           ],
                         ),
                       ),
@@ -187,9 +201,18 @@ class _HomePageState extends State<HomePage> {
                             EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                         child: Column(
                           children: [
-                            Text('Products Sold',
-                                style: TextStyle(color: Colors.red)),
-                            Text(SneakerManager().totalSoldProducts.toString())
+                            Container(
+                              margin: AppTheme.spaceBetweenInListBottom(),
+                              child: Text('\$Products Sold\$',
+                                  style: AppTheme.totalInvenTitle(
+                                      context, Colors.red)),
+                            ),
+                            Text(SneakerManager().totalSoldProducts.toString(),
+                                style: Theme.of(ctx)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                        fontSize: AppTheme.fontSizeDisplay()))
                           ],
                         ),
                       ),
@@ -249,5 +272,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
 import 'package:invest_manager/pages/add_stock.dart';
+import 'package:invest_manager/styles/theme_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -225,7 +226,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
+                        const SnackBar(content: Text('Added to the list')),
                       );
                     }
                   },
@@ -512,6 +513,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
   Widget _stockListTile(SneakerDetail stock, int position) {
     return Card(
+      elevation: AppTheme.cardElevation(),
       child: InkResponse(
         onTap: () => {_editStockInfoDialog(stock, position)},
         child: ListTile(
@@ -558,7 +560,8 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
     print('Sneaker id is ' + widget._newSneaker.getID);
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: AppTheme.spaceBetweenInListTop(),
+      padding: EdgeInsets.only(left: 20, right: 20),
       child: Container(
         width: double.infinity,
         child: Column(
@@ -574,7 +577,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
                 ] else ...[
                   SizedBox(
-                    height: 230,
+                    height: 250,
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -588,30 +591,39 @@ class _SneakerStockListState extends State<SneakerStockList> {
                                     direction: DismissDirection.endToStart,
                                     onDismissed: (direction) {
                                       widget._newSneaker.deleteStockCopiedList(index);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Deleted stock!!!')),
+                                      );
                                       // Scaffold
                                       //     .of(context)
                                       //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
                                     },
-                                    child: _stockListTile(
-                                        widget._sneakerAvailable[index],
-                                        index))))),
+                                    child: Container(
+                                      margin: AppTheme.spaceBetweenInEList(),
+                                      child: _stockListTile(
+                                          widget._sneakerAvailable[index],
+                                          index),
+                                    ))))),
                   )
                 ],
               ],
             ),
             Consumer<Sneaker>(
-              builder: (context, sneaker, _) => RawMaterialButton(
-                onPressed: () {
-                  _showAddStockDialog();
-                },
-                elevation: 2.0,
-                fillColor: Theme.of(context).primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+              builder: (context, sneaker, _) => Container(
+                margin: AppTheme.spaceBetweenInListTop(),
+                child: RawMaterialButton(
+                  onPressed: () {
+                    _showAddStockDialog();
+                  },
+                  elevation: 2.0,
+                  fillColor: Theme.of(context).primaryColor,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  padding: EdgeInsets.all(15.0),
+                  shape: CircleBorder(),
                 ),
-                padding: EdgeInsets.all(15.0),
-                shape: CircleBorder(),
               ),
             )
           ],

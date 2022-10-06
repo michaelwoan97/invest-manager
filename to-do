@@ -33,10 +33,22 @@ working on storing token scretly and secure done
 
 take a look at storing token in the server done
 
-fix bug
+fix bug done
     The problem is that when navigate back to homepage from add-stock the precious route is gone
-fix error and exception
+
+fix error and exception done
+
+Theme
+    expanded list involve in responsive might have to do some research
+    continue theme
+       appropriate response for actions
+
 writing unit test
+    what do I need test for? When everthing need to be inbound
+        write the tests that I needs so I dont have to run manual even
+            if it is inbound
+    Do it later before clean and optimize
+
 optimize
 
 working on app presentations

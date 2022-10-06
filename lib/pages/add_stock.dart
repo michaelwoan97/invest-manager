@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
+import '../styles/theme_styles.dart';
 
 enum Scenarios { add, edit }
 
@@ -54,10 +55,14 @@ class _AddStockState extends State<AddStock> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Stock Info'),
-        actions: [IconButton(onPressed: () {
-          widget.newSneaker.clearAvailableStockExisted();
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.close_sharp))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                widget.newSneaker.clearAvailableStockExisted();
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close_sharp))
+        ],
       ),
       body: ChangeNotifierProvider.value(
         value: widget.newSneaker,
@@ -104,7 +109,8 @@ class _AddStockState extends State<AddStock> {
                       Consumer<Sneaker>(
                         builder: (ctx, sneaker, _) => Column(
                           children: [
-                            if (result == null || widget.newSneaker.getImgUrl.isEmpty) ...[
+                            if (result == null ||
+                                widget.newSneaker.getImgUrl.isEmpty) ...[
                               Text('Use camera to take picture')
                             ] else ...[
                               if (result.toString().contains("http")) ...[
@@ -126,12 +132,11 @@ class _AddStockState extends State<AddStock> {
                                   result = result[0].toString();
 
                                   // check scenario
-                                  if(widget.scenarios == Scenarios.edit){
+                                  if (widget.scenarios == Scenarios.edit) {
                                     sneaker.notifyWithoutUpdateData();
                                   } else {
                                     sneaker.updateImgURLNotify(result);
                                   }
-
                                 },
                                 child: Icon(Icons.camera))
                           ],
@@ -140,18 +145,16 @@ class _AddStockState extends State<AddStock> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 50,
-                ),
                 Container(
-                    margin: EdgeInsets.only(left: 20),
-                    child: Text('Stock Available')),
-                if(widget.scenarios == Scenarios.edit)...[
+                    margin: AppTheme.spaceBetweenSectionTop(),
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text('Stock Available',
+                        style: AppTheme.displayInvenTitle(context))),
+                if (widget.scenarios == Scenarios.edit) ...[
                   SneakerStockList(scenarioProcessing: Scenarios.edit)
-                ] else...[
+                ] else ...[
                   SneakerStockList(scenarioProcessing: Scenarios.add)
                 ]
-
               ],
             ),
           ),
@@ -162,11 +165,17 @@ class _AddStockState extends State<AddStock> {
         margin: EdgeInsets.only(left: 20, right: 20),
         child: ElevatedButton(
           onPressed: () {
-            if(widget.scenarios == Scenarios.edit){
+            if (widget.scenarios == Scenarios.edit) {
               // update sneaker
-              widget.newSneaker.updateSneaker(newSneakerName: _sneakerNameController.text, sNewNotes: _sneakerNotesController.text, sNewImgURL: result);
-              ManagementAPI().updateSneaker(SneakerManager().accessToken, SneakerManager().userID, widget.newSneaker.getID, widget.newSneaker);
-
+              widget.newSneaker.updateSneaker(
+                  newSneakerName: _sneakerNameController.text,
+                  sNewNotes: _sneakerNotesController.text,
+                  sNewImgURL: result);
+              ManagementAPI().updateSneaker(
+                  SneakerManager().accessToken,
+                  SneakerManager().userID,
+                  widget.newSneaker.getID,
+                  widget.newSneaker);
             } else {
               widget.newSneaker.setSneakerName = _sneakerNameController.text;
               if (_sneakerNotesController.text.isNotEmpty) {
@@ -174,18 +183,20 @@ class _AddStockState extends State<AddStock> {
               }
               //update new sneaker to total
               double totalNewSneakerPrice = 0;
-              if(widget.newSneaker.getAvailableStocks.isNotEmpty){
-                for(var e in widget.newSneaker.getAvailableStocks){
-                  if(e.getSneakerSoldPrice.isEmpty){
+              if (widget.newSneaker.getAvailableStocks.isNotEmpty) {
+                for (var e in widget.newSneaker.getAvailableStocks) {
+                  if (e.getSneakerSoldPrice.isEmpty) {
                     continue;
                   }
                   totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
                 }
               }
-              SneakerManager().updateTotalAvaiSoldProducts(widget.newSneaker.getAvailableStocks.length, totalNewSneakerPrice);
+              SneakerManager().updateTotalAvaiSoldProducts(
+                  widget.newSneaker.getAvailableStocks.length,
+                  totalNewSneakerPrice);
               SneakerManager().addNewSneakerToList(widget.newSneaker);
-              ManagementAPI().addSneaker(SneakerManager().accessToken, SneakerManager().userID, widget.newSneaker);
-
+              ManagementAPI().addSneaker(SneakerManager().accessToken,
+                  SneakerManager().userID, widget.newSneaker);
             }
 
             widget.newSneaker.clearAvailableStockExisted();
