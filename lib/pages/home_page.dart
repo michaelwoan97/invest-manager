@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
-    await AuthService().logOut(SneakerManager().refreshToken);
+    await AuthService().logOut(SneakerManager().refreshToken, SneakerManager().userID);
   }
 
   Future<void> _showTypeDialog() async {

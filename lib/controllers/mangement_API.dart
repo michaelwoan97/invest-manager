@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/controllers/interceptor_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:path/path.dart';
@@ -90,7 +92,25 @@ class ManagementAPI {
         options: Options(
             headers: {"requiresToken": true},
             contentType: Headers.formUrlEncodedContentType),
-      );
+      ).then((val) {
+        final res = json.decode(val.data);
+        if(res['success']){
+          Fluttertoast.showToast(msg: 'Successfully Added to The Sneaker list!',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(msg: res['msg'],
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      });
     } on DioError catch (e) {
       rethrow;
     }
@@ -112,15 +132,36 @@ class ManagementAPI {
     String encodedSneaker = jsonEncode(updateStockInfo);
 
     try {
-      return await dio.post("$_url/updatedata/updatesneaker",
-          data: {
-            "userID": userID,
-            "sneakerID": sneakerID,
-            "updateStockInfo": encodedSneaker
-          },
-          options: Options(
-              headers: {"requiresToken": true},
-              contentType: Headers.formUrlEncodedContentType));
+      return await dio
+          .post("$_url/updatedata/updatesneaker",
+              data: {
+                "userID": userID,
+                "sneakerID": sneakerID,
+                "updateStockInfo": encodedSneaker
+              },
+              options: Options(
+                  headers: {"requiresToken": true},
+                  contentType: Headers.formUrlEncodedContentType))
+          .then((val) {
+        final res = json.decode(val.data);
+        if(res['success']){
+          Fluttertoast.showToast(msg: 'Successfully Updated The Sneaker list!',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(msg: res['msg'],
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+
+      });
     } on DioError catch (e) {
       rethrow;
     }

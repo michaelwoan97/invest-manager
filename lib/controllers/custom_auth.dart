@@ -34,7 +34,25 @@ class AuthService {
           "$_url/adduser",
           data: {"name": name, "password": password, "data": ""},
           options: Options(contentType: Headers.formUrlEncodedContentType)
-      );
+      ).then((val) {
+        final res = json.decode(val.data);
+        if(res['success']){
+          Fluttertoast.showToast(msg: 'Successfully Registered!',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(msg: res['msg'],
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      });
     } on DioError catch(e){
       final data = json.decode(e.response!.data);
       Fluttertoast.showToast(msg: data['msg'],
@@ -46,15 +64,33 @@ class AuthService {
     }
   }
 
-  logOut(refreshToken) async{
+  logOut(refreshToken, String userID) async{
     SneakerManager().refreshToken = "";
     print(refreshToken);
     try{
       return await dio.delete(
           "$_url/logout",
-          data: {"token": refreshToken},
+          data: {"token": refreshToken, "userID": userID},
           options: Options(contentType: Headers.formUrlEncodedContentType)
-      );
+      ).then((val) {
+        final res = json.decode(val.data);
+        if(res['success']){
+          Fluttertoast.showToast(msg: 'Successfully Logged out!',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(msg: res['msg'],
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      });
     } on DioError catch(e){
       final data = json.decode(e.response!.data);
       Fluttertoast.showToast(msg: data['msg'],
