@@ -11,6 +11,7 @@ import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/utils/mange_token.dart';
+import 'package:invest_manager/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/auth.dart';
 import '../styles/theme_styles.dart';
@@ -19,6 +20,7 @@ class LoginPage extends StatefulWidget {
   static const routeName = '/login';
   static const emailField = "*Email";
   static const passField = "*Password";
+
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -32,6 +34,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -76,28 +80,39 @@ class _LoginPageState extends State<LoginPage> {
     AuthService()
         .login(_controllerEmail.text, _controllerPassword.text)
         .then((val) async {
-      final res = await json.decode(val.data);
-      // final res = val.data;
-      if (res['success']) {
-        // save tokens
-        // await token to be saved before continue
-        await ManageToken.saveAccessToken(res['token']);
-        await ManageToken.saveRefreshToken(res['refreshToken']);
-        await ManageToken.saveUserID(res['userID']);
+      if (val == null) {
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        final res = await json.decode(val.data);
+        if (res['success']) {
+          // save tokens
+          // await token to be saved before continue
+          await ManageToken.saveAccessToken(res['token']);
+          await ManageToken.saveRefreshToken(res['refreshToken']);
+          await ManageToken.saveUserID(res['userID']);
 
-        // print("Refresh Token for authenticate is " + res['refreshToken']);
-
-        ManagementAPI().getUserID(SneakerManager()
-            .accessToken); // save user id to sneaker_manager singleton
-        Fluttertoast.showToast(
-            msg: 'Authenticated',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+          // print("Refresh Token for authenticate is " + res['refreshToken']);
+          setState(() {
+            isLoading = false;
+          });
+          ManagementAPI().getUserID(SneakerManager()
+              .accessToken); // save user id to sneaker_manager singleton
+          Fluttertoast.showToast(
+              msg: 'Authenticated',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     });
   }
@@ -106,15 +121,21 @@ class _LoginPageState extends State<LoginPage> {
     AuthService()
         .signUp(_controllerEmail.text, _controllerPassword.text)
         .then((val) {
-      if (val.data['success']) {
-        Fluttertoast.showToast(
-            msg: 'Successfully Created!!!',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0);
+      if (val == null) {
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        if (val.data['success']) {
+          Fluttertoast.showToast(
+              msg: 'Successfully Created!!!',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       }
     });
   }
@@ -133,9 +154,9 @@ class _LoginPageState extends State<LoginPage> {
         validator: (value) {
           if (value == null || value.isEmpty) {
             String errorMsg = "";
-            if(title == LoginPage.emailField ) {
+            if (title == LoginPage.emailField) {
               errorMessage = "Please Enter Your Email!!!";
-            } else if (title == LoginPage.passField){
+            } else if (title == LoginPage.passField) {
               errorMessage = "Please Enter Your Password!!!";
             }
             return errorMessage;
@@ -147,23 +168,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget _errorMessage() {
     return Text(errorMessage == '' ? '' : 'Hum ? $errorMessage');
   }
-  
+
   Widget _submitButton() {
     return ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            if(isLogin){
+            // setstate lodading to true ... loading pop
+            setState(() {
+              isLoading = true;
+            });
+            if (isLogin) {
+              // await
               signInWithEmailAndPassword();
             } else {
+              // await
               addUser();
             }
+
+            // process response
+            // if true go to nextpage
+            // else flutter toat with error message
 
           }
         },
         child: Text(isLogin ? 'Login' : 'Register'));
   }
-
-
 
   Widget _loginOrRegisterButton() {
     return TextButton(
@@ -177,33 +206,35 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _title(),
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        margin: AppTheme.spaceBetweenSectionTop(),
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/images/invest-manager.png"),
-                _entryField(LoginPage.emailField, _controllerEmail),
-                _entryField(LoginPage.passField, _controllerPassword),
-                _submitButton(),
-                _loginOrRegisterButton()
-              ],
+    return isLoading
+        ? Loading()
+        : Scaffold(
+            appBar: AppBar(
+              title: _title(),
             ),
-          ),
-        ),
-      ),
-    );
+            body: Container(
+              height: double.infinity,
+              width: double.infinity,
+              margin: AppTheme.spaceBetweenSectionTop(),
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/images/invest-manager.png"),
+                      _entryField(LoginPage.emailField, _controllerEmail),
+                      _entryField(LoginPage.passField, _controllerPassword),
+                      _submitButton(),
+                      _loginOrRegisterButton()
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 
   // purpose: used for save and navigate to the last screen

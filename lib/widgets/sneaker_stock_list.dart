@@ -572,7 +572,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                 if (widget._sneakerAvailable.isEmpty) ...[
                   Container(
                       margin: EdgeInsets.only(top: 50, bottom: 30),
-                      child: Text('Empty! Please add somthing to the list!!!'),
+                      child: Text('Empty! Please add something to the list!!!'),
                   )
 
                 ] else ...[

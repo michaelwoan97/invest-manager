@@ -5,6 +5,7 @@ import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/styles/theme_styles.dart';
+import 'package:invest_manager/widgets/transition_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -57,8 +58,7 @@ class StockList extends StatelessWidget {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: arrSneakers.length,
-                        itemBuilder: (context, index) =>
-                            Container(
+                        itemBuilder: (context, index) => Container(
                               margin: AppTheme.spaceBetweenInEList(),
                               child: ChangeNotifierProvider.value(
                                 value: arrSneakers[index],
@@ -71,8 +71,8 @@ class StockList extends StatelessWidget {
                                         SneakerManager().accessToken,
                                         SneakerManager().userID,
                                         arrSneakers[index].getID);
-                                    SneakerManager()
-                                        .deleteSneaker(arrSneakers[index].getID);
+                                    SneakerManager().deleteSneaker(
+                                        arrSneakers[index].getID);
 
                                     // Scaffold
                                     //     .of(context)
@@ -82,26 +82,41 @@ class StockList extends StatelessWidget {
                                     elevation: AppTheme.cardElevation(),
                                     child: InkResponse(
                                         onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                              AddStock.routeName,
-                                              arguments: [
-                                                arrSneakers[index],
-                                                Scenarios.edit
-                                              ]);
+                                          // Navigator.of(context).pushNamed(
+                                          //     AddStock.routeName,
+                                          //     arguments: [
+                                          //       arrSneakers[index],
+                                          //       Scenarios.edit
+                                          //     ]);
+                                          Navigator.push(
+                                            context,
+                                            TransitionRoutes(
+                                                page: AddStock(),
+                                                routeName: AddStock.routeName,
+                                                arguments: [
+                                                  arrSneakers[index],
+                                                  Scenarios.edit
+                                                ]),
+                                          );
                                         },
                                         child: Consumer<Sneaker>(
-                                          builder: (ctx, sneaker, _) => ListTile(
+                                          builder: (ctx, sneaker, _) =>
+                                              ListTile(
                                             leading: CircleAvatar(
-                                              backgroundImage: arrSneakers[index]
-                                                      .getImgUrl
-                                                      .contains("http")
-                                                  ? NetworkImage(
-                                                      arrSneakers[index].getImgUrl)
-                                                  : FileImage(File(arrSneakers[index]
-                                                      .getImgUrl)) as ImageProvider,
+                                              backgroundImage:
+                                                  arrSneakers[index]
+                                                          .getImgUrl
+                                                          .contains("http")
+                                                      ? NetworkImage(
+                                                          arrSneakers[index]
+                                                              .getImgUrl)
+                                                      : FileImage(File(
+                                                              arrSneakers[index]
+                                                                  .getImgUrl))
+                                                          as ImageProvider,
                                             ),
-                                            title: Text(
-                                                arrSneakers[index].getSneakerName),
+                                            title: Text(arrSneakers[index]
+                                                .getSneakerName),
                                             subtitle: Text('QTY: ' +
                                                 arrSneakers[index]
                                                     .getAvailableStocks

@@ -40,7 +40,7 @@ fix error and exception done
 
 Theme
     expanded list involve in responsive might have to do some research
-    continue theme
+    continue themegit
        appropriate response for actions done
             focus on the most important actions
                CRUD
@@ -55,14 +55,19 @@ writing unit test
 optimize
 
 working on app presentations
-    Theme,responsive,animation try a bit but focus on bayby step
+    Theme done,responsive,animation try a bit but focus on bayby step
+        animation
+                page transition done
+                adding to the list
+                hero maybe replacing another pic
 add more meaningfull log for errors and exceptions
 clean up, optimize
 test unit
 
 wishlist
-having loading screen for login
-store token secure
+having loading screen for login done
+store token secure done
+list tile images
 
 doubt
 future might not come back in time for usage

@@ -17,7 +17,7 @@ import 'models/sneaker_manager.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> main() async{
+Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,11 +30,14 @@ Future<void> main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp( MyApp(camera: firstCamera,));
+  runApp(MyApp(
+    camera: firstCamera,
+  ));
 }
 
 class MyApp extends StatefulWidget {
   final CameraDescription camera;
+
   MyApp({Key? key, required this.camera}) : super(key: key);
 
   @override
@@ -42,7 +45,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -53,14 +55,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider(
       create: (ctx) => SneakerManager(),
       child: MaterialApp(
         navigatorKey: navigatorKey,
-        navigatorObservers: [
-          MyRouteObserver()
-        ],
+        navigatorObservers: [MyRouteObserver()],
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         home: LoginPage(),
@@ -68,7 +67,8 @@ class _MyAppState extends State<MyApp> {
           LoginPage.routeName: (ctx) => LoginPage(),
           HomePage.routeName: (context) => HomePage(),
           AddStock.routeName: (context) => AddStock(),
-          TakePictureScreen.routeName: (context) => TakePictureScreen(camera: widget.camera)
+          TakePictureScreen.routeName: (context) =>
+              TakePictureScreen(camera: widget.camera)
         },
       ),
     );
