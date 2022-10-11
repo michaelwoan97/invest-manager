@@ -56,10 +56,12 @@ optimize
 
 working on app presentations
     Theme done,responsive,animation try a bit but focus on bayby step
-        animation
+        animation done
                 page transition done
-                adding to the list
-                hero maybe replacing another pic
+                adding to the list not needed
+                hero maybe replacing another pic will do in next version
+        responsive
+        adaptive
 add more meaningfull log for errors and exceptions
 clean up, optimize
 test unit
@@ -68,6 +70,7 @@ wishlist
 having loading screen for login done
 store token secure done
 list tile images
+re-do taking pics
 
 doubt
 future might not come back in time for usage

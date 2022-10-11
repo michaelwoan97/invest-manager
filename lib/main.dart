@@ -22,17 +22,36 @@ Future<void> main() async {
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
 
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
+  try{
+    // Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+    // Get a specific camera from the list of available cameras.
+    final firstCamera = cameras.first;
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp(
-    camera: firstCamera,
-  ));
+    // WidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    runApp(MyApp(
+      camera: firstCamera,
+    ));
+  } on CameraException catch(err){
+    if(err.code == "cameraNotFound"){
+      runApp(MyAppNoCam());
+    }
+  }
+
+  // // Obtain a list of the available cameras on the device.
+  // final cameras = await availableCameras();
+  //
+  // // Get a specific camera from the list of available cameras.
+  // final firstCamera = cameras.first;
+  //
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // runApp(MyApp(
+  //   camera: firstCamera,
+  // ));
 }
 
 class MyApp extends StatefulWidget {
@@ -69,6 +88,43 @@ class _MyAppState extends State<MyApp> {
           AddStock.routeName: (context) => AddStock(),
           TakePictureScreen.routeName: (context) =>
               TakePictureScreen(camera: widget.camera)
+        },
+      ),
+    );
+  }
+}
+
+class MyAppNoCam extends StatefulWidget {
+
+  MyAppNoCam({Key? key}) : super(key: key);
+
+  @override
+  State<MyAppNoCam> createState() => _MyAppNoCamState();
+}
+
+class _MyAppNoCamState extends State<MyAppNoCam> {
+  @override
+  void initState() {
+    super.initState();
+
+    // test
+    ManagementAPI().dio.interceptors.add(InterceptorAPI(ManagementAPI().dio));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (ctx) => SneakerManager(),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        navigatorObservers: [MyRouteObserver()],
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: LoginPage(),
+        routes: {
+          LoginPage.routeName: (ctx) => LoginPage(),
+          HomePage.routeName: (context) => HomePage(),
+          AddStock.routeName: (context) => AddStock(),
         },
       ),
     );

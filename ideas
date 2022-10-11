@@ -1,0 +1,9 @@
+for responsive:
+    font size
+        follow the best practice font size for breakpoints
+        create with seperate class
+    widget
+        after font size
+        brainstorm how you want it to look like
+
+    prefer scalling with percentage of width or height

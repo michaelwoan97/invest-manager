@@ -41,7 +41,7 @@ class _AddStockState extends State<AddStock> {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments == null) {
+    if (ModalRoute.of(context)!.settings.arguments == null || (ModalRoute.of(context)!.settings.arguments as List).isEmpty) {
       widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
     } else {
       final sneakerData = ModalRoute.of(context)!.settings.arguments as List;

@@ -10,10 +10,10 @@ import 'package:path/path.dart';
 import '../models/sneaker.dart';
 
 //https://invest-manager-app.herokuapp.com
-//http://localhost:3000
+//http://http://192.168.0.43:3000
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
-  final String _url = "http://192.168.0.43:3000";
+  final String _url = "https://invest-manager-app.herokuapp.com";
   Dio dio = new Dio();
 
   factory ManagementAPI() {

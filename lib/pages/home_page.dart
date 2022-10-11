@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' as io;
 import '../models/sneaker.dart';
 import '../utils/mange_token.dart';
+import '../widgets/transition_routes.dart';
 
 enum Type { sneaker, electronic, crypto }
 
@@ -30,7 +31,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Type dropDownValue = Type.sneaker;
   late Future<List<Sneaker>> listSneakers;
-  final User? user = Auth().currentUser;
+  // final User? user = Auth().currentUser;
   final SneakerManager sneakerManager = SneakerManager();
   late String greetingMsg;
 
@@ -102,7 +103,13 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 if (dropDownValue == Type.sneaker) {
-                  Navigator.of(context).pushNamed(AddStock.routeName);
+                  // Navigator.of(context).pushNamed(AddStock.routeName);
+                  Navigator.push(
+                    context,
+                    TransitionRoutes(
+                        page: AddStock(),
+                        routeName: AddStock.routeName,),
+                  );
                 }
               },
             ),
@@ -116,9 +123,9 @@ class _HomePageState extends State<HomePage> {
     return const Text('Home');
   }
 
-  Widget _userUid() {
-    return Text(user?.email ?? 'User Email');
-  }
+  // Widget _userUid() {
+  //   return Text(user?.email ?? 'User Email');
+  // }
 
   Widget _signOutButton() {
     return ElevatedButton(onPressed: signOut, child: const Text('Sign Out'));

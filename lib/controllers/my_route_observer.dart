@@ -20,7 +20,7 @@ class MyRouteObserver extends RouteObserver {
     // if(lastRoute.settings.arguments != null){
     // check route
     if (lastRoute.settings.name == AddStock.routeName) {
-      if(lastRoute.settings.arguments == null){
+      if(lastRoute.settings.arguments == null || (lastRoute.settings.arguments as List).isEmpty){
         return;
       }
       final data = lastRoute.settings.arguments as List;

@@ -20,7 +20,7 @@ class InterceptorAPI extends Interceptor{
   final Dio _dio;
 
   final _sneakerManager = SneakerManager();
-  static final String _url = "http://192.168.0.43:3000";
+  static final String _url = "https://invest-manager-app.herokuapp.com";
 
   InterceptorAPI(this._dio);
 
