@@ -7,15 +7,15 @@ class AppTheme {
         scaffoldBackgroundColor: Colors.blueGrey[50]);
   }
 
-  static TextStyle displayInvenTitle(BuildContext context) {
+  static TextStyle displayInvenTitle(BuildContext context,final fontSize) {
     return Theme.of(context).textTheme.headlineSmall!.copyWith(
-      fontSize: 20
+      fontSize: fontSize
     );
   }
 
-  static TextStyle totalInvenTitle(BuildContext ctx, Color titleColor){
+  static TextStyle totalInvenTitle(BuildContext ctx, Color titleColor,final fontSize){
     return Theme.of(ctx).textTheme.headlineSmall!.copyWith(
-        fontSize: 17,
+        fontSize: fontSize,
         color: titleColor,
     );
   }

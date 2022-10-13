@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
+import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/widgets/sneaker_stock_list.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -149,7 +150,7 @@ class _AddStockState extends State<AddStock> {
                     margin: AppTheme.spaceBetweenSectionTop(),
                     padding: EdgeInsets.only(left: 20),
                     child: Text('Stock Available',
-                        style: AppTheme.displayInvenTitle(context))),
+                        style: AppTheme.displayInvenTitle(context, kMobileSubHeadings))),
                 if (widget.scenarios == Scenarios.edit) ...[
                   SneakerStockList(scenarioProcessing: Scenarios.edit)
                 ] else ...[

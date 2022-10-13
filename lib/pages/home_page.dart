@@ -7,6 +7,8 @@ import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
+import 'package:invest_manager/styles/responsive/font_sizes.dart';
+import 'package:invest_manager/styles/responsive_layout.dart';
 import 'package:invest_manager/styles/theme_styles.dart';
 import 'package:invest_manager/utils/read_json_file.dart';
 import 'package:invest_manager/widgets/stock_list.dart';
@@ -31,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Type dropDownValue = Type.sneaker;
   late Future<List<Sneaker>> listSneakers;
+
   // final User? user = Auth().currentUser;
   final SneakerManager sneakerManager = SneakerManager();
   late String greetingMsg;
@@ -79,7 +82,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
-    await AuthService().logOut(SneakerManager().refreshToken, SneakerManager().userID);
+    await AuthService()
+        .logOut(SneakerManager().refreshToken, SneakerManager().userID);
   }
 
   Future<void> _showTypeDialog() async {
@@ -107,8 +111,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     TransitionRoutes(
-                        page: AddStock(),
-                        routeName: AddStock.routeName,),
+                      page: AddStock(),
+                      routeName: AddStock.routeName,
+                    ),
                   );
                 }
               },
@@ -158,7 +163,7 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _HomeInventory() {
+  Widget _HomeInventoryMobile() {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -168,7 +173,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Text(
               greetingMsg,
-              style: Theme.of(context).textTheme.headline5,
+              style: AppTheme.displayInvenTitle(context, kMobileHeadings),
             ),
             Container(
               margin: AppTheme.spaceBetweenInListTop(),
@@ -188,15 +193,12 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 'Total Products',
                                 style: AppTheme.totalInvenTitle(
-                                    context, Colors.green),
+                                    context, Colors.green, kMobileSubHeadings),
                               ),
                             ),
                             Text(SneakerManager().totalAvaiProducts.toString(),
-                                style: Theme.of(ctx)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .copyWith(
-                                        fontSize: AppTheme.fontSizeDisplay()))
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.black, kMobileSubHeadings))
                           ],
                         ),
                       ),
@@ -212,14 +214,82 @@ class _HomePageState extends State<HomePage> {
                               margin: AppTheme.spaceBetweenInListBottom(),
                               child: Text('\$Products Sold\$',
                                   style: AppTheme.totalInvenTitle(
-                                      context, Colors.red)),
+                                      context, Colors.red, kMobileSubHeadings)),
                             ),
                             Text(SneakerManager().totalSoldProducts.toString(),
-                                style: Theme.of(ctx)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .copyWith(
-                                        fontSize: AppTheme.fontSizeDisplay()))
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.black, kMobileSubHeadings))
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            StockList()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _HomeInventoryDesktop() {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Text(
+              greetingMsg,
+              style: AppTheme.displayInvenTitle(context, kDesktopHeadings),
+            ),
+            Container(
+              margin: AppTheme.spaceBetweenInListTop(),
+              child: Consumer<SneakerManager>(
+                builder: (ctx, manager, _) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Card(
+                      elevation: 2,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: AppTheme.spaceBetweenInListBottom(),
+                              child: Text(
+                                'Total Products',
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.green, kDesktopSubHeadings),
+                              ),
+                            ),
+                            Text(SneakerManager().totalAvaiProducts.toString(),
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.black, kDesktopSubHeadings))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      elevation: 2,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: AppTheme.spaceBetweenInListBottom(),
+                              child: Text('\$Products Sold\$',
+                                  style: AppTheme.totalInvenTitle(
+                                      context, Colors.red, kDesktopSubHeadings)),
+                            ),
+                            Text(SneakerManager().totalSoldProducts.toString(),
+                                style: AppTheme.totalInvenTitle(
+                                    context, Colors.black, kDesktopSubHeadings))
                           ],
                         ),
                       ),
@@ -261,7 +331,11 @@ class _HomePageState extends State<HomePage> {
               sneakerManager.setListSneaker = sneakers;
               SneakerManager().calculateTotalProductSold();
               SneakerManager().calculateTotalQuantityProducts();
-              return _HomeInventory();
+              return ResponsiveLayout(
+                mobileBody: _HomeInventoryMobile(),
+                tabletVersion: _HomeInventoryDesktop(),
+                desktopVersion: _HomeInventoryDesktop(),
+              ); //***
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }

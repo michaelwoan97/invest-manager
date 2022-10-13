@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
+import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/styles/theme_styles.dart';
 import 'package:invest_manager/widgets/transition_routes.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class StockList extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Inventory", style: AppTheme.displayInvenTitle(context)),
+            Text("Inventory", style: AppTheme.displayInvenTitle(context, kMobileSubHeadings)),
             if (arrSneakers.isNotEmpty) ...[
               Consumer<SneakerManager>(
                 builder: (ctx, sneakerManager, _) => Container(
