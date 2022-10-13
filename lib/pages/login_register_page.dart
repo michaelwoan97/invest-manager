@@ -14,6 +14,7 @@ import 'package:invest_manager/utils/mange_token.dart';
 import 'package:invest_manager/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/auth.dart';
+import '../styles/responsive/breakpoints.dart';
 import '../styles/theme_styles.dart';
 
 class LoginPage extends StatefulWidget {
@@ -140,17 +141,23 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  Widget _title() {
-    return const Text('Invest Manager');
+  Widget _title(BuildContext context) {
+    return Text('Home',
+        style: MediaQuery.of(context).size.width > kTabletBreakPoint
+            ? AppTheme.kFontSizeDesktopAppBarText
+            : AppTheme.kFontSizeMobileAppBarText);
   }
 
-  Widget _entryField(String title, TextEditingController controller) {
+  Widget _entryField(
+      BuildContext context, String title, TextEditingController controller) {
     return TextFormField(
         controller: controller,
         obscureText: title == LoginPage.passField ? true : false,
         decoration: InputDecoration(
-          labelText: title,
-        ),
+            labelText: title,
+            labelStyle: MediaQuery.of(context).size.width > kTabletBreakPoint
+                ? AppTheme.kFontSizeDesktopBodyText
+                : AppTheme.kFontSizeMobileBodyText),
         validator: (value) {
           if (value == null || value.isEmpty) {
             String errorMsg = "";
@@ -191,7 +198,9 @@ class _LoginPageState extends State<LoginPage> {
 
           }
         },
-        child: Text(isLogin ? 'Login' : 'Register'));
+        child: Text(isLogin ? 'Login' : 'Register',style: MediaQuery.of(context).size.width > kTabletBreakPoint
+            ? AppTheme.kFontSizeDesktopBodyText
+            : AppTheme.kFontSizeMobileBodyText));
   }
 
   Widget _loginOrRegisterButton() {
@@ -201,7 +210,12 @@ class _LoginPageState extends State<LoginPage> {
             isLogin = !isLogin;
           });
         },
-        child: Text(isLogin ? 'Register instead' : 'Login instead'));
+        child: Text(
+          isLogin ? 'Register instead' : 'Login instead',
+          style: MediaQuery.of(context).size.width > kTabletBreakPoint
+              ? AppTheme.kFontSizeDesktopBodyText
+              : AppTheme.kFontSizeMobileBodyText,
+        ));
   }
 
   @override
@@ -210,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
         ? Loading()
         : Scaffold(
             appBar: AppBar(
-              title: _title(),
+              title: _title(context),
             ),
             body: Container(
               height: double.infinity,
@@ -225,8 +239,10 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset("assets/images/invest-manager.png"),
-                      _entryField(LoginPage.emailField, _controllerEmail),
-                      _entryField(LoginPage.passField, _controllerPassword),
+                      _entryField(
+                          context, LoginPage.emailField, _controllerEmail),
+                      _entryField(
+                          context, LoginPage.passField, _controllerPassword),
                       _submitButton(),
                       _loginOrRegisterButton()
                     ],

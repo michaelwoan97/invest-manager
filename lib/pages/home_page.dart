@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' as io;
 import '../models/sneaker.dart';
+import '../styles/responsive/breakpoints.dart';
 import '../utils/mange_token.dart';
 import '../widgets/transition_routes.dart';
 
@@ -124,8 +125,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _title() {
-    return const Text('Home');
+  Widget _title(BuildContext context) {
+    return Text('Home',
+        style: MediaQuery.of(context).size.width >
+            kTabletBreakPoint
+            ? AppTheme.kFontSizeDesktopAppBarText
+            : AppTheme.kFontSizeMobileAppBarText);
   }
 
   // Widget _userUid() {
@@ -309,7 +314,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
+        title: _title(context),
         actions: [
           IconButton(
             icon: Icon(Icons.logout_outlined),

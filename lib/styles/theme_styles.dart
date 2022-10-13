@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:invest_manager/styles/responsive/font_sizes.dart';
 
 class AppTheme {
+  static const kFontSizeMobileBodyText = TextStyle(fontSize: kMobileBodyText);
+  static const kFontSizeDesktopBodyText = TextStyle(fontSize: kDesktopBodyText);
+  static const kFontSizeMobileAppBarText = TextStyle(fontSize: kMobileSubHeadings);
+  static const kFontSizeDesktopAppBarText = TextStyle(fontSize: kDesktopSubHeadings);
+
   static ThemeData get lightTheme {
     return ThemeData(
         primarySwatch: Colors.blue,
@@ -45,6 +51,7 @@ class AppTheme {
     double val = 20;
     return val;
   }
+
   static double cardElevation(){
     double val = 2;
     return val;

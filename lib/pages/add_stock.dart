@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
+import 'package:invest_manager/styles/responsive/breakpoints.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
+import 'package:invest_manager/styles/responsive_layout.dart';
 import 'package:invest_manager/widgets/sneaker_stock_list.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -42,7 +44,8 @@ class _AddStockState extends State<AddStock> {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments == null || (ModalRoute.of(context)!.settings.arguments as List).isEmpty) {
+    if (ModalRoute.of(context)!.settings.arguments == null ||
+        (ModalRoute.of(context)!.settings.arguments as List).isEmpty) {
       widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
     } else {
       final sneakerData = ModalRoute.of(context)!.settings.arguments as List;
@@ -53,9 +56,14 @@ class _AddStockState extends State<AddStock> {
       result = widget.newSneaker.getImgUrl;
     }
 
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stock Info'),
+        title: Text('Stock Info',
+            style: MediaQuery.of(context).size.width >
+                kTabletBreakPoint
+                ? AppTheme.kFontSizeDesktopAppBarText
+                : AppTheme.kFontSizeMobileAppBarText),
         actions: [
           IconButton(
               onPressed: () {
@@ -79,34 +87,12 @@ class _AddStockState extends State<AddStock> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              controller: _sneakerNameController,
-                              // The validator receives the text that the user has entered.
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter the stock's name";
-                                }
-                                return null;
-                              },
-                              decoration:
-                                  InputDecoration(labelText: "Sneaker Name"),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                                controller: _sneakerNotesController,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: 3,
-                                decoration:
-                                    InputDecoration(labelText: "Notes")),
-                          ),
-                        ],
-                      ),
+                      Expanded(
+                          child: ResponsiveLayout(
+                        mobileBody: _formSneakerMobile(),
+                        tabletVersion: _formSneakerDesktop(),
+                        desktopVersion: _formSneakerDesktop(),
+                      )),
                       Consumer<Sneaker>(
                         builder: (ctx, sneaker, _) => Column(
                           children: [
@@ -150,7 +136,12 @@ class _AddStockState extends State<AddStock> {
                     margin: AppTheme.spaceBetweenSectionTop(),
                     padding: EdgeInsets.only(left: 20),
                     child: Text('Stock Available',
-                        style: AppTheme.displayInvenTitle(context, kMobileSubHeadings))),
+                        style: MediaQuery.of(context).size.width >
+                                kTabletBreakPoint
+                            ? AppTheme.displayInvenTitle(
+                                context, kDesktopSubHeadings)
+                            : AppTheme.displayInvenTitle(
+                                context, kMobileSubHeadings))),
                 if (widget.scenarios == Scenarios.edit) ...[
                   SneakerStockList(scenarioProcessing: Scenarios.edit)
                 ] else ...[
@@ -167,7 +158,7 @@ class _AddStockState extends State<AddStock> {
         child: ElevatedButton(
           onPressed: () {
             // validate Form
-            if(_formKey.currentState!.validate()){
+            if (_formKey.currentState!.validate()) {
               if (widget.scenarios == Scenarios.edit) {
                 // update sneaker
                 widget.newSneaker.updateSneaker(
@@ -210,10 +201,85 @@ class _AddStockState extends State<AddStock> {
               ? Text("+ Add to the list")
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.edit), Text("Edit Sneaker Info!!")],
+                  children: [
+                    Icon(Icons.edit),
+                    Text(
+                      "Edit Sneaker Info!!",
+                      style:
+                          MediaQuery.of(context).size.width > kTabletBreakPoint
+                              ? AppTheme.kFontSizeDesktopBodyText
+                              : AppTheme.kFontSizeMobileBodyText,
+                    )
+                  ],
                 ),
         ),
       ),
+    );
+  }
+
+  Widget _formSneakerMobile() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 150,
+          child: TextFormField(
+            controller: _sneakerNameController,
+            // The validator receives the text that the user has entered.
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Please enter the stock's name";
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+                labelText: "Sneaker Name",
+                labelStyle: TextStyle(fontSize: kMobileInputText)),
+          ),
+        ),
+        SizedBox(
+          width: 150,
+          child: TextFormField(
+              controller: _sneakerNotesController,
+              keyboardType: TextInputType.multiline,
+              maxLines: 3,
+              decoration: InputDecoration(
+                  labelText: "Notes",
+                  labelStyle: TextStyle(fontSize: kMobileInputText))),
+        ),
+      ],
+    );
+  }
+
+  Widget _formSneakerDesktop() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 150,
+          child: TextFormField(
+            controller: _sneakerNameController,
+            // The validator receives the text that the user has entered.
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Please enter the stock's name";
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+                labelText: "Sneaker Name",
+                labelStyle: TextStyle(fontSize: kDesktopInputText)),
+          ),
+        ),
+        SizedBox(
+          width: 150,
+          child: TextFormField(
+              controller: _sneakerNotesController,
+              keyboardType: TextInputType.multiline,
+              maxLines: 3,
+              decoration: InputDecoration(
+                  labelText: "Notes",
+                  labelStyle: TextStyle(fontSize: kDesktopInputText))),
+        ),
+      ],
     );
   }
 }
