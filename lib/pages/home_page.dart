@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Type dropDownValue = Type.sneaker;
   late Future<List<Sneaker>> listSneakers;
+  bool isCalculated = false;
 
   // final User? user = Auth().currentUser;
   final SneakerManager sneakerManager = SneakerManager();
@@ -334,8 +335,14 @@ class _HomePageState extends State<HomePage> {
               List<Sneaker> sneakers = snapshot.data!;
               // add list to singleton provider
               sneakerManager.setListSneaker = sneakers;
-              SneakerManager().calculateTotalProductSold();
-              SneakerManager().calculateTotalQuantityProducts();
+
+              // check whether the total is calculated so it would be not
+              if(!isCalculated){
+                SneakerManager().calculateTotalProductSold();
+                SneakerManager().calculateTotalQuantityProducts();
+                isCalculated = true;
+              }
+
               return ResponsiveLayout(
                 mobileBody: _HomeInventoryMobile(),
                 tabletVersion: _HomeInventoryDesktop(),
