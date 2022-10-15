@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
+import 'package:invest_manager/styles/max_width_container.dart';
 import 'package:invest_manager/styles/responsive/breakpoints.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/styles/responsive_layout.dart';
@@ -78,142 +79,154 @@ class _AddStockState extends State<AddStock> {
         builder: (context, child) => Form(
           key: _formKey,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                          child: ResponsiveLayout(
-                        mobileBody: _formSneakerMobile(),
-                        tabletVersion: _formSneakerDesktop(),
-                        desktopVersion: _formSneakerDesktop(),
-                      )),
-                      Consumer<Sneaker>(
-                        builder: (ctx, sneaker, _) => Column(
-                          children: [
-                            if (result == null ||
-                                widget.newSneaker.getImgUrl.isEmpty) ...[
-                              Text('Use camera to take picture')
-                            ] else ...[
-                              if (result.toString().contains("http")) ...[
-                                Image.network(result.toString(),
-                                    height: 160, width: 180, fit: BoxFit.cover)
+            child: MaxWidthContainer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                            child: ResponsiveLayout(
+                          mobileBody: _formSneakerMobile(),
+                          tabletVersion: _formSneakerDesktop(),
+                          desktopVersion: _formSneakerDesktop(),
+                        )),
+                        Consumer<Sneaker>(
+                          builder: (ctx, sneaker, _) => Column(
+                            children: [
+                              if (result == null ||
+                                  widget.newSneaker.getImgUrl.isEmpty) ...[
+                                Text('Use camera to take picture')
                               ] else ...[
-                                Image.file(
-                                  File(result),
-                                  height: 160,
-                                  width: 180,
-                                  fit: BoxFit.cover,
-                                )
-                              ]
-                            ],
-                            ElevatedButton(
-                                onPressed: () async {
-                                  result = await Navigator.of(context)
-                                      .pushNamed(TakePictureScreen.routeName);
-                                  result = result[0].toString();
+                                if (result.toString().contains("http")) ...[
+                                  Image.network(result.toString(),
+                                      height: 160, width: 180, fit: BoxFit.cover)
+                                ] else ...[
+                                  Image.file(
+                                    File(result),
+                                    height: 160,
+                                    width: 180,
+                                    fit: BoxFit.cover,
+                                  )
+                                ]
+                              ],
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    result = await Navigator.of(context)
+                                        .pushNamed(TakePictureScreen.routeName);
+                                    result = result[0].toString();
 
-                                  // check scenario
-                                  if (widget.scenarios == Scenarios.edit) {
-                                    sneaker.notifyWithoutUpdateData();
-                                  } else {
-                                    sneaker.updateImgURLNotify(result);
-                                  }
-                                },
-                                child: Icon(Icons.camera))
-                          ],
-                        ),
-                      )
-                    ],
+                                    // check scenario
+                                    if (widget.scenarios == Scenarios.edit) {
+                                      sneaker.notifyWithoutUpdateData();
+                                    } else {
+                                      sneaker.updateImgURLNotify(result);
+                                    }
+                                  },
+                                  child: Icon(Icons.camera))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                    margin: AppTheme.spaceBetweenSectionTop(),
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text('Stock Available',
-                        style: MediaQuery.of(context).size.width >
-                                kTabletBreakPoint
-                            ? AppTheme.displayInvenTitle(
-                                context, kDesktopSubHeadings)
-                            : AppTheme.displayInvenTitle(
-                                context, kMobileSubHeadings))),
-                if (widget.scenarios == Scenarios.edit) ...[
-                  SneakerStockList(scenarioProcessing: Scenarios.edit)
-                ] else ...[
-                  SneakerStockList(scenarioProcessing: Scenarios.add)
-                ]
-              ],
+                  Container(
+                      margin: AppTheme.spaceBetweenSectionTop(),
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text('Stock Available',
+                          style: MediaQuery.of(context).size.width >
+                                  kTabletBreakPoint
+                              ? AppTheme.displayInvenTitle(
+                                  context, kDesktopSubHeadings)
+                              : AppTheme.displayInvenTitle(
+                                  context, kMobileSubHeadings))),
+                  if (widget.scenarios == Scenarios.edit) ...[
+                    SneakerStockList(scenarioProcessing: Scenarios.edit)
+                  ] else ...[
+                    SneakerStockList(scenarioProcessing: Scenarios.add)
+                  ]
+                ],
+              ),
             ),
           ),
         ),
       ),
-      bottomSheet: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(left: 20, right: 20),
-        child: ElevatedButton(
-          onPressed: () {
-            // validate Form
-            if (_formKey.currentState!.validate()) {
-              if (widget.scenarios == Scenarios.edit) {
-                // update sneaker
-                widget.newSneaker.updateSneaker(
-                    newSneakerName: _sneakerNameController.text,
-                    sNewNotes: _sneakerNotesController.text,
-                    sNewImgURL: result);
-                ManagementAPI().updateSneaker(
-                    SneakerManager().accessToken,
-                    SneakerManager().userID,
-                    widget.newSneaker.getID,
-                    widget.newSneaker);
-              } else {
-                widget.newSneaker.setSneakerName = _sneakerNameController.text;
-                if (_sneakerNotesController.text.isNotEmpty) {
-                  widget.newSneaker.setNotes = _sneakerNotesController.text;
-                }
-                //update new sneaker to total
-                double totalNewSneakerPrice = 0;
-                if (widget.newSneaker.getAvailableStocks.isNotEmpty) {
-                  for (var e in widget.newSneaker.getAvailableStocks) {
-                    if (e.getSneakerSoldPrice.isEmpty) {
-                      continue;
+      floatingActionButton: MaxWidthContainer(
+        child: Container(
+          width: double.infinity,
+          padding: MediaQuery.of(context).size.width >= kMaxWidth ? EdgeInsets.only(left: 0, right: 0) : EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: MediaQuery.of(context).size.width >= kTabletBreakPoint ? CrossAxisAlignment.center : CrossAxisAlignment.end ,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // validate Form
+                  if (_formKey.currentState!.validate()) {
+                    if (widget.scenarios == Scenarios.edit) {
+                      // update sneaker
+                      widget.newSneaker.updateSneaker(
+                          newSneakerName: _sneakerNameController.text,
+                          sNewNotes: _sneakerNotesController.text,
+                          sNewImgURL: result);
+                      ManagementAPI().updateSneaker(
+                          SneakerManager().accessToken,
+                          SneakerManager().userID,
+                          widget.newSneaker.getID,
+                          widget.newSneaker);
+                    } else {
+                      widget.newSneaker.setSneakerName = _sneakerNameController.text;
+                      if (_sneakerNotesController.text.isNotEmpty) {
+                        widget.newSneaker.setNotes = _sneakerNotesController.text;
+                      }
+                      //update new sneaker to total
+                      double totalNewSneakerPrice = 0;
+                      if (widget.newSneaker.getAvailableStocks.isNotEmpty) {
+                        for (var e in widget.newSneaker.getAvailableStocks) {
+                          if (e.getSneakerSoldPrice.isEmpty) {
+                            continue;
+                          }
+                          totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
+                        }
+                      }
+                      SneakerManager().updateTotalAvaiSoldProducts(
+                          widget.newSneaker.getAvailableStocks.length,
+                          totalNewSneakerPrice);
+                      SneakerManager().addNewSneakerToList(widget.newSneaker);
+                      ManagementAPI().addSneaker(SneakerManager().accessToken,
+                          SneakerManager().userID, widget.newSneaker);
                     }
-                    totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
-                  }
-                }
-                SneakerManager().updateTotalAvaiSoldProducts(
-                    widget.newSneaker.getAvailableStocks.length,
-                    totalNewSneakerPrice);
-                SneakerManager().addNewSneakerToList(widget.newSneaker);
-                ManagementAPI().addSneaker(SneakerManager().accessToken,
-                    SneakerManager().userID, widget.newSneaker);
-              }
 
-              widget.newSneaker.clearAvailableStockExisted();
-              Navigator.of(context).pop();
-            }
-          },
-          child: widget.scenarios == Scenarios.add
-              ? Text("+ Add to the list")
-              : Row(
+                    widget.newSneaker.clearAvailableStockExisted();
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: widget.scenarios == Scenarios.add
+                    ? Text("+ Add to the list")
+                    : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.edit),
                     Text(
                       "Edit Sneaker Info!!",
                       style:
-                          MediaQuery.of(context).size.width > kTabletBreakPoint
-                              ? AppTheme.kFontSizeDesktopBodyText
-                              : AppTheme.kFontSizeMobileBodyText,
+                      MediaQuery.of(context).size.width > kTabletBreakPoint
+                          ? AppTheme.kFontSizeDesktopAppBarText
+                          : AppTheme.kFontSizeMobileAppBarText,
                     )
                   ],
                 ),
+              )
+            ],
+          ),
         ),
       ),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.centerFloat
     );
   }
 

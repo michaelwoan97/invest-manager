@@ -7,6 +7,7 @@ import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:invest_manager/pages/widget_tree.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
+import 'package:invest_manager/styles/max_width_container.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/styles/responsive_layout.dart';
 import 'package:invest_manager/styles/theme_styles.dart';
@@ -343,10 +344,12 @@ class _HomePageState extends State<HomePage> {
                 isCalculated = true;
               }
 
-              return ResponsiveLayout(
-                mobileBody: _HomeInventoryMobile(),
-                tabletVersion: _HomeInventoryDesktop(),
-                desktopVersion: _HomeInventoryDesktop(),
+              return MaxWidthContainer(
+                child: ResponsiveLayout(
+                  mobileBody: _HomeInventoryMobile(),
+                  tabletVersion: _HomeInventoryDesktop(),
+                  desktopVersion: _HomeInventoryDesktop(),
+                ),
               ); //***
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
@@ -357,12 +360,20 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _showTypeDialog();
-        },
+      floatingActionButton: Container(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: MediaQuery.of(context).size.width >= kTabletBreakPoint ? CrossAxisAlignment.center : CrossAxisAlignment.end ,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              _showTypeDialog();
+            },
+          )],
+        ),
       ),
+
     );
   }
 }

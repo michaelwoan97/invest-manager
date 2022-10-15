@@ -62,7 +62,11 @@ working on app presentations
                 hero maybe replacing another pic will do in next version
         responsive
             working on responsive for stock list done
-            need to fix the bug total autoupdate when re-render
+            need to fix the bug total autoupdate when re-render done
+            fix image not loading correctly temporarily fixed
+            continue for responsive
+                breakponts center done
+                widgets
         adaptive
 add more meaningfull log for errors and exceptions
 clean up, optimize

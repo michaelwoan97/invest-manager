@@ -7,6 +7,7 @@ class AppTheme {
   static const kFontSizeMobileAppBarText = TextStyle(fontSize: kMobileSubHeadings);
   static const kFontSizeDesktopAppBarText = TextStyle(fontSize: kDesktopSubHeadings);
 
+
   static ThemeData get lightTheme {
     return ThemeData(
         primarySwatch: Colors.blue,
