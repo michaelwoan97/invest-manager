@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invest_manager/controllers/auth.dart';
 import 'package:flutter/material.dart';
@@ -129,8 +130,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _title(BuildContext context) {
     return Text('Home',
-        style: MediaQuery.of(context).size.width >
-            kTabletBreakPoint
+        style: MediaQuery.of(context).size.width > kTabletBreakPoint
             ? AppTheme.kFontSizeDesktopAppBarText
             : AppTheme.kFontSizeMobileAppBarText);
   }
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -182,59 +182,82 @@ class _HomePageState extends State<HomePage> {
               greetingMsg,
               style: AppTheme.displayInvenTitle(context, kMobileHeadings),
             ),
-            Container(
-              margin: AppTheme.spaceBetweenInListTop(),
-              child: Consumer<SneakerManager>(
-                builder: (ctx, manager, _) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Card(
-                      elevation: 2,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: AppTheme.spaceBetweenInListBottom(),
-                              child: Text(
-                                'Total Products',
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.green, kMobileSubHeadings),
+            SizedBox(
+              height: MediaQuery.of(context).size.height >= kTabletBreakPoint ? 180 : MediaQuery.of(context).size.height * 0.2,
+              child: Container(
+                width: double.infinity,
+                child: Consumer<SneakerManager>(
+                  builder: (ctx, manager, _) => Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          elevation: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Expanded(
+                                child: AutoSizeText(
+                                  'Total Products',
+                                  style: AppTheme.totalInvenTitle(context,
+                                      Colors.green, kMobileSubHeadings),
+                                ),
                               ),
-                            ),
-                            Text(SneakerManager().totalAvaiProducts.toString(),
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.black, kMobileSubHeadings))
-                          ],
+                              Expanded(
+                                child: AutoSizeText(
+                                    SneakerManager()
+                                        .totalAvaiProducts
+                                        .toString(),
+                                    style: AppTheme.totalInvenTitle(context,
+                                        Colors.black, kMobileSubHeadings)),
+                              ),
+                              Spacer()
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Card(
-                      elevation: 2,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: AppTheme.spaceBetweenInListBottom(),
-                              child: Text('\$Products Sold\$',
-                                  style: AppTheme.totalInvenTitle(
-                                      context, Colors.red, kMobileSubHeadings)),
-                            ),
-                            Text(SneakerManager().totalSoldProducts.toString(),
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.black, kMobileSubHeadings))
-                          ],
-                        ),
+                      Spacer(
+                        flex: 1,
                       ),
-                    )
-                  ],
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          elevation: 2,
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(),
+                                Expanded(
+                                  child: AutoSizeText('Products Sold',
+                                      style: AppTheme.totalInvenTitle(context,
+                                          Colors.red, kMobileSubHeadings)),
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                      SneakerManager()
+                                          .totalSoldProducts
+                                          .toString(),
+                                      style: AppTheme.totalInvenTitle(context,
+                                          Colors.black, kMobileSubHeadings)),
+                                ),
+                                Spacer()
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-            StockList()
+            Container(
+                width: double.infinity,
+                height:  MediaQuery.of(context).size.height >= kTabletBreakPoint ? 500 : MediaQuery.of(context).size.height * 0.5,
+                child: Expanded(child: StockList()))
           ],
         ),
       ),
@@ -245,7 +268,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -253,68 +276,160 @@ class _HomePageState extends State<HomePage> {
               greetingMsg,
               style: AppTheme.displayInvenTitle(context, kDesktopHeadings),
             ),
-            Container(
-              margin: AppTheme.spaceBetweenInListTop(),
-              child: Consumer<SneakerManager>(
-                builder: (ctx, manager, _) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Card(
-                      elevation: 2,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: AppTheme.spaceBetweenInListBottom(),
-                              child: Text(
-                                'Total Products',
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.green, kDesktopSubHeadings),
+            SizedBox(
+              height: MediaQuery.of(context).size.height >= kTabletBreakPoint ? 180 : MediaQuery.of(context).size.height * 0.2,
+              child: Container(
+                width: double.infinity,
+                child: Consumer<SneakerManager>(
+                  builder: (ctx, manager, _) => Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          elevation: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Expanded(
+                                child: AutoSizeText(
+                                  'Total Products',
+                                  style: AppTheme.totalInvenTitle(context,
+                                      Colors.green, kDesktopSubHeadings),
+                                ),
                               ),
-                            ),
-                            Text(SneakerManager().totalAvaiProducts.toString(),
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.black, kDesktopSubHeadings))
-                          ],
+                              Expanded(
+                                child: AutoSizeText(
+                                    SneakerManager()
+                                        .totalAvaiProducts
+                                        .toString(),
+                                    style: AppTheme.totalInvenTitle(context,
+                                        Colors.black, kDesktopSubHeadings)),
+                              ),
+                              Spacer()
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Card(
-                      elevation: 2,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: AppTheme.spaceBetweenInListBottom(),
-                              child: Text('\$Products Sold\$',
-                                  style: AppTheme.totalInvenTitle(
-                                      context, Colors.red, kDesktopSubHeadings)),
-                            ),
-                            Text(SneakerManager().totalSoldProducts.toString(),
-                                style: AppTheme.totalInvenTitle(
-                                    context, Colors.black, kDesktopSubHeadings))
-                          ],
-                        ),
+                      Spacer(
+                        flex: 1,
                       ),
-                    )
-                  ],
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          elevation: 2,
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(),
+                                Expanded(
+                                  child: AutoSizeText('Products Sold',
+                                      style: AppTheme.totalInvenTitle(context,
+                                          Colors.red, kDesktopSubHeadings)),
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                      SneakerManager()
+                                          .totalSoldProducts
+                                          .toString(),
+                                      style: AppTheme.totalInvenTitle(context,
+                                          Colors.black, kDesktopSubHeadings)),
+                                ),
+                                Spacer()
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-            StockList()
+            Container(
+                width: double.infinity,
+                height:  MediaQuery.of(context).size.height >= kTabletBreakPoint ? 500 : MediaQuery.of(context).size.height * 0.5,
+                child: Expanded(child: StockList()))
           ],
         ),
       ),
     );
   }
+  // Widget _HomeInventoryDesktop() {
+  //   return Container(
+  //     height: double.infinity,
+  //     width: double.infinity,
+  //     padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+  //     child: SingleChildScrollView(
+  //       child: Column(
+  //         children: <Widget>[
+  //           Text(
+  //             greetingMsg,
+  //             style: AppTheme.displayInvenTitle(context, kDesktopHeadings),
+  //           ),
+  //           Container(
+  //             margin: AppTheme.spaceBetweenInListTop(),
+  //             child: Consumer<SneakerManager>(
+  //               builder: (ctx, manager, _) => Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Card(
+  //                     elevation: 2,
+  //                     child: Container(
+  //                       child: Column(
+  //                         children: [
+  //                           Container(
+  //                             margin: AppTheme.spaceBetweenInListBottom(),
+  //                             child: Text(
+  //                               'Total Products',
+  //                               style: AppTheme.totalInvenTitle(
+  //                                   context, Colors.green, kDesktopSubHeadings),
+  //                             ),
+  //                           ),
+  //                           Text(SneakerManager().totalAvaiProducts.toString(),
+  //                               style: AppTheme.totalInvenTitle(
+  //                                   context, Colors.black, kDesktopSubHeadings))
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Card(
+  //                     elevation: 2,
+  //                     child: Container(
+  //                       padding:
+  //                           EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+  //                       child: Column(
+  //                         children: [
+  //                           Container(
+  //                             margin: AppTheme.spaceBetweenInListBottom(),
+  //                             child: Text('\$Products Sold\$',
+  //                                 style: AppTheme.totalInvenTitle(context,
+  //                                     Colors.red, kDesktopSubHeadings)),
+  //                           ),
+  //                           Text(SneakerManager().totalSoldProducts.toString(),
+  //                               style: AppTheme.totalInvenTitle(
+  //                                   context, Colors.black, kDesktopSubHeadings))
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           StockList()
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: _title(context),
         actions: [
@@ -338,7 +453,7 @@ class _HomePageState extends State<HomePage> {
               sneakerManager.setListSneaker = sneakers;
 
               // check whether the total is calculated so it would be not
-              if(!isCalculated){
+              if (!isCalculated) {
                 SneakerManager().calculateTotalProductSold();
                 SneakerManager().calculateTotalQuantityProducts();
                 isCalculated = true;
@@ -363,17 +478,21 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: Container(
         width: double.infinity,
         child: Column(
-          crossAxisAlignment: MediaQuery.of(context).size.width >= kTabletBreakPoint ? CrossAxisAlignment.center : CrossAxisAlignment.end ,
+          crossAxisAlignment:
+              MediaQuery.of(context).size.width >= kTabletBreakPoint
+                  ? CrossAxisAlignment.center
+                  : CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              _showTypeDialog();
-            },
-          )],
+          children: [
+            FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                _showTypeDialog();
+              },
+            )
+          ],
         ),
       ),
-
     );
   }
 }
