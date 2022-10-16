@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
                 width: double.infinity,
-                height:  MediaQuery.of(context).size.height >= kTabletBreakPoint ? 500 : MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: Expanded(child: StockList()))
           ],
         ),

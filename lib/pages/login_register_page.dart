@@ -10,6 +10,7 @@ import 'package:invest_manager/models/sneaker.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/pages/home_page.dart';
+import 'package:invest_manager/styles/max_width_container.dart';
 import 'package:invest_manager/utils/mange_token.dart';
 import 'package:invest_manager/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -226,26 +227,28 @@ class _LoginPageState extends State<LoginPage> {
             appBar: AppBar(
               title: _title(context),
             ),
-            body: Container(
-              height: double.infinity,
-              width: double.infinity,
-              margin: AppTheme.spaceBetweenSectionTop(),
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/invest-manager.png"),
-                      _entryField(
-                          context, LoginPage.emailField, _controllerEmail),
-                      _entryField(
-                          context, LoginPage.passField, _controllerPassword),
-                      _submitButton(),
-                      _loginOrRegisterButton()
-                    ],
+            body: MaxWidthContainer(
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                margin: AppTheme.spaceBetweenSectionTop(),
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/invest-manager.png"),
+                        _entryField(
+                            context, LoginPage.emailField, _controllerEmail),
+                        _entryField(
+                            context, LoginPage.passField, _controllerPassword),
+                        _submitButton(),
+                        _loginOrRegisterButton()
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
@@ -81,74 +82,99 @@ class _AddStockState extends State<AddStock> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      height: MediaQuery.of(context).size.height * 0.2,
                       width: double.infinity,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
+                              flex: 5,
                               child: ResponsiveLayout(
-                            mobileBody: _formSneakerMobile(),
-                            tabletVersion: _formSneakerDesktop(),
-                            desktopVersion: _formSneakerDesktop(),
-                          )),
+                                mobileBody: _formSneakerMobile(),
+                                tabletVersion: _formSneakerDesktop(),
+                                desktopVersion: _formSneakerDesktop(),
+                              )),
+                          Spacer(
+                            flex: 1,
+                          ),
                           Consumer<Sneaker>(
-                            builder: (ctx, sneaker, _) => Column(
-                              children: [
-                                if (result == null ||
-                                    widget.newSneaker.getImgUrl.isEmpty) ...[
-                                  Text('Use camera to take picture')
-                                ] else ...[
-                                  if (result.toString().contains("http")) ...[
-                                    Image.network(result.toString(),
-                                        height: 160,
-                                        width: 180,
-                                        fit: BoxFit.cover)
+                            builder: (ctx, sneaker, _) => Expanded(
+                              flex: 6,
+                              child: Column(
+                                children: [
+                                  if (result == null ||
+                                      widget.newSneaker.getImgUrl.isEmpty) ...[
+                                    Text('Use camera to take picture')
                                   ] else ...[
-                                    Image.file(
-                                      File(result),
-                                      height: 160,
-                                      width: 180,
-                                      fit: BoxFit.cover,
-                                    )
-                                  ]
-                                ],
-                                ElevatedButton(
-                                    onPressed: () async {
-                                      result = await Navigator.of(context)
-                                          .pushNamed(
-                                              TakePictureScreen.routeName);
-                                      result = result[0].toString();
+                                    if (result.toString().contains("http")) ...[
+                                      Expanded(
+                                        flex: 4,
+                                        child: Image.network(result.toString(),
+                                            fit: BoxFit.cover),
+                                      )
+                                    ] else ...[
+                                      Expanded(
+                                        flex: 4,
+                                        child: Image.file(
+                                          File(result),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    ]
+                                  ],
+                                  Row(
+                                    children: [
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: ElevatedButton(
+                                            onPressed: () async {
+                                              result =
+                                                  await Navigator.of(context)
+                                                      .pushNamed(
+                                                          TakePictureScreen
+                                                              .routeName);
+                                              result = result[0].toString();
 
-                                      // check scenario
-                                      if (widget.scenarios == Scenarios.edit) {
-                                        sneaker.notifyWithoutUpdateData();
-                                      } else {
-                                        sneaker.updateImgURLNotify(result);
-                                      }
-                                    },
-                                    child: Icon(Icons.camera))
-                              ],
+                                              // check scenario
+                                              if (widget.scenarios ==
+                                                  Scenarios.edit) {
+                                                sneaker
+                                                    .notifyWithoutUpdateData();
+                                              } else {
+                                                sneaker
+                                                    .updateImgURLNotify(result);
+                                              }
+                                            },
+                                            child: Icon(Icons.camera)),
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    Container(
-                        margin: AppTheme.spaceBetweenSectionTop(),
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text('Stock Available',
-                            style: MediaQuery.of(context).size.width >
-                                    kTabletBreakPoint
-                                ? AppTheme.displayInvenTitle(
-                                    context, kDesktopSubHeadings)
-                                : AppTheme.displayInvenTitle(
-                                    context, kMobileSubHeadings))),
                     if (widget.scenarios == Scenarios.edit) ...[
-                      SneakerStockList(scenarioProcessing: Scenarios.edit)
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: SneakerStockList(
+                              scenarioProcessing: Scenarios.edit))
                     ] else ...[
-                      SneakerStockList(scenarioProcessing: Scenarios.add)
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: SneakerStockList(
+                              scenarioProcessing: Scenarios.add))
                     ]
                   ],
                 ),
@@ -215,30 +241,27 @@ class _AddStockState extends State<AddStock> {
                     }
                   },
                   child: widget.scenarios == Scenarios.add
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
+                      ? Center(
+                          child: Expanded(
+                            child: AutoSizeText(
                               "+ Add to the List",
                               style: MediaQuery.of(context).size.width >
                                       kTabletBreakPoint
                                   ? AppTheme.kFontSizeDesktopAppBarText
                                   : AppTheme.kFontSizeMobileAppBarText,
-                            )
-                          ],
+                            ),
+                          ),
                         )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.edit),
-                            Text(
+                      : Center(
+                          child: Expanded(
+                            child: AutoSizeText(
                               "Edit Sneaker Info!!",
                               style: MediaQuery.of(context).size.width >
                                       kTabletBreakPoint
                                   ? AppTheme.kFontSizeDesktopAppBarText
                                   : AppTheme.kFontSizeMobileAppBarText,
-                            )
-                          ],
+                            ),
+                          ),
                         ),
                 )
               ],
@@ -251,8 +274,8 @@ class _AddStockState extends State<AddStock> {
   Widget _formSneakerMobile() {
     return Column(
       children: [
-        SizedBox(
-          width: 150,
+        Expanded(
+          flex: 3,
           child: TextFormField(
             controller: _sneakerNameController,
             // The validator receives the text that the user has entered.
@@ -267,8 +290,8 @@ class _AddStockState extends State<AddStock> {
                 labelStyle: TextStyle(fontSize: kMobileInputText)),
           ),
         ),
-        SizedBox(
-          width: 150,
+        Expanded(
+          flex: 3,
           child: TextFormField(
               controller: _sneakerNotesController,
               keyboardType: TextInputType.multiline,
@@ -277,6 +300,9 @@ class _AddStockState extends State<AddStock> {
                   labelText: "Notes",
                   labelStyle: TextStyle(fontSize: kMobileInputText))),
         ),
+        Spacer(
+          flex: 4,
+        )
       ],
     );
   }
@@ -284,8 +310,8 @@ class _AddStockState extends State<AddStock> {
   Widget _formSneakerDesktop() {
     return Column(
       children: [
-        SizedBox(
-          width: 150,
+        Expanded(
+          flex: 3,
           child: TextFormField(
             controller: _sneakerNameController,
             // The validator receives the text that the user has entered.
@@ -300,8 +326,8 @@ class _AddStockState extends State<AddStock> {
                 labelStyle: TextStyle(fontSize: kDesktopInputText)),
           ),
         ),
-        SizedBox(
-          width: 150,
+        Expanded(
+          flex: 3,
           child: TextFormField(
               controller: _sneakerNotesController,
               keyboardType: TextInputType.multiline,
@@ -310,6 +336,9 @@ class _AddStockState extends State<AddStock> {
                   labelText: "Notes",
                   labelStyle: TextStyle(fontSize: kDesktopInputText))),
         ),
+        Spacer(
+          flex: 4,
+        )
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
+import '../styles/responsive/breakpoints.dart';
 
 class SneakerStockList extends StatefulWidget {
   late Sneaker _newSneaker;
@@ -613,200 +615,190 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
   Widget _sneakerStockListMobile() {
     return Container(
-      margin: AppTheme.spaceBetweenInListTop(),
       padding: EdgeInsets.only(left: 20, right: 20),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            Column(
-              children: [
-                if (widget._sneakerAvailable.isEmpty) ...[
-                  Container(
-                    margin: EdgeInsets.only(top: 50, bottom: 30),
-                    child: Text(
-                      'Empty! Please add something to the list!!!',
-                      style: TextStyle(fontSize: kMobileBodyText),
-                    ),
-                  )
-                ] else ...[
-                  SizedBox(
-                    height: 250,
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: widget._sneakerAvailable.length,
-                        itemBuilder: (ctx, index) =>
-                            ChangeNotifierProvider.value(
-                                value: widget._sneakerAvailable[index],
-                                child: Consumer<SneakerDetail>(
-                                    builder: (context, sneakerInfo, _) =>
-                                        Dismissible(
-                                            key: Key(Uuid().v1()),
-                                            background:
-                                                Container(color: Colors.red),
-                                            direction:
-                                                DismissDirection.endToStart,
-                                            onDismissed: (direction) {
-                                              widget._newSneaker
-                                                  .deleteStockCopiedList(index);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        'Deleted stock!!!',
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                kMobileBodyText))),
-                                              );
-                                              // Scaffold
-                                              //     .of(context)
-                                              //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
-                                            },
-                                            child: Container(
-                                              margin: AppTheme
-                                                  .spaceBetweenInEList(),
-                                              child: ResponsiveLayout(
-                                                mobileBody: _stockListTileMobile(
-                                                    widget._sneakerAvailable[
-                                                    index],
-                                                    index),
-                                                tabletVersion:
-                                                _stockListTileDesktop(
-                                                    widget._sneakerAvailable[
-                                                    index],
-                                                    index),
-                                                desktopVersion:
-                                                _stockListTileDesktop(
-                                                    widget._sneakerAvailable[
-                                                    index],
-                                                    index),
-                                              ),
-                                            ))))),
-                  )
-                ],
-              ],
-            ),
-            Consumer<Sneaker>(
-              builder: (context, sneaker, _) => Container(
-                margin: AppTheme.spaceBetweenInListTop(),
-                child: RawMaterialButton(
-                  onPressed: () {
-                    _showAddStockDialog();
-                  },
-                  elevation: 2.0,
-                  fillColor: Theme.of(context).primaryColor,
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  padding: EdgeInsets.all(15.0),
-                  shape: CircleBorder(),
-                ),
+      width: double.infinity,
+      child: Column(
+        children: [
+          Container(
+              width: double.infinity,
+              child: AutoSizeText('Stock Available',
+                  style: AppTheme.displayInvenTitle(
+                      context, kMobileSubHeadings))),
+          if (widget._sneakerAvailable.isEmpty) ...[
+            const Center(
+              child: AutoSizeText(
+                'Empty! Please add something to the list!!!',
+                style: TextStyle(fontSize: kMobileBodyText),
               ),
             )
+          ] else ...[
+            Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: widget._sneakerAvailable.length,
+                  itemBuilder: (ctx, index) =>
+                      ChangeNotifierProvider.value(
+                          value: widget._sneakerAvailable[index],
+                          child: Consumer<SneakerDetail>(
+                              builder: (context, sneakerInfo, _) =>
+                                  Dismissible(
+                                      key: Key(Uuid().v1()),
+                                      background:
+                                          Container(color: Colors.red),
+                                      direction:
+                                          DismissDirection.endToStart,
+                                      onDismissed: (direction) {
+                                        widget._newSneaker
+                                            .deleteStockCopiedList(index);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Deleted stock!!!',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          kMobileBodyText))),
+                                        );
+                                        // Scaffold
+                                        //     .of(context)
+                                        //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                                      },
+                                      child: Container(
+                                        margin: AppTheme
+                                            .spaceBetweenInEList(),
+                                        child: ResponsiveLayout(
+                                          mobileBody: _stockListTileMobile(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                          tabletVersion:
+                                          _stockListTileDesktop(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                          desktopVersion:
+                                          _stockListTileDesktop(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                        ),
+                                      ))))),
+            )
           ],
-        ),
+          Consumer<Sneaker>(
+            builder: (context, sneaker, _) => Container(
+              child: RawMaterialButton(
+                onPressed: () {
+                  _showAddStockDialog();
+                },
+                elevation: 2.0,
+                fillColor: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                // padding: EdgeInsets.all(15.0),
+                shape: CircleBorder(),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget _sneakerStockListDesktop() {
     return Container(
-      margin: AppTheme.spaceBetweenInListTop(),
       padding: EdgeInsets.only(left: 20, right: 20),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            Column(
-              children: [
-                if (widget._sneakerAvailable.isEmpty) ...[
-                  Container(
-                    margin: EdgeInsets.only(top: 50, bottom: 30),
-                    child: Text(
-                      'Empty! Please add something to the list!!!',
-                      style: TextStyle(fontSize: kDesktopBodyText),
-                    ),
-                  )
-                ] else ...[
-                  SizedBox(
-                    height: 250,
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: widget._sneakerAvailable.length,
-                        itemBuilder: (ctx, index) =>
-                            ChangeNotifierProvider.value(
-                                value: widget._sneakerAvailable[index],
-                                child: Consumer<SneakerDetail>(
-                                    builder: (context, sneakerInfo, _) =>
-                                        Dismissible(
-                                            key: Key(Uuid().v1()),
-                                            background:
-                                                Container(color: Colors.red),
-                                            direction:
-                                                DismissDirection.endToStart,
-                                            onDismissed: (direction) {
-                                              widget._newSneaker
-                                                  .deleteStockCopiedList(index);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        'Deleted stock!!!',
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                kDesktopBodyText))),
-                                              );
-                                              // Scaffold
-                                              //     .of(context)
-                                              //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
-                                            },
-                                            child: Container(
-                                              margin: AppTheme
-                                                  .spaceBetweenInEList(),
-                                              child: ResponsiveLayout(
-                                                mobileBody: _stockListTileMobile(
-                                                    widget._sneakerAvailable[
-                                                        index],
-                                                    index),
-                                                tabletVersion:
-                                                    _stockListTileDesktop(
-                                                        widget._sneakerAvailable[
-                                                            index],
-                                                        index),
-                                                desktopVersion:
-                                                    _stockListTileDesktop(
-                                                        widget._sneakerAvailable[
-                                                            index],
-                                                        index),
-                                              ),
-                                            ))))),
-                  )
-                ],
-              ],
-            ),
-            Consumer<Sneaker>(
-              builder: (context, sneaker, _) => Container(
-                margin: AppTheme.spaceBetweenInListTop(),
-                child: RawMaterialButton(
-                  onPressed: () {
-                    _showAddStockDialog();
-                  },
-                  elevation: 2.0,
-                  fillColor: Theme.of(context).primaryColor,
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  padding: EdgeInsets.all(15.0),
-                  shape: CircleBorder(),
-                ),
+      width: double.infinity,
+      child: Column(
+        children: [
+          Container(
+              width: double.infinity,
+              child: AutoSizeText('Stock Available',
+                  style: AppTheme.displayInvenTitle(
+                      context, kDesktopSubHeadings))),
+          if (widget._sneakerAvailable.isEmpty) ...[
+            const Center(
+              child: AutoSizeText(
+                'Empty! Please add something to the list!!!',
+                style: TextStyle(fontSize: kDesktopBodyText),
               ),
             )
+          ] else ...[
+            Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: widget._sneakerAvailable.length,
+                  itemBuilder: (ctx, index) =>
+                      ChangeNotifierProvider.value(
+                          value: widget._sneakerAvailable[index],
+                          child: Consumer<SneakerDetail>(
+                              builder: (context, sneakerInfo, _) =>
+                                  Dismissible(
+                                      key: Key(Uuid().v1()),
+                                      background:
+                                      Container(color: Colors.red),
+                                      direction:
+                                      DismissDirection.endToStart,
+                                      onDismissed: (direction) {
+                                        widget._newSneaker
+                                            .deleteStockCopiedList(index);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Deleted stock!!!',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                      kDesktopBodyText))),
+                                        );
+                                        // Scaffold
+                                        //     .of(context)
+                                        //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                                      },
+                                      child: Container(
+                                        margin: AppTheme
+                                            .spaceBetweenInEList(),
+                                        child: ResponsiveLayout(
+                                          mobileBody: _stockListTileMobile(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                          tabletVersion:
+                                          _stockListTileDesktop(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                          desktopVersion:
+                                          _stockListTileDesktop(
+                                              widget._sneakerAvailable[
+                                              index],
+                                              index),
+                                        ),
+                                      ))))),
+            )
           ],
-        ),
+          Consumer<Sneaker>(
+            builder: (context, sneaker, _) => Container(
+              child: RawMaterialButton(
+                onPressed: () {
+                  _showAddStockDialog();
+                },
+                elevation: 2.0,
+                fillColor: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                // padding: EdgeInsets.all(15.0),
+                shape: CircleBorder(),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
