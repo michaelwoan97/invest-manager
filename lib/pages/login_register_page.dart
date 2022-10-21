@@ -224,8 +224,13 @@ class _LoginPageState extends State<LoginPage> {
     return isLoading
         ? Loading()
         : Scaffold(
-            appBar: AppBar(
-              title: _title(context),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(MediaQuery.of(context).size.height >= kTabletBreakPoint ? 60 : MediaQuery.of(context).size.height * 0.1),
+              child: MaxWidthContainer(
+                child: AppBar(
+                  title: _title(context),
+                ),
+              ),
             ),
             body: MaxWidthContainer(
               child: Container(

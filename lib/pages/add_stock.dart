@@ -9,6 +9,7 @@ import 'package:invest_manager/styles/max_width_container.dart';
 import 'package:invest_manager/styles/responsive/breakpoints.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/styles/responsive_layout.dart';
+import 'package:invest_manager/widgets/custom_sneaker_image.dart';
 import 'package:invest_manager/widgets/sneaker_stock_list.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -59,19 +60,24 @@ class _AddStockState extends State<AddStock> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Stock Info',
-              style: MediaQuery.of(context).size.width > kTabletBreakPoint
-                  ? AppTheme.kFontSizeDesktopAppBarText
-                  : AppTheme.kFontSizeMobileAppBarText),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  widget.newSneaker.clearAvailableStockExisted();
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.close_sharp))
-          ],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height >= kTabletBreakPoint ? 60 : MediaQuery.of(context).size.height * 0.1),
+          child: MaxWidthContainer(
+            child: AppBar(
+              title: Text('Stock Info',
+                  style: MediaQuery.of(context).size.width > kTabletBreakPoint
+                      ? AppTheme.kFontSizeDesktopAppBarText
+                      : AppTheme.kFontSizeMobileAppBarText),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      widget.newSneaker.clearAvailableStockExisted();
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.close_sharp))
+              ],
+            ),
+          ),
         ),
         body: ChangeNotifierProvider.value(
           value: widget.newSneaker,
@@ -109,21 +115,10 @@ class _AddStockState extends State<AddStock> {
                                       widget.newSneaker.getImgUrl.isEmpty) ...[
                                     Text('Use camera to take picture')
                                   ] else ...[
-                                    if (result.toString().contains("http")) ...[
-                                      Expanded(
-                                        flex: 4,
-                                        child: Image.network(result.toString(),
-                                            fit: BoxFit.cover),
-                                      )
-                                    ] else ...[
-                                      Expanded(
-                                        flex: 4,
-                                        child: Image.file(
-                                          File(result),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    ]
+                                    Expanded(
+                                      flex: 4,
+                                      child: CustomSneakerImage(imgUrl: result, placeholderImg: "assets/images/default_img.png",),
+                                    )
                                   ],
                                   Row(
                                     children: [

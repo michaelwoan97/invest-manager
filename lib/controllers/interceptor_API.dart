@@ -111,7 +111,8 @@ class InterceptorAPI extends Interceptor{
 
     // back to login page without using context
     // check this https://stackoverflow.com/a/53397266/9101876
-    navigatorKey.currentState?.pushReplacementNamed(LoginPage.routeName);
+    navigatorKey.currentState?.pop();
+    navigatorKey.currentState?.pushReplacementNamed("/");
 
     _dio.interceptors.requestLock.unlock();
   }

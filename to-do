@@ -54,13 +54,13 @@ writing unit test
 
 optimize
 
-working on app presentations
+working on app presentations done
     Theme done,responsive,animation try a bit but focus on bayby step
         animation done
                 page transition done
                 adding to the list not needed
                 hero maybe replacing another pic will do in next version
-        responsive
+        responsive done
             working on responsive for stock list done
             need to fix the bug total autoupdate when re-render done
             fix image not loading correctly temporarily fixed
@@ -70,7 +70,17 @@ working on app presentations
                     find a way to resisze text done
                         Homepage widget
                     fixing inventory text issuse
+        testing
+            Nothing really needed since it just used for presentation
+        optimize
+            Nothing really needed since wanted to focus on more stuff
+            same with flutter analy
+             =>Can do when have free time to clean up
         adaptive
+        fixing on some cucial error like image not loading
+            working on add-stock page
+        comment
+
 add more meaningfull log for errors and exceptions
 clean up, optimize
 test unit

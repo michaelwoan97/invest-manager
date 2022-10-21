@@ -8,6 +8,7 @@ import 'package:invest_manager/pages/add_stock.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
 import 'package:invest_manager/styles/responsive_layout.dart';
 import 'package:invest_manager/styles/theme_styles.dart';
+import 'package:invest_manager/widgets/custom_circle_avatar.dart';
 import 'package:invest_manager/widgets/transition_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -121,18 +122,11 @@ class StockList extends StatelessWidget {
                                         child: Consumer<Sneaker>(
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
-                                            leading: CircleAvatar(
-                                              backgroundImage:
-                                                  arrSneakers[index]
-                                                          .getImgUrl
-                                                          .contains("http")
-                                                      ? NetworkImage(
-                                                          arrSneakers[index]
-                                                              .getImgUrl)
-                                                      : FileImage(File(
-                                                              arrSneakers[index]
-                                                                  .getImgUrl))
-                                                          as ImageProvider,
+                                            leading: CustomCircleAvatar(
+                                              imgUrl:
+                                                  arrSneakers[index].getImgUrl,
+                                              placeholderImg:
+                                                  "images/default_img.png",
                                             ),
                                             title: Text(
                                               arrSneakers[index].getSneakerName,
@@ -161,6 +155,36 @@ class StockList extends StatelessWidget {
     );
   }
 
+  // CircleAvatar(
+  // backgroundImage:
+  // arrSneakers[index]
+  //     .getImgUrl
+  //     .contains("http")
+  // ? NetworkImage(
+  // arrSneakers[index]
+  //     .getImgUrl)
+  //     : FileImage(File(
+  // arrSneakers[index]
+  //     .getImgUrl))
+  // as ImageProvider,
+  // )
+
+  // ClipOval(
+  // child:
+  // FadeInImage(
+  // placeholder: AssetImage("assets/default_img.png"),
+  // image: arrSneakers[index]
+  //     .getImgUrl
+  //     .contains("http")
+  // ? NetworkImage(
+  // arrSneakers[index]
+  //     .getImgUrl)
+  //     : FileImage(File(
+  // arrSneakers[index]
+  //     .getImgUrl))
+  // as ImageProvider,),
+  // )
+
   Widget _stockListTablet(BuildContext context) {
     return Container(
       margin: AppTheme.spaceBetweenSectionTop(),
@@ -171,8 +195,8 @@ class StockList extends StatelessWidget {
           Expanded(
               flex: 1,
               child: AutoSizeText("Inventory",
-                  style:
-                  AppTheme.displayInvenTitle(context, kDesktopSubHeadings))),
+                  style: AppTheme.displayInvenTitle(
+                      context, kDesktopSubHeadings))),
           if (arrSneakers.isNotEmpty) ...[
             Consumer<SneakerManager>(
               builder: (ctx, sneakerManager, _) => Expanded(
@@ -198,8 +222,8 @@ class StockList extends StatelessWidget {
                                         SneakerManager().accessToken,
                                         SneakerManager().userID,
                                         arrSneakers[index].getID);
-                                    SneakerManager()
-                                        .deleteSneaker(arrSneakers[index].getID);
+                                    SneakerManager().deleteSneaker(
+                                        arrSneakers[index].getID);
 
                                     // Scaffold
                                     //     .of(context)
@@ -227,18 +251,20 @@ class StockList extends StatelessWidget {
                                           );
                                         },
                                         child: Consumer<Sneaker>(
-                                          builder: (ctx, sneaker, _) => ListTile(
+                                          builder: (ctx, sneaker, _) =>
+                                              ListTile(
                                             leading: CircleAvatar(
-                                              backgroundImage: arrSneakers[index]
-                                                      .getImgUrl
-                                                      .contains("http")
-                                                  ? NetworkImage(
-                                                      arrSneakers[index]
-                                                          .getImgUrl)
-                                                  : FileImage(File(
+                                              backgroundImage:
+                                                  arrSneakers[index]
+                                                          .getImgUrl
+                                                          .contains("http")
+                                                      ? NetworkImage(
                                                           arrSneakers[index]
-                                                              .getImgUrl))
-                                                      as ImageProvider,
+                                                              .getImgUrl)
+                                                      : FileImage(File(
+                                                              arrSneakers[index]
+                                                                  .getImgUrl))
+                                                          as ImageProvider,
                                             ),
                                             title: Text(
                                               arrSneakers[index].getSneakerName,

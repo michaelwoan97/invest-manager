@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
             Container(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: Expanded(child: StockList()))
+                child: StockList())
           ],
         ),
       ),
@@ -357,90 +357,27 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  // Widget _HomeInventoryDesktop() {
-  //   return Container(
-  //     height: double.infinity,
-  //     width: double.infinity,
-  //     padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-  //     child: SingleChildScrollView(
-  //       child: Column(
-  //         children: <Widget>[
-  //           Text(
-  //             greetingMsg,
-  //             style: AppTheme.displayInvenTitle(context, kDesktopHeadings),
-  //           ),
-  //           Container(
-  //             margin: AppTheme.spaceBetweenInListTop(),
-  //             child: Consumer<SneakerManager>(
-  //               builder: (ctx, manager, _) => Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   Card(
-  //                     elevation: 2,
-  //                     child: Container(
-  //                       child: Column(
-  //                         children: [
-  //                           Container(
-  //                             margin: AppTheme.spaceBetweenInListBottom(),
-  //                             child: Text(
-  //                               'Total Products',
-  //                               style: AppTheme.totalInvenTitle(
-  //                                   context, Colors.green, kDesktopSubHeadings),
-  //                             ),
-  //                           ),
-  //                           Text(SneakerManager().totalAvaiProducts.toString(),
-  //                               style: AppTheme.totalInvenTitle(
-  //                                   context, Colors.black, kDesktopSubHeadings))
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Card(
-  //                     elevation: 2,
-  //                     child: Container(
-  //                       padding:
-  //                           EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-  //                       child: Column(
-  //                         children: [
-  //                           Container(
-  //                             margin: AppTheme.spaceBetweenInListBottom(),
-  //                             child: Text('\$Products Sold\$',
-  //                                 style: AppTheme.totalInvenTitle(context,
-  //                                     Colors.red, kDesktopSubHeadings)),
-  //                           ),
-  //                           Text(SneakerManager().totalSoldProducts.toString(),
-  //                               style: AppTheme.totalInvenTitle(
-  //                                   context, Colors.black, kDesktopSubHeadings))
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //           StockList()
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: _title(context),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout_outlined),
-            onPressed: () {
-              signOut();
-              Navigator.of(context).pushReplacementNamed(WidgetTree.routeName);
-            },
-          )
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height >= kTabletBreakPoint ? 60 : MediaQuery.of(context).size.height * 0.1),
+        child: MaxWidthContainer(
+          child: AppBar(
+            title: _title(context),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.logout_outlined),
+                onPressed: () {
+                  signOut();
+                  Navigator.of(context).pushReplacementNamed(WidgetTree.routeName);
+                },
+              )
+            ],
+          ),
+        ),
       ),
       body: ChangeNotifierProvider.value(
         value: sneakerManager,
