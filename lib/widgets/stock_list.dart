@@ -126,7 +126,7 @@ class StockList extends StatelessWidget {
                                               imgUrl:
                                                   arrSneakers[index].getImgUrl,
                                               placeholderImg:
-                                                  "images/default_img.png",
+                                                  "assets/images/default_img.png",
                                             ),
                                             title: Text(
                                               arrSneakers[index].getSneakerName,

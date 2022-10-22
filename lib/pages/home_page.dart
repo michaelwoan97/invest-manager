@@ -372,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.logout_outlined),
                 onPressed: () {
                   signOut();
-                  Navigator.of(context).pushReplacementNamed(WidgetTree.routeName);
+                  Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
                 },
               )
             ],

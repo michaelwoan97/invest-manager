@@ -81,7 +81,6 @@ class _MyAppState extends State<MyApp> {
         navigatorObservers: [MyRouteObserver()],
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: LoginPage(),
         routes: {
           LoginPage.routeName: (ctx) => LoginPage(),
           HomePage.routeName: (context) => HomePage(),
@@ -120,7 +119,6 @@ class _MyAppNoCamState extends State<MyAppNoCam> {
         navigatorObservers: [MyRouteObserver()],
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: LoginPage(),
         routes: {
           LoginPage.routeName: (ctx) => LoginPage(),
           HomePage.routeName: (context) => HomePage(),

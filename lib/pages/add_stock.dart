@@ -236,8 +236,10 @@ class _AddStockState extends State<AddStock> {
                     }
                   },
                   child: widget.scenarios == Scenarios.add
-                      ? Center(
-                          child: Expanded(
+                      ? Flex(
+                        direction: Axis.horizontal,
+                        children: [Expanded(
+                          child: Center(
                             child: AutoSizeText(
                               "+ Add to the List",
                               style: MediaQuery.of(context).size.width >
@@ -246,17 +248,21 @@ class _AddStockState extends State<AddStock> {
                                   : AppTheme.kFontSizeMobileAppBarText,
                             ),
                           ),
-                        )
-                      : Center(
-                          child: Expanded(
-                            child: AutoSizeText(
-                              "Edit Sneaker Info!!",
-                              style: MediaQuery.of(context).size.width >
-                                      kTabletBreakPoint
-                                  ? AppTheme.kFontSizeDesktopAppBarText
-                                  : AppTheme.kFontSizeMobileAppBarText,
+                        )],
+                      )
+                      : Flex(
+                          direction: Axis.horizontal,
+                          children: [Expanded(
+                            child: Center(
+                              child: AutoSizeText(
+                                "Edit Sneaker Info!!",
+                                style: MediaQuery.of(context).size.width >
+                                        kTabletBreakPoint
+                                    ? AppTheme.kFontSizeDesktopAppBarText
+                                    : AppTheme.kFontSizeMobileAppBarText,
+                              ),
                             ),
-                          ),
+                          )],
                         ),
                 )
               ],

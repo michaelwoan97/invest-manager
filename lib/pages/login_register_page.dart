@@ -19,7 +19,7 @@ import '../styles/responsive/breakpoints.dart';
 import '../styles/theme_styles.dart';
 
 class LoginPage extends StatefulWidget {
-  static const routeName = '/login';
+  static const routeName = '/';
   static const emailField = "*Email";
   static const passField = "*Password";
 
@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title(BuildContext context) {
-    return Text('Home',
+    return Text('Invest Manager',
         style: MediaQuery.of(context).size.width > kTabletBreakPoint
             ? AppTheme.kFontSizeDesktopAppBarText
             : AppTheme.kFontSizeMobileAppBarText);
@@ -273,6 +273,7 @@ class _LoginPageState extends State<LoginPage> {
       final user = await ManageToken.getUserID();
       SneakerManager().userID = user;
       if (lastRoute == AddStock.routeName) {
+        Navigator.of(context).popUntil(ModalRoute.withName("/"));
         Navigator.of(context).pushReplacementNamed(HomePage.routeName);
 
         // check whether there are arguments
@@ -287,6 +288,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.of(context).pushNamed(lastRoute);
         }
       } else {
+        Navigator.of(context).popUntil(ModalRoute.withName("/"));
         Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }
     }
