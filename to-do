@@ -38,7 +38,7 @@ fix bug done
 
 fix error and exception done
 
-Theme
+Theme done
     expanded list involve in responsive might have to do some research
     continue themegit
        appropriate response for actions done
@@ -46,13 +46,13 @@ Theme
                CRUD
 
 
-writing unit test
+writing unit test FUTURE
     what do I need test for? When everthing need to be inbound
         write the tests that I needs so I dont have to run manual even
             if it is inbound
     Do it later before clean and optimize
 
-optimize
+optimize FUTURE
 
 working on app presentations done
     Theme done,responsive,animation try a bit but focus on bayby step
@@ -79,7 +79,8 @@ working on app presentations done
         adaptive
         fixing on some cucial error like image not loading
             working on add-stock page
-        comment
+fix login page bugs (authenticate iusse)FUTURE
+comment
 
 add more meaningfull log for errors and exceptions
 clean up, optimize
@@ -90,6 +91,11 @@ having loading screen for login done
 store token secure done
 list tile images
 re-do taking pics
+    will do re-design how image is taken and saved
+        because web limited api to file system
+            better approach upload to database so every devices could have it
+correct url navigation
+save last screen on web browser
 
 doubt
 future might not come back in time for usage

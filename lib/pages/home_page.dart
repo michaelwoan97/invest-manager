@@ -24,6 +24,10 @@ import '../widgets/transition_routes.dart';
 
 enum Type { sneaker, electronic, crypto }
 
+/*
+* class: HomePage
+* purpose: This class represent the HomePage page
+* */
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
 
@@ -36,7 +40,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Type dropDownValue = Type.sneaker;
   late Future<List<Sneaker>> listSneakers;
-  bool isCalculated = false;
 
   // final User? user = Auth().currentUser;
   final SneakerManager sneakerManager = SneakerManager();
@@ -62,6 +65,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /*
+  * purpose: check which value is selected from the drop down widget
+  * */
   String _checkTypeOfDropdownValue(Type kind) {
     switch (kind) {
       case Type.sneaker:
@@ -83,6 +89,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
@@ -90,6 +97,9 @@ class _HomePageState extends State<HomePage> {
         .logOut(SneakerManager().refreshToken, SneakerManager().userID);
   }
 
+  /*
+  * purpose: create dialog with choices to select
+  * */
   Future<void> _showTypeDialog() async {
     return showDialog<void>(
       context: context,
@@ -128,6 +138,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Widget _title(BuildContext context) {
     return Text('Home',
         style: MediaQuery.of(context).size.width > kTabletBreakPoint
@@ -135,14 +146,9 @@ class _HomePageState extends State<HomePage> {
             : AppTheme.kFontSizeMobileAppBarText);
   }
 
-  // Widget _userUid() {
-  //   return Text(user?.email ?? 'User Email');
-  // }
-
-  Widget _signOutButton() {
-    return ElevatedButton(onPressed: signOut, child: const Text('Sign Out'));
-  }
-
+  /*
+  * purpose: create dropdown widget
+  * */
   Widget _dropDownTypesButton() {
     String value = _checkTypeOfDropdownValue(this.dropDownValue);
     return DropdownButtonFormField<String>(
@@ -170,6 +176,9 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _HomeInventoryMobile() {
     return Container(
       height: double.infinity,
@@ -183,7 +192,9 @@ class _HomePageState extends State<HomePage> {
               style: AppTheme.displayInvenTitle(context, kMobileHeadings),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height >= kTabletBreakPoint ? 180 : MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height >= kTabletBreakPoint
+                  ? 180
+                  : MediaQuery.of(context).size.height * 0.2,
               child: Container(
                 width: double.infinity,
                 child: Consumer<SneakerManager>(
@@ -264,6 +275,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _HomeInventoryDesktop() {
     return Container(
       height: double.infinity,
@@ -277,7 +291,9 @@ class _HomePageState extends State<HomePage> {
               style: AppTheme.displayInvenTitle(context, kDesktopHeadings),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height >= kTabletBreakPoint ? 180 : MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height >= kTabletBreakPoint
+                  ? 180
+                  : MediaQuery.of(context).size.height * 0.2,
               child: Container(
                 width: double.infinity,
                 child: Consumer<SneakerManager>(
@@ -350,8 +366,14 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
                 width: double.infinity,
-                height:  MediaQuery.of(context).size.height >= kTabletBreakPoint ? 500 : MediaQuery.of(context).size.height * 0.5,
-                child: Expanded(child: StockList()))
+                height: MediaQuery.of(context).size.height >= kTabletBreakPoint
+                    ? 500
+                    : MediaQuery.of(context).size.height * 0.5,
+                child: Column(
+                  children: [
+                    Expanded(child: StockList()),
+                  ],
+                ))
           ],
         ),
       ),
@@ -363,7 +385,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height >= kTabletBreakPoint ? 60 : MediaQuery.of(context).size.height * 0.1),
+        preferredSize: Size.fromHeight(
+            MediaQuery.of(context).size.height >= kTabletBreakPoint
+                ? 60
+                : MediaQuery.of(context).size.height * 0.1),
         child: MaxWidthContainer(
           child: AppBar(
             title: _title(context),
@@ -372,7 +397,8 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.logout_outlined),
                 onPressed: () {
                   signOut();
-                  Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
+                  Navigator.of(context)
+                      .pushReplacementNamed(LoginPage.routeName);
                 },
               )
             ],
@@ -390,10 +416,10 @@ class _HomePageState extends State<HomePage> {
               sneakerManager.setListSneaker = sneakers;
 
               // check whether the total is calculated so it would be not
-              if (!isCalculated) {
+              if (!SneakerManager().isTotalCalculated) {
                 SneakerManager().calculateTotalProductSold();
                 SneakerManager().calculateTotalQuantityProducts();
-                isCalculated = true;
+                SneakerManager().isTotalCalculated = true;
               }
 
               return MaxWidthContainer(

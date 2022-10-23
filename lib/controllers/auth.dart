@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+/*
+* class: Auth
+* purpose: This class used Firebase for authenticating & authorizing
+* */
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 

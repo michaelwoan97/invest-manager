@@ -1,13 +1,18 @@
 import 'dart:convert';
-
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_manager/pages/add_stock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// purpose: the purpose of this class is to observe the change
-//          in route stack and apply logic accordingly
+
+/*
+* class: ManagementAPI
+* purpose: the purpose of this class is to observe the change
+*          in route stack and apply logic accordingly
+* */
 class MyRouteObserver extends RouteObserver {
+
+  // purpose: save last the route when users were on
   void saveLastRoute(Route lastRoute) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 

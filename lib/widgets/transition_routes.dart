@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/*
+* class: TransitionRoutes
+* purpose: this class is used for creating transition effects
+* */
 class TransitionRoutes extends PageRouteBuilder {
   final Widget page;
 

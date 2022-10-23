@@ -1,5 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/*
+* class: ManageToken
+* purpose: this class is used for managing token
+* */
 class ManageToken {
   static saveAccessToken(val) async {
     const storage = FlutterSecureStorage();

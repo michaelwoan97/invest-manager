@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:invest_manager/styles/responsive/breakpoints.dart';
 
-// create responsive layout
+
+/*
+* class: ResponsiveLayout
+* purpose: create responsive layouts
+* */
 class ResponsiveLayout extends StatelessWidget {
   ResponsiveLayout(
       {Key? key, required this.mobileBody, tabletVersion, desktopVersion}) {

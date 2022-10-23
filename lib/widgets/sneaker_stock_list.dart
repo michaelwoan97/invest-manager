@@ -12,6 +12,10 @@ import 'package:uuid/uuid.dart';
 import '../models/sneaker.dart';
 import '../styles/responsive/breakpoints.dart';
 
+/*
+* class: SneakerStockList
+* purpose: this class is used for creating SneakerStockList widget
+* */
 class SneakerStockList extends StatefulWidget {
   late Sneaker _newSneaker;
   late List<SneakerDetail> _sneakerAvailable;
@@ -38,6 +42,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
   final _priceController = TextEditingController();
   final soldAtController = TextEditingController();
 
+  // purpose: used for creating add stock dialog
   Future<void> _showAddStockDialog() async {
     return showDialog<void>(
       context: context,
@@ -243,6 +248,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+  // purpose: used for creating edit stock dialog
   Future<void> _editStockInfoDialog(SneakerDetail stock, int position) async {
     _purchasedFromController.text = stock.getSellerName;
     _purchasedDateController.text = stock.getDatePurchased;
@@ -443,6 +449,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+  // purpose: used for processing new available stocks
   void _processNewAvailableStocks() {
     List<SneakerDetail> newStockAvailable = [];
     // start adding to the available stock
@@ -474,6 +481,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     }
   }
 
+  // purpose: used for clearing data of a form
   void clearForm() {
     _purchasedFromController.text = '';
     _purchasedDateController.text = '';
@@ -483,6 +491,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
     soldAtController.text = '';
   }
 
+  // purpose: used for editing/updating new available stocks
   void _editSneakerStock(SneakerDetail stock, int position) {
     SneakerDetail newSneakerStockInfo;
 
@@ -515,6 +524,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     }
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _stockListTileMobile(SneakerDetail stock, int position) {
     return Card(
       elevation: AppTheme.cardElevation(),
@@ -548,6 +560,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach desktop/tablet breakpoints
+  * */
   Widget _stockListTileDesktop(SneakerDetail stock, int position) {
     return Card(
       elevation: AppTheme.cardElevation(),
@@ -613,6 +628,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _sneakerStockListMobile() {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
@@ -708,6 +726,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach desktop/tablet breakpoints
+  * */
   Widget _sneakerStockListDesktop() {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
@@ -804,23 +825,4 @@ class _SneakerStockListState extends State<SneakerStockList> {
   }
 }
 
-// not use any more because cant update the sold at text field if not using
-// setState in the statefulbuilder
-// Widget _dropDownTypesButton() {
-//   return DropdownButtonFormField<String>(
-//       decoration: InputDecoration(
-//         labelText: "Is Sold?"
-//       ),
-//       items: const [
-//         DropdownMenuItem(child: Text('Yes'), value: 'Yes'),
-//         DropdownMenuItem(child: Text('No'), value: 'No'),
-//       ],
-//       value: sIsSold,
-//       onChanged: (selectedValue) {
-//         if (selectedValue is String) {
-//           setState(() {
-//             sIsSold = selectedValue;
-//           });
-//         }
-//       });
-// }
+

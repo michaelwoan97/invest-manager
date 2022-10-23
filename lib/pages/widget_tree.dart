@@ -4,6 +4,7 @@ import 'package:invest_manager/pages/home_page.dart';
 import 'package:invest_manager/pages/login_register_page.dart';
 import 'package:flutter/material.dart';
 
+// this class used when the firebase was using
 class WidgetTree extends StatefulWidget {
   static const routeName = '/login';
   const WidgetTree({Key? key}) : super(key: key);

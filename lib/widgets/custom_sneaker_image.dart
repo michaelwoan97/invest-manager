@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+
+/*
+* class: CustomSneakerImage
+* purpose: this class is used for creating custom sneaker image
+* */
 class CustomSneakerImage extends StatefulWidget {
   NetworkImage? myNetworkImage;
   FileImage? myFileImage;

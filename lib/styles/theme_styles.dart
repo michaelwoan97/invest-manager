@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:invest_manager/styles/responsive/font_sizes.dart';
 
+/*
+* class: AppTheme
+* purpose: create general theme for the app
+* */
 class AppTheme {
   static const kFontSizeMobileBodyText = TextStyle(fontSize: kMobileBodyText);
   static const kFontSizeDesktopBodyText = TextStyle(fontSize: kDesktopBodyText);

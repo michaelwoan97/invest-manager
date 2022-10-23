@@ -5,6 +5,10 @@ import 'package:invest_manager/models/sneaker.dart';
 
 import '../models/sneaker_manager.dart';
 
+/*
+* class: ManageToken
+* purpose: this class is used for reading json files
+* */
 class ReadJsonFile{
 
   static Future<List<Sneaker>> readJson(String filePath) async {

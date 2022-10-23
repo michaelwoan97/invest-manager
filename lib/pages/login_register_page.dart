@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +19,11 @@ import '../controllers/auth.dart';
 import '../styles/responsive/breakpoints.dart';
 import '../styles/theme_styles.dart';
 
+
+/*
+* class: LoginPage
+* purpose: This class represent the LoginPage page
+* */
 class LoginPage extends StatefulWidget {
   static const routeName = '/';
   static const emailField = "*Email";
@@ -47,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     navigateToLastPage();
   }
 
+  // This is function for authenticating when using firebase
   // Future<void> signInWithEmailAndPassword() async {
   //   try {
   //     await Auth().signInWithEmailAndPassword(
@@ -58,17 +65,7 @@ class _LoginPageState extends State<LoginPage> {
   //   }
   // }
 
-  // Future<void> signInWithEmailAndPassword() async {
-  //   try {
-  //     await Auth().signInWithEmailAndPassword(
-  //         email: _controllerEmail.text, password: _controllerPassword.text);
-  //   } on FirebaseAuthException catch (e) {
-  //     setState(() {
-  //       errorMessage = e.message;
-  //     });
-  //   }
-  // }
-
+  // This is function for authenticating when using firebase
   // Future<void> createUserWithEmailAndPassword() async {
   //   try {
   //     await Auth().createUserWithEmailAndPassword(
@@ -119,6 +116,9 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  /*
+  * purpose: register new users
+  * */
   void addUser() {
     AuthService()
         .signUp(_controllerEmail.text, _controllerPassword.text)
@@ -173,9 +173,6 @@ class _LoginPageState extends State<LoginPage> {
         });
   }
 
-  Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'Hum ? $errorMessage');
-  }
 
   Widget _submitButton() {
     return ElevatedButton(
@@ -192,10 +189,6 @@ class _LoginPageState extends State<LoginPage> {
               // await
               addUser();
             }
-
-            // process response
-            // if true go to nextpage
-            // else flutter toat with error message
 
           }
         },
@@ -268,29 +261,41 @@ class _LoginPageState extends State<LoginPage> {
 
     if (lastRoute == null) return;
 
-    // no need to push to another screen, if the last route was root
-    if (lastRoute!.isNotEmpty && lastRoute != LoginPage.routeName) {
-      final user = await ManageToken.getUserID();
-      SneakerManager().userID = user;
-      if (lastRoute == AddStock.routeName) {
-        Navigator.of(context).popUntil(ModalRoute.withName("/"));
-        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+    // check whether the app is on web browser
+    if(lastRoute!.isNotEmpty && kIsWeb){
+      // disabled save last screen feature
+      Navigator.of(context).popUntil(ModalRoute.withName(LoginPage.routeName));
+    } else {
+      // no need to push to another screen, if the last route was root
+      if (lastRoute!.isNotEmpty && lastRoute != LoginPage.routeName) {
+        final user = await ManageToken.getUserID();
+        SneakerManager().userID = user;
+        if (lastRoute == AddStock.routeName) {
+          Navigator.of(context).popUntil(ModalRoute.withName("/"));
+          Navigator.of(context).pushReplacementNamed(HomePage.routeName);
 
-        // check whether there are arguments
-        if (prefs.containsKey("sneaker")) {
-          Sneaker sneaker =
-              Sneaker.fromJson(json.decode(prefs.getString("sneaker")!));
-          final scenarios = EnumToString.fromString(
-              Scenarios.values, prefs.getString("scenario")!);
-          Navigator.of(context)
-              .pushNamed(lastRoute, arguments: [sneaker, scenarios]);
+          // check whether there are arguments
+          if (prefs.containsKey("sneaker")) {
+            Sneaker sneaker =
+            Sneaker.fromJson(json.decode(prefs.getString("sneaker")!));
+            final scenarios = EnumToString.fromString(
+                Scenarios.values, prefs.getString("scenario")!);
+            Navigator.of(context)
+                .pushNamed(lastRoute, arguments: [sneaker, scenarios]);
+          } else {
+            Navigator.of(context).pushNamed(lastRoute);
+          }
         } else {
-          Navigator.of(context).pushNamed(lastRoute);
+          if(kIsWeb){
+            Navigator.of(context).popUntil(ModalRoute.withName("/"));
+          }
+
+          Navigator.of(context).pushReplacementNamed(HomePage.routeName);
         }
-      } else {
-        Navigator.of(context).popUntil(ModalRoute.withName("/"));
-        Navigator.of(context).pushReplacementNamed(HomePage.routeName);
       }
     }
+
+
+
   }
 }

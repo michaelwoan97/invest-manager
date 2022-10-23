@@ -91,7 +91,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             //   ),
             // );
 
-            Navigator.of(context).pop([image.path]);
+            Navigator.of(context).pop([image.path]); // return the image path
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);

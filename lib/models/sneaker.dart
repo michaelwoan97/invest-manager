@@ -2,6 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:invest_manager/models/sneaker_detail.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 
+
+/*
+* class: Sneaker
+* purpose: This class represent for the model of a sneaker. It uses singleton pattern and provider state management
+* */
 class Sneaker with ChangeNotifier {
   late String _id;
   late String _sName;

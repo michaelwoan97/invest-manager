@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 
+/*
+* class: AuthService
+* purpose: This class used for authenticating users by using custom server
+* server-detail:
+* */
 class AuthService {
   Dio dio = new Dio();
   final String _url = "https://invest-manager-app.herokuapp.com";

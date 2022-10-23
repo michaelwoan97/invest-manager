@@ -36,6 +36,7 @@ Future<void> main() async {
       camera: firstCamera,
     ));
   } on CameraException catch(err){
+    // check whether camera is available
     if(err.code == "cameraNotFound"){
       runApp(MyAppNoCam());
     }
@@ -54,6 +55,10 @@ Future<void> main() async {
   // ));
 }
 
+/*
+* class: MyApp
+* purpose: this class is used for creating the invest manager app (when camera is available)
+* */
 class MyApp extends StatefulWidget {
   final CameraDescription camera;
 
@@ -93,6 +98,10 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+/*
+* class: MyAppNoCam
+* purpose: this class is used for creating the invest manager app (when no camera is available)
+* */
 class MyAppNoCam extends StatefulWidget {
 
   MyAppNoCam({Key? key}) : super(key: key);

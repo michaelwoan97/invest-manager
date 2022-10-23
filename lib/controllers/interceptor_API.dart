@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -16,14 +14,25 @@ enum TokenErrorType{
   refreshTokenHasExpired,
   failedToRegenerateAccessToken
 }
+
+/*
+* class: InterceptorAPI
+* purpose: This class used for intercepting all the outgoing requests to check whether they needed to be adjusted before
+*           reaching the server
+* server-detail:
+* */
 class InterceptorAPI extends Interceptor{
   final Dio _dio;
-
   final _sneakerManager = SneakerManager();
   static final String _url = "https://invest-manager-app.herokuapp.com";
 
   InterceptorAPI(this._dio);
 
+  /*
+  * function: onRequest
+  * purpose: The purpose of this function is to intercept all the outgoing requests to check whether they needed to be adjusted before
+  *           reaching the server
+  * */
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     print("intercepting request!!!");
@@ -84,6 +93,11 @@ class InterceptorAPI extends Interceptor{
     }
   }
 
+  /*
+  * function: onError
+  * purpose: The purpose of this function is to check whether the token from the response
+  *           is expired or invalidated. If the token is expired, the app will be automatically perform logout
+  * */
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
     if (err.response?.statusCode == 403 || err.response?.statusCode == 401) {
@@ -100,6 +114,10 @@ class InterceptorAPI extends Interceptor{
     return handler.next(err);
   }
 
+  /*
+  * function: _performLogout
+  * purpose: The purpose of this function is to stop and clear everything then log out
+  * */
   void _performLogout(Dio dio) {
     // clear and lock for all request
     _dio.interceptors.requestLock.clear();
@@ -117,6 +135,10 @@ class InterceptorAPI extends Interceptor{
     _dio.interceptors.requestLock.unlock();
   }
 
+  /*
+  * function: _regenerateAccessToken
+  * purpose: The purpose of this function is trying to regenerate access token if it is expired
+  * */
   Future<bool> _regenerateAccessToken() async {
     try{
       var dio = Dio();// should create new dio instance because the request interceptor is being locked

@@ -15,6 +15,10 @@ import 'package:uuid/uuid.dart';
 
 import '../models/sneaker.dart';
 
+/*
+* class: StockList
+* purpose: this class is used for creating StockList widget
+* */
 class StockList extends StatelessWidget {
   late List<Sneaker> arrSneakers;
 
@@ -24,19 +28,6 @@ class StockList extends StatelessWidget {
     } else {
       arrSneakers = [];
     }
-  }
-
-  List<Widget> _displayStockList() {
-    List<Widget> sneakerNames = [];
-    if (arrSneakers.isNotEmpty) {
-      for (var e in arrSneakers) {
-        sneakerNames.add(Text(e.getSneakerName));
-      }
-    } else {
-      sneakerNames.add(Text("List is empty!!!!!!!!!"));
-    }
-
-    return sneakerNames;
   }
 
   @override
@@ -54,6 +45,9 @@ class StockList extends StatelessWidget {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _stockListMobile(BuildContext context) {
     return Container(
       height: double.infinity,
@@ -155,36 +149,9 @@ class StockList extends StatelessWidget {
     );
   }
 
-  // CircleAvatar(
-  // backgroundImage:
-  // arrSneakers[index]
-  //     .getImgUrl
-  //     .contains("http")
-  // ? NetworkImage(
-  // arrSneakers[index]
-  //     .getImgUrl)
-  //     : FileImage(File(
-  // arrSneakers[index]
-  //     .getImgUrl))
-  // as ImageProvider,
-  // )
-
-  // ClipOval(
-  // child:
-  // FadeInImage(
-  // placeholder: AssetImage("assets/default_img.png"),
-  // image: arrSneakers[index]
-  //     .getImgUrl
-  //     .contains("http")
-  // ? NetworkImage(
-  // arrSneakers[index]
-  //     .getImgUrl)
-  //     : FileImage(File(
-  // arrSneakers[index]
-  //     .getImgUrl))
-  // as ImageProvider,),
-  // )
-
+  /*
+  * purpose: different layout when the app reach desktop/tablet breakpoints
+  * */
   Widget _stockListTablet(BuildContext context) {
     return Container(
       margin: AppTheme.spaceBetweenSectionTop(),
@@ -253,18 +220,11 @@ class StockList extends StatelessWidget {
                                         child: Consumer<Sneaker>(
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
-                                            leading: CircleAvatar(
-                                              backgroundImage:
-                                                  arrSneakers[index]
-                                                          .getImgUrl
-                                                          .contains("http")
-                                                      ? NetworkImage(
-                                                          arrSneakers[index]
-                                                              .getImgUrl)
-                                                      : FileImage(File(
-                                                              arrSneakers[index]
-                                                                  .getImgUrl))
-                                                          as ImageProvider,
+                                            leading: CustomCircleAvatar(
+                                              imgUrl:
+                                              arrSneakers[index].getImgUrl,
+                                              placeholderImg:
+                                              "assets/images/default_img.png",
                                             ),
                                             title: Text(
                                               arrSneakers[index].getSneakerName,

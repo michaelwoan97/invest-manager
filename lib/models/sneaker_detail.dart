@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
+
+/*
+* class: SneakerDetail
+* purpose: This class represent for the model of a sneaker. It uses singleton pattern and provider state management
+* */
 class SneakerDetail with ChangeNotifier {
   late String _id;
   late String _sSeller;

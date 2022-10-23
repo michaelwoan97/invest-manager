@@ -1,7 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
+/*
+* class: CustomCircleAvatar
+* purpose: this class is used for creating custom circle avatar
+* */
 class CustomCircleAvatar extends StatefulWidget {
   NetworkImage? myNetworkImage;
   FileImage? myFileImage;
@@ -13,7 +18,9 @@ class CustomCircleAvatar extends StatefulWidget {
     if (this.imgUrl.contains("http")) {
       myNetworkImage = NetworkImage(this.imgUrl);
     } else {
-      myFileImage = FileImage(File(this.imgUrl));
+      if (!kIsWeb) {
+        myFileImage = FileImage(File(this.imgUrl));
+      }
     }
   }
 
@@ -28,37 +35,54 @@ class _CustomCircleAvatarState extends State<CustomCircleAvatar> {
   void initState() {
     //check whether the images are from local or server
     if (widget.imgUrl.contains("http")) {
-      widget.myNetworkImage!.resolve(ImageConfiguration()).addListener(
-          ImageStreamListener((ImageInfo image, bool synchronousCall) {
-            if (mounted) {
-              setState(() => _checkLoading = false);
-            }
-          }));
+      try{
+        widget.myNetworkImage!.resolve(ImageConfiguration()).addListener(
+            ImageStreamListener((ImageInfo image, bool synchronousCall) {
+              if (mounted) {
+                setState(() => _checkLoading = false);
+              }
+            }));
+      } on Exception catch (err) {
+        print(err);
+      }
+
     } else {
-      widget.myFileImage!.resolve(ImageConfiguration()).addListener(
-          ImageStreamListener((ImageInfo image, bool synchronousCall) {
-            if (mounted) {
-              setState(() => _checkLoading = false);
-            }
-          }));
+      if (!kIsWeb) {
+        try{
+          widget.myFileImage!.resolve(ImageConfiguration()).addListener(
+              ImageStreamListener((ImageInfo image, bool synchronousCall) {
+                if (mounted) {
+                  setState(() => _checkLoading = false);
+                }
+              }));
+        } on Exception catch (err){
+          print(err);
+        }
+
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_checkLoading == true){
+    if (_checkLoading == true) {
       return new CircleAvatar(
         backgroundImage: AssetImage(widget.placeholderImg),
       );
     } else {
-      if (widget.imgUrl.contains("http")){
+      if (widget.imgUrl.contains("http")) {
         return new CircleAvatar(
           backgroundImage: widget.myNetworkImage,
         );
       } else {
-        return new CircleAvatar(
-          backgroundImage: widget.myFileImage,
-        );
+        // check whether the app is being used on the web
+        return kIsWeb
+            ? new CircleAvatar(
+                backgroundImage: AssetImage(widget.placeholderImg),
+              )
+            : new CircleAvatar(
+                backgroundImage: widget.myFileImage,
+              );
       }
     }
   }

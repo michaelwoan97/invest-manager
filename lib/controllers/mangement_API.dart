@@ -11,6 +11,11 @@ import '../models/sneaker.dart';
 
 //https://invest-manager-app.herokuapp.com
 //http://http://192.168.0.43:3000
+
+/*
+* class: ManagementAPI
+* purpose: This class used for making api requests to the invest manager server
+* */
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
   final String _url = "https://invest-manager-app.herokuapp.com";
@@ -22,27 +27,11 @@ class ManagementAPI {
 
   ManagementAPI._internal();
 
-  // Future<List<Sneaker>> getSneakers(token) async {
-  //   List<Sneaker> arrSneakers = [];
-  //
-  //   try {
-  //     await dio
-  //         .get("$_url/getdata/sneaker",
-  //             options: Options(headers: {"Authorization": "Bearer $token"}))
-  //         .then((val) {
-  //       final res = json.decode(val.data);
-  //       final data = res['msg'];
-  //
-  //       for (var e in data) {
-  //         arrSneakers.add(Sneaker.fromJson(e));
-  //       }
-  //     });
-  //   } on DioError catch (err) {
-  //     rethrow;
-  //   }
-  //   return arrSneakers;
-  // }
 
+  /*
+  * function: getSneakers
+  * purpose: The purpose of this function is to get available sneakers from the server
+  * */
   Future<List<Sneaker>> getSneakers(token) async {
     List<Sneaker> arrSneakers = [];
 
@@ -66,6 +55,10 @@ class ManagementAPI {
     return arrSneakers;
   }
 
+  /*
+  * function: getUserID
+  * purpose: The purpose of this function is to get the ID belong the user
+  * */
   getUserID(token) async {
     try {
       await dio
@@ -82,6 +75,10 @@ class ManagementAPI {
     }
   }
 
+  /*
+  * function: addSneaker
+  * purpose: The purpose of this function is to add new sneakers to the list of the user
+  * */
   addSneaker(token, userID, Sneaker newSneaker) async {
     String encodedSneaker = jsonEncode(newSneaker);
 
@@ -116,6 +113,10 @@ class ManagementAPI {
     }
   }
 
+  /*
+  * function: removeSneaker
+  * purpose: The purpose of this function is to remove sneakers out of the list of the user
+  * */
   removeSneaker(token, userID, sneakerID) async {
     try {
       return await dio.post("$_url/updatedata/removesneaker",
@@ -128,6 +129,10 @@ class ManagementAPI {
     }
   }
 
+  /*
+  * function: updateSneaker
+  * purpose: The purpose of this function is to update sneakers to the list of the user
+  * */
   updateSneaker(token, userID, sneakerID, updateStockInfo) async {
     String encodedSneaker = jsonEncode(updateStockInfo);
 
@@ -167,7 +172,10 @@ class ManagementAPI {
     }
   }
 
-  // refersh token
+  /*
+  * function: refreshToken
+  * purpose: The purpose of this function is to refresh access token
+  * */
   refreshToken(userID) async {
     try {
       return await dio.post("$_url/token",
@@ -178,24 +186,4 @@ class ManagementAPI {
     }
   }
 
-// refreshToken(token) async {
-//   try {
-//     await dio
-//         .post("$_url/token",
-//             data: {"token": token},
-//             options: Options(contentType: Headers.formUrlEncodedContentType))
-//         .then((val) {
-//       final res = json.decode(val.data);
-//       if(res['success']){
-//         print("success refresh token");
-//         SneakerManager().refreshToken = res['msg'];
-//
-//       } else {
-//         print('failed refresh token');
-//       }
-//     });
-//   } on DioError catch (e) {
-//     rethrow;
-//   }
-// }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
@@ -19,8 +20,12 @@ import '../styles/theme_styles.dart';
 
 enum Scenarios { add, edit }
 
+/*
+* class: AddStock
+* purpose: This class represent the add stock page
+* */
 class AddStock extends StatefulWidget {
-  static const routeName = '/add-stock';
+  static const routeName = '/home/stock-info';
   late Sneaker newSneaker;
   late Scenarios scenarios;
 
@@ -45,6 +50,32 @@ class _AddStockState extends State<AddStock> {
     super.initState();
   }
 
+  /*
+  * purpose: when the app uses on web browser, no camera available. An alert will be presented to the users
+  * */
+  Future<void> _alertImageDesktop() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Attention!!!"),
+          content: SingleChildScrollView(
+            child: Text(
+                "A version allows to take or select a picture from camera will be added in the near future. Sorry for the inconvenience!"),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Ok"))
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments == null ||
@@ -61,7 +92,10 @@ class _AddStockState extends State<AddStock> {
 
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height >= kTabletBreakPoint ? 60 : MediaQuery.of(context).size.height * 0.1),
+          preferredSize: Size.fromHeight(
+              MediaQuery.of(context).size.height >= kTabletBreakPoint
+                  ? 60
+                  : MediaQuery.of(context).size.height * 0.1),
           child: MaxWidthContainer(
             child: AppBar(
               title: Text('Stock Info',
@@ -117,7 +151,11 @@ class _AddStockState extends State<AddStock> {
                                   ] else ...[
                                     Expanded(
                                       flex: 4,
-                                      child: CustomSneakerImage(imgUrl: result, placeholderImg: "assets/images/default_img.png",),
+                                      child: CustomSneakerImage(
+                                        imgUrl: result,
+                                        placeholderImg:
+                                            "assets/images/default_img.png",
+                                      ),
                                     )
                                   ],
                                   Row(
@@ -125,29 +163,38 @@ class _AddStockState extends State<AddStock> {
                                       Spacer(
                                         flex: 3,
                                       ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: ElevatedButton(
-                                            onPressed: () async {
-                                              result =
-                                                  await Navigator.of(context)
-                                                      .pushNamed(
-                                                          TakePictureScreen
-                                                              .routeName);
-                                              result = result[0].toString();
+                                      if (kIsWeb) ...[
+                                        Expanded(
+                                          flex: 3,
+                                          child: ElevatedButton(
+                                              onPressed: _alertImageDesktop,
+                                              child: Icon(Icons.camera)),
+                                        )
+                                      ] else ...[
+                                        Expanded(
+                                          flex: 3,
+                                          child: ElevatedButton(
+                                              onPressed: () async {
+                                                result =
+                                                    await Navigator.of(context)
+                                                        .pushNamed(
+                                                            TakePictureScreen
+                                                                .routeName);
+                                                result = result[0].toString();
 
-                                              // check scenario
-                                              if (widget.scenarios ==
-                                                  Scenarios.edit) {
-                                                sneaker
-                                                    .notifyWithoutUpdateData();
-                                              } else {
-                                                sneaker
-                                                    .updateImgURLNotify(result);
-                                              }
-                                            },
-                                            child: Icon(Icons.camera)),
-                                      ),
+                                                // check scenario
+                                                if (widget.scenarios ==
+                                                    Scenarios.edit) {
+                                                  sneaker
+                                                      .notifyWithoutUpdateData();
+                                                } else {
+                                                  sneaker.updateImgURLNotify(
+                                                      result);
+                                                }
+                                              },
+                                              child: Icon(Icons.camera)),
+                                        )
+                                      ],
                                       Spacer(
                                         flex: 3,
                                       ),
@@ -237,32 +284,36 @@ class _AddStockState extends State<AddStock> {
                   },
                   child: widget.scenarios == Scenarios.add
                       ? Flex(
-                        direction: Axis.horizontal,
-                        children: [Expanded(
-                          child: Center(
-                            child: AutoSizeText(
-                              "+ Add to the List",
-                              style: MediaQuery.of(context).size.width >
-                                      kTabletBreakPoint
-                                  ? AppTheme.kFontSizeDesktopAppBarText
-                                  : AppTheme.kFontSizeMobileAppBarText,
-                            ),
-                          ),
-                        )],
-                      )
+                          direction: Axis.horizontal,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: AutoSizeText(
+                                  "+ Add to the List",
+                                  style: MediaQuery.of(context).size.width >
+                                          kTabletBreakPoint
+                                      ? AppTheme.kFontSizeDesktopAppBarText
+                                      : AppTheme.kFontSizeMobileAppBarText,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
                       : Flex(
                           direction: Axis.horizontal,
-                          children: [Expanded(
-                            child: Center(
-                              child: AutoSizeText(
-                                "Edit Sneaker Info!!",
-                                style: MediaQuery.of(context).size.width >
-                                        kTabletBreakPoint
-                                    ? AppTheme.kFontSizeDesktopAppBarText
-                                    : AppTheme.kFontSizeMobileAppBarText,
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: AutoSizeText(
+                                  "Edit Sneaker Info!!",
+                                  style: MediaQuery.of(context).size.width >
+                                          kTabletBreakPoint
+                                      ? AppTheme.kFontSizeDesktopAppBarText
+                                      : AppTheme.kFontSizeMobileAppBarText,
+                                ),
                               ),
-                            ),
-                          )],
+                            )
+                          ],
                         ),
                 )
               ],
@@ -272,6 +323,9 @@ class _AddStockState extends State<AddStock> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 
+  /*
+  * purpose: different layout when the app reach mobile breakpoints
+  * */
   Widget _formSneakerMobile() {
     return Column(
       children: [
@@ -308,6 +362,9 @@ class _AddStockState extends State<AddStock> {
     );
   }
 
+  /*
+  * purpose: different layout when the app reach desktop/tablet breakpoints
+  * */
   Widget _formSneakerDesktop() {
     return Column(
       children: [
