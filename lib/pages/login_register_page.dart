@@ -106,6 +106,9 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 16.0);
+
+          // prevent unknown crashing
+          if(!context.mounted) return;
           Navigator.of(context).pushReplacementNamed(HomePage.routeName);
         } else {
           setState(() {

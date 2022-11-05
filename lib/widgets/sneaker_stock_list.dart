@@ -228,7 +228,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
                     if (_formKey.currentState!.validate()) {
                       Navigator.of(context).pop();
                       // call function to process data
-                      _processNewAvailableStocks();
+                      _processAvailableStocks();
                       // Then, notify the list stock has changed
                       // _formKey = GlobalKey<FormState>();
 
@@ -449,48 +449,6 @@ class _SneakerStockListState extends State<SneakerStockList> {
     );
   }
 
-  // purpose: used for processing new available stocks
-  void _processNewAvailableStocks() {
-    List<SneakerDetail> newStockAvailable = [];
-    // start adding to the available stock
-    SneakerDetail newSneakerStock = SneakerDetail(
-        sSeller: _purchasedFromController.text,
-        sDate: _purchasedDateController.text,
-        sSize: _sizeController.text,
-        sPrice: _priceController.text,
-        isSold: sIsSold == "Yes" ? true : false,
-        sPriceSold: soldAtController.text);
-    newStockAvailable.add(newSneakerStock);
-
-    // not working with the logic update each element but might take a look in a future
-    //check whether the quantity is more than 1
-    // int quantity = int.parse(_qtyController.text);
-    // if( quantity > 1){
-    //   for(int i = 1; i < quantity; i++ ){
-    //     newStockAvailable.add(newSneakerStock);
-    //   }
-    // }
-
-    clearForm();
-
-    // check whether the user are adding or edditng the stock avaiable
-    if (widget.scenario == Scenarios.edit) {
-      widget._newSneaker.addToAvailableStockExisted(newSneakerStock);
-    } else {
-      widget._newSneaker.modifyAvailableStocks(newStockAvailable);
-    }
-  }
-
-  // purpose: used for clearing data of a form
-  void clearForm() {
-    _purchasedFromController.text = '';
-    _purchasedDateController.text = '';
-    _sizeController.text = '';
-    _priceController.text = '';
-    sIsSold = 'No';
-    soldAtController.text = '';
-  }
-
   // purpose: used for editing/updating new available stocks
   void _editSneakerStock(SneakerDetail stock, int position) {
     SneakerDetail newSneakerStockInfo;
@@ -517,12 +475,56 @@ class _SneakerStockListState extends State<SneakerStockList> {
 
     // check whether the user are adding or edditng the stock avaiable
     if (widget.scenario == Scenarios.edit) {
-      widget._newSneaker.getNewAddedStockAvailable[position]
+      widget._newSneaker.getCopiedOfArrAvailable[position]
           .updateSneakerStock(newSneakerStockInfo);
     } else {
-      widget._newSneaker.addToAvailableStockExisted(newSneakerStockInfo);
+      widget._newSneaker.addToCopiedAvailableStock(newSneakerStockInfo);
     }
   }
+
+  // purpose: used for processing new available stocks
+  void _processAvailableStocks() {
+    List<SneakerDetail> newStockAvailable = [];
+    // start adding to the available stock
+    SneakerDetail newSneakerStock = SneakerDetail(
+        sSeller: _purchasedFromController.text,
+        sDate: _purchasedDateController.text,
+        sSize: _sizeController.text,
+        sPrice: _priceController.text,
+        isSold: sIsSold == "Yes" ? true : false,
+        sPriceSold: soldAtController.text);
+    newStockAvailable.add(newSneakerStock);
+
+    // not working with the logic update each element but might take a look in a future
+    //check whether the quantity is more than 1
+    // int quantity = int.parse(_qtyController.text);
+    // if( quantity > 1){
+    //   for(int i = 1; i < quantity; i++ ){
+    //     newStockAvailable.add(newSneakerStock);
+    //   }
+    // }
+
+    clearForm();
+
+    // check whether the user are adding or edditng the stock avaiable
+    if (widget.scenario == Scenarios.edit) {
+      widget._newSneaker.addToCopiedAvailableStock(newSneakerStock);
+    } else {
+      widget._newSneaker.modifyAvailableStocks(newStockAvailable);
+    }
+  }
+
+  // purpose: used for clearing data of a form
+  void clearForm() {
+    _purchasedFromController.text = '';
+    _purchasedDateController.text = '';
+    _sizeController.text = '';
+    _priceController.text = '';
+    sIsSold = 'No';
+    soldAtController.text = '';
+  }
+
+
 
   /*
   * purpose: different layout when the app reach mobile breakpoints
@@ -616,7 +618,7 @@ class _SneakerStockListState extends State<SneakerStockList> {
         widget._newSneaker.createCoptyOfStockList();
         widget.isCopied = true;
       }
-      widget._sneakerAvailable = widget._newSneaker.getNewAddedStockAvailable;
+      widget._sneakerAvailable = widget._newSneaker.getCopiedOfArrAvailable;
     } else {
       widget._sneakerAvailable = widget._newSneaker.getAvailableStocks;
     }

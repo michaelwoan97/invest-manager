@@ -19,7 +19,7 @@ import '../models/sneaker.dart';
 * class: StockList
 * purpose: this class is used for creating StockList widget
 * */
-class StockList extends StatelessWidget {
+class StockList extends StatefulWidget {
   late List<Sneaker> arrSneakers;
 
   StockList({List<Sneaker>? sneakers}) {
@@ -31,9 +31,14 @@ class StockList extends StatelessWidget {
   }
 
   @override
+  State<StockList> createState() => _StockListState();
+}
+
+class _StockListState extends State<StockList> {
+  @override
   Widget build(BuildContext context) {
     final sneakersData = Provider.of<SneakerManager>(context);
-    arrSneakers = sneakersData.getListSneaker;
+    widget.arrSneakers = sneakersData.getListSneaker;
 
     return ChangeNotifierProvider.value(
       value: SneakerManager(),
@@ -60,7 +65,7 @@ class StockList extends StatelessWidget {
               child: AutoSizeText("Inventory",
                   style:
                       AppTheme.displayInvenTitle(context, kMobileSubHeadings))),
-          if (arrSneakers.isNotEmpty) ...[
+          if (widget.arrSneakers.isNotEmpty) ...[
             Consumer<SneakerManager>(
               builder: (ctx, sneakerManager, _) => Expanded(
                 flex: 10,
@@ -71,11 +76,11 @@ class StockList extends StatelessWidget {
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: arrSneakers.length,
+                        itemCount: widget.arrSneakers.length,
                         itemBuilder: (context, index) => Container(
                               margin: AppTheme.spaceBetweenInEList(),
                               child: ChangeNotifierProvider.value(
-                                value: arrSneakers[index],
+                                value: widget.arrSneakers[index],
                                 child: Dismissible(
                                   key: Key(Uuid().v1()),
                                   background: Container(color: Colors.red),
@@ -84,9 +89,9 @@ class StockList extends StatelessWidget {
                                     ManagementAPI().removeSneaker(
                                         SneakerManager().accessToken,
                                         SneakerManager().userID,
-                                        arrSneakers[index].getID);
+                                        widget.arrSneakers[index].getID);
                                     SneakerManager().deleteSneaker(
-                                        arrSneakers[index].getID);
+                                        widget.arrSneakers[index].getID);
 
                                     // Scaffold
                                     //     .of(context)
@@ -108,7 +113,7 @@ class StockList extends StatelessWidget {
                                                 page: AddStock(),
                                                 routeName: AddStock.routeName,
                                                 arguments: [
-                                                  arrSneakers[index],
+                                                  widget.arrSneakers[index],
                                                   Scenarios.edit
                                                 ]),
                                           );
@@ -118,17 +123,17 @@ class StockList extends StatelessWidget {
                                               ListTile(
                                             leading: CustomCircleAvatar(
                                               imgUrl:
-                                                  arrSneakers[index].getImgUrl,
+                                                  widget.arrSneakers[index].getImgUrl,
                                               placeholderImg:
                                                   "assets/images/default_img.png",
                                             ),
                                             title: Text(
-                                              arrSneakers[index].getSneakerName,
+                                              widget.arrSneakers[index].getSneakerName,
                                               style: TextStyle(
                                                   fontSize: kMobileBodyText),
                                             ),
                                             subtitle: Text('QTY: ' +
-                                                arrSneakers[index]
+                                                widget.arrSneakers[index]
                                                     .getAvailableStocks
                                                     .length
                                                     .toString()),
@@ -164,7 +169,7 @@ class StockList extends StatelessWidget {
               child: AutoSizeText("Inventory",
                   style: AppTheme.displayInvenTitle(
                       context, kDesktopSubHeadings))),
-          if (arrSneakers.isNotEmpty) ...[
+          if (widget.arrSneakers.isNotEmpty) ...[
             Consumer<SneakerManager>(
               builder: (ctx, sneakerManager, _) => Expanded(
                 flex: 10,
@@ -175,11 +180,11 @@ class StockList extends StatelessWidget {
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: arrSneakers.length,
+                        itemCount: widget.arrSneakers.length,
                         itemBuilder: (context, index) => Container(
                               margin: AppTheme.spaceBetweenInEList(),
                               child: ChangeNotifierProvider.value(
-                                value: arrSneakers[index],
+                                value: widget.arrSneakers[index],
                                 child: Dismissible(
                                   key: Key(Uuid().v1()),
                                   background: Container(color: Colors.red),
@@ -188,9 +193,9 @@ class StockList extends StatelessWidget {
                                     ManagementAPI().removeSneaker(
                                         SneakerManager().accessToken,
                                         SneakerManager().userID,
-                                        arrSneakers[index].getID);
+                                        widget.arrSneakers[index].getID);
                                     SneakerManager().deleteSneaker(
-                                        arrSneakers[index].getID);
+                                        widget.arrSneakers[index].getID);
 
                                     // Scaffold
                                     //     .of(context)
@@ -212,7 +217,7 @@ class StockList extends StatelessWidget {
                                                 page: AddStock(),
                                                 routeName: AddStock.routeName,
                                                 arguments: [
-                                                  arrSneakers[index],
+                                                  widget.arrSneakers[index],
                                                   Scenarios.edit
                                                 ]),
                                           );
@@ -222,17 +227,17 @@ class StockList extends StatelessWidget {
                                               ListTile(
                                             leading: CustomCircleAvatar(
                                               imgUrl:
-                                              arrSneakers[index].getImgUrl,
+                                              widget.arrSneakers[index].getImgUrl,
                                               placeholderImg:
                                               "assets/images/default_img.png",
                                             ),
                                             title: Text(
-                                              arrSneakers[index].getSneakerName,
+                                              widget.arrSneakers[index].getSneakerName,
                                               style: TextStyle(
                                                   fontSize: kDesktopBodyText),
                                             ),
                                             subtitle: Text('QTY: ' +
-                                                arrSneakers[index]
+                                                widget.arrSneakers[index]
                                                     .getAvailableStocks
                                                     .length
                                                     .toString()),

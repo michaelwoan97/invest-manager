@@ -241,45 +241,9 @@ class _AddStockState extends State<AddStock> {
                   onPressed: () {
                     // validate Form
                     if (_formKey.currentState!.validate()) {
-                      if (widget.scenarios == Scenarios.edit) {
-                        // update sneaker
-                        widget.newSneaker.updateSneaker(
-                            newSneakerName: _sneakerNameController.text,
-                            sNewNotes: _sneakerNotesController.text,
-                            sNewImgURL: result);
-                        ManagementAPI().updateSneaker(
-                            SneakerManager().accessToken,
-                            SneakerManager().userID,
-                            widget.newSneaker.getID,
-                            widget.newSneaker);
-                      } else {
-                        widget.newSneaker.setSneakerName =
-                            _sneakerNameController.text;
-                        if (_sneakerNotesController.text.isNotEmpty) {
-                          widget.newSneaker.setNotes =
-                              _sneakerNotesController.text;
-                        }
-                        //update new sneaker to total
-                        double totalNewSneakerPrice = 0;
-                        if (widget.newSneaker.getAvailableStocks.isNotEmpty) {
-                          for (var e in widget.newSneaker.getAvailableStocks) {
-                            if (e.getSneakerSoldPrice.isEmpty) {
-                              continue;
-                            }
-                            totalNewSneakerPrice +=
-                                double.parse(e.getSneakerSoldPrice);
-                          }
-                        }
-                        SneakerManager().updateTotalAvaiSoldProducts(
-                            widget.newSneaker.getAvailableStocks.length,
-                            totalNewSneakerPrice);
-                        SneakerManager().addNewSneakerToList(widget.newSneaker);
-                        ManagementAPI().addSneaker(SneakerManager().accessToken,
-                            SneakerManager().userID, widget.newSneaker);
-                      }
 
-                      widget.newSneaker.clearAvailableStockExisted();
-                      Navigator.of(context).pop();
+                      // check whether adding or editing stocks
+                      _processStockInfoRequests();
                     }
                   },
                   child: widget.scenarios == Scenarios.add
@@ -321,6 +285,54 @@ class _AddStockState extends State<AddStock> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+  }
+
+  void _processStockInfoRequests() {
+
+    // check whether adding or editing stocks
+    if (widget.scenarios == Scenarios.edit) {
+      // update sneaker
+      widget.newSneaker.updateSneaker(
+          newSneakerName: _sneakerNameController.text,
+          sNewNotes: _sneakerNotesController.text,
+          sNewImgURL: result);
+      ManagementAPI().updateSneaker(
+          SneakerManager().accessToken,
+          SneakerManager().userID,
+          widget.newSneaker.getID,
+          widget.newSneaker);
+    } else {
+      widget.newSneaker.setSneakerName =
+          _sneakerNameController.text;
+      if (_sneakerNotesController.text.isNotEmpty) {
+        widget.newSneaker.setNotes =
+            _sneakerNotesController.text;
+      }
+
+      //update new sneaker total
+      double totalNewSneakerPrice = 0;
+      // check whether new stocks available
+      if (widget.newSneaker.getAvailableStocks.isNotEmpty) {
+        for (var e in widget.newSneaker.getAvailableStocks) {
+          if (e.getSneakerSoldPrice.isEmpty) {
+            continue;
+          }
+          totalNewSneakerPrice +=
+              double.parse(e.getSneakerSoldPrice);
+        }
+      }
+      // update available products
+      SneakerManager().updateTotalAvaiSoldProducts(
+          widget.newSneaker.getAvailableStocks.length,
+          totalNewSneakerPrice);
+
+      SneakerManager().addNewSneakerToList(widget.newSneaker);
+      ManagementAPI().addSneaker(SneakerManager().accessToken,
+          SneakerManager().userID, widget.newSneaker);
+    }
+
+    widget.newSneaker.clearAvailableStockExisted();
+    Navigator.of(context).pop();
   }
 
   /*

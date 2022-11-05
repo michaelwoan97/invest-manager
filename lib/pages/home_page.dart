@@ -89,7 +89,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   Future<void> signOut() async {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
@@ -410,6 +409,11 @@ class _HomePageState extends State<HomePage> {
         child: FutureBuilder<List<Sneaker>>(
           future: listSneakers,
           builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            }
+
             if (snapshot.hasData) {
               List<Sneaker> sneakers = snapshot.data!;
               // add list to singleton provider

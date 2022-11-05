@@ -17,7 +17,7 @@ class Sneaker with ChangeNotifier {
   // completely new sneaker about add to list
   // the other one used for modifying and waiting whether user want to add
   late List<SneakerDetail> _arrAvailable;
-  late List<SneakerDetail> _newAddedStockAvailable = []; // copied of the og list
+  late List<SneakerDetail> _copiedOfArrAvailable = []; // copied of the og list
   late List<SneakerDetail> _stockToBeDeleted = [];
 
 
@@ -31,7 +31,7 @@ class Sneaker with ChangeNotifier {
     _sName = sName ?? '';
     _sNotes = sNotes ?? '';
     _sImgUrl = sImageUrl ?? '';
-    _newAddedStockAvailable = [];
+    _copiedOfArrAvailable = [];
     _stockToBeDeleted = [];
 
     if (arrStockAvailable != null) {
@@ -105,10 +105,15 @@ class Sneaker with ChangeNotifier {
   }
 
 
-  List<SneakerDetail> get getNewAddedStockAvailable => _newAddedStockAvailable;
+  List<SneakerDetail> get getCopiedOfArrAvailable => _copiedOfArrAvailable;
 
-  set setNewAddedStockAvailable(List<SneakerDetail> value) {
-    _newAddedStockAvailable = value.map((e) => SneakerDetail(id: e.getStockID ,sSeller: e.getSellerName, sDate: e.getDatePurchased, sSize: e.getSneakerSize, sPrice: e.getSneakerPrice, isSold: e.isSneakerSold, sPriceSold: e.getSneakerSoldPrice)).toList();
+  /*
+  * Function: setNewAddedStockAvailable
+  * Purpose: The purpose of the function is to get the copy of the list without using its pointer.
+  *         Therefore modification on the copied list will not reflect on the OG list
+  * */
+  set setCopiedOfArrAvailable(List<SneakerDetail> value) {
+    _copiedOfArrAvailable = value.map((e) => SneakerDetail(id: e.getStockID ,sSeller: e.getSellerName, sDate: e.getDatePurchased, sSize: e.getSneakerSize, sPrice: e.getSneakerPrice, isSold: e.isSneakerSold, sPriceSold: e.getSneakerSoldPrice)).toList();
   }
 
   set setAvailableStocks(List<SneakerDetail> arrAvailableStock) {
@@ -138,8 +143,8 @@ class Sneaker with ChangeNotifier {
   // The pupose if this function is to update the temporary stock info list
   // which is created for the purpose of holding the new data until the user
   // accepted to the new sneaker to main list sneaker
-  void addToAvailableStockExisted(SneakerDetail sneaker){
-    _newAddedStockAvailable.add(sneaker);
+  void addToCopiedAvailableStock(SneakerDetail sneaker){
+    _copiedOfArrAvailable.add(sneaker);
     notifyListeners();
   }
 
@@ -147,11 +152,11 @@ class Sneaker with ChangeNotifier {
   // provider then when user agree to merge it will with main list
   void modifyAvailableStockExisted(List<SneakerDetail> sneakerDetails){
     // check whether the array of available stock is empty
-    if(_newAddedStockAvailable.isEmpty){
-      setNewAddedStockAvailable = sneakerDetails;
+    if(_copiedOfArrAvailable.isEmpty){
+      setCopiedOfArrAvailable = sneakerDetails;
     } else {
       for(var e in sneakerDetails){
-        _newAddedStockAvailable.add(e);
+        _copiedOfArrAvailable.add(e);
       }
     }
     notifyListeners();
@@ -162,28 +167,24 @@ class Sneaker with ChangeNotifier {
   * when user agree to update
   * */
   void _mergeTwoLists(){
-    // check whether there are something to change to the list or not
-    // I think this _stockToBeDeleted.isNotEmpty help whether there are something
-    // need to change in the og array I already deleted the stuff before get in to this
-    // condition so their purpose is make sure to update accordingly
-    if(_newAddedStockAvailable.isNotEmpty || _stockToBeDeleted.isNotEmpty){
+    // check whether there are something to change to the list or not,
+    if(_copiedOfArrAvailable.isNotEmpty){
+      // update total avai & sold products
+      updateTotalInfo();
       if(_arrAvailable.isNotEmpty){
-
-        // update total avai products
-        updateTotalInfo();
-
         // copy new values from the copied and updated list
         // no need to traverse and upadte each element
         // since brand new copy contain old and updated values
         _arrAvailable.clear();
-        _arrAvailable = List.from(_newAddedStockAvailable);
+        _arrAvailable = List.from(_copiedOfArrAvailable);
 
       } else {
-        updateTotalInfo();
-        _arrAvailable = List.from(_newAddedStockAvailable);
+        _arrAvailable = List.from(_copiedOfArrAvailable);
       }
+
+
     } else {
-      // check for update og list
+
       if(_arrAvailable.isNotEmpty){
         _arrAvailable.clear();
         updateTotalInfo();
@@ -198,7 +199,7 @@ class Sneaker with ChangeNotifier {
    * in the app
    */
   void updateTotalInfo() {
-    int updateQuantity = _newAddedStockAvailable.length - _arrAvailable.length;
+    int updateQuantity = _copiedOfArrAvailable.length - _arrAvailable.length;
 
     // update total price sold
     double oldTotalSold = 0;
@@ -209,7 +210,7 @@ class Sneaker with ChangeNotifier {
     }
 
     double newTotalSold = 0;
-    for(var e in _newAddedStockAvailable){
+    for(var e in _copiedOfArrAvailable){
       if(e.getSneakerSoldPrice.isNotEmpty){
         newTotalSold += double.parse(e.getSneakerSoldPrice);
       }
@@ -225,7 +226,7 @@ class Sneaker with ChangeNotifier {
   * */
   void createCoptyOfStockList(){
     if(_arrAvailable.isNotEmpty){
-      setNewAddedStockAvailable = _arrAvailable;
+      setCopiedOfArrAvailable = _arrAvailable;
       // for(var e in _arrAvailable){
       //   _newAddedStockAvailable.add(e);
       // }
@@ -237,7 +238,7 @@ class Sneaker with ChangeNotifier {
   * when user decided to update it or not
   * */
   void clearAvailableStockExisted(){
-    _newAddedStockAvailable.clear();
+    _copiedOfArrAvailable.clear();
     _stockToBeDeleted.clear();
     notifyListeners();
   }
@@ -271,11 +272,11 @@ class Sneaker with ChangeNotifier {
   * */
   void deleteStockCopiedList(int index){
     SneakerDetail stockToBeDeleted;
-    if(_newAddedStockAvailable.isNotEmpty){
-      stockToBeDeleted = _newAddedStockAvailable[index];
+    if(_copiedOfArrAvailable.isNotEmpty){
+      stockToBeDeleted = _copiedOfArrAvailable[index];
       if(stockToBeDeleted != null){
         _stockToBeDeleted.add(stockToBeDeleted);
-        _newAddedStockAvailable.removeAt(index);
+        _copiedOfArrAvailable.removeAt(index);
         notifyListeners();
       }
     }
