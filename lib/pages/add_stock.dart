@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -74,6 +75,21 @@ class _AddStockState extends State<AddStock> {
         );
       },
     );
+  }
+
+  void _readFileByte(String filePath) async{
+    Uri myUri = Uri.parse(filePath);
+    File imageFile = new File.fromUri(myUri);
+    Uint8List bytes;
+    await imageFile.readAsBytes().then((val){
+      bytes = Uint8List.fromList(val);
+      widget.newSneaker.setImgUrl = base64Encode(val);
+
+      print("image read as bytes: "+ widget.newSneaker.getImgUrl);
+    }).catchError((onError) {
+      print('Exception Error while reading audio from path:' +
+          onError.toString());
+    });
   }
 
   @override
@@ -181,6 +197,9 @@ class _AddStockState extends State<AddStock> {
                                                             TakePictureScreen
                                                                 .routeName);
                                                 result = result[0].toString();
+                                                if(result != null){
+                                                  _readFileByte(result);
+                                                }
 
                                                 // check scenario
                                                 if (widget.scenarios ==
