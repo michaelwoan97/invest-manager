@@ -77,15 +77,33 @@ class _AddStockState extends State<AddStock> {
     );
   }
 
-  void _readFileByte(String filePath) async{
+  void _processNewImages(Sneaker sneaker, String filePath) async {
+    if (filePath.isEmpty) {
+      print("File not existed!!!");
+      return;
+    }
+
     Uri myUri = Uri.parse(filePath);
     File imageFile = new File.fromUri(myUri);
     Uint8List bytes;
-    await imageFile.readAsBytes().then((val){
+    String convertedImage = "";
+    await imageFile.readAsBytes().then((val) {
       bytes = Uint8List.fromList(val);
-      widget.newSneaker.setImgUrl = base64Encode(val);
+      convertedImage = base64Encode(val);
 
-      print("image read as bytes: "+ widget.newSneaker.getImgUrl);
+      if (convertedImage.isNotEmpty) {
+        result = convertedImage;
+        // check scenario
+        if (widget.scenarios == Scenarios.edit) {
+          // using result variables update temporarily the image
+          // taken from camera so not update anywhere else
+          sneaker.notifyWithoutUpdateData();
+        } else {
+          sneaker.updateImgURLNotify(result);
+          widget.newSneaker.setImgUrl = result;
+        }
+      }
+      print("image read as bytes: " + convertedImage);
     }).catchError((onError) {
       print('Exception Error while reading audio from path:' +
           onError.toString());
@@ -161,14 +179,14 @@ class _AddStockState extends State<AddStock> {
                               flex: 6,
                               child: Column(
                                 children: [
-                                  if (result == null ||
+                                  if (result == null &&
                                       widget.newSneaker.getImgUrl.isEmpty) ...[
                                     Text('Use camera to take picture')
                                   ] else ...[
                                     Expanded(
                                       flex: 4,
                                       child: CustomSneakerImage(
-                                        imgUrl: result,
+                                        images: result,
                                         placeholderImg:
                                             "assets/images/default_img.png",
                                       ),
@@ -197,19 +215,8 @@ class _AddStockState extends State<AddStock> {
                                                             TakePictureScreen
                                                                 .routeName);
                                                 result = result[0].toString();
-                                                if(result != null){
-                                                  _readFileByte(result);
-                                                }
-
-                                                // check scenario
-                                                if (widget.scenarios ==
-                                                    Scenarios.edit) {
-                                                  sneaker
-                                                      .notifyWithoutUpdateData();
-                                                } else {
-                                                  sneaker.updateImgURLNotify(
-                                                      result);
-                                                }
+                                                _processNewImages(
+                                                    sneaker, result);
                                               },
                                               child: Icon(Icons.camera)),
                                         )
@@ -260,7 +267,6 @@ class _AddStockState extends State<AddStock> {
                   onPressed: () {
                     // validate Form
                     if (_formKey.currentState!.validate()) {
-
                       // check whether adding or editing stocks
                       _processStockInfoRequests();
                     }
@@ -307,7 +313,6 @@ class _AddStockState extends State<AddStock> {
   }
 
   void _processStockInfoRequests() {
-
     // check whether adding or editing stocks
     if (widget.scenarios == Scenarios.edit) {
       // update sneaker
@@ -315,17 +320,12 @@ class _AddStockState extends State<AddStock> {
           newSneakerName: _sneakerNameController.text,
           sNewNotes: _sneakerNotesController.text,
           sNewImgURL: result);
-      ManagementAPI().updateSneaker(
-          SneakerManager().accessToken,
-          SneakerManager().userID,
-          widget.newSneaker.getID,
-          widget.newSneaker);
+      ManagementAPI().updateSneaker(SneakerManager().accessToken,
+          SneakerManager().userID, widget.newSneaker.getID, widget.newSneaker);
     } else {
-      widget.newSneaker.setSneakerName =
-          _sneakerNameController.text;
+      widget.newSneaker.setSneakerName = _sneakerNameController.text;
       if (_sneakerNotesController.text.isNotEmpty) {
-        widget.newSneaker.setNotes =
-            _sneakerNotesController.text;
+        widget.newSneaker.setNotes = _sneakerNotesController.text;
       }
 
       //update new sneaker total
@@ -336,14 +336,12 @@ class _AddStockState extends State<AddStock> {
           if (e.getSneakerSoldPrice.isEmpty) {
             continue;
           }
-          totalNewSneakerPrice +=
-              double.parse(e.getSneakerSoldPrice);
+          totalNewSneakerPrice += double.parse(e.getSneakerSoldPrice);
         }
       }
       // update available products
       SneakerManager().updateTotalAvaiSoldProducts(
-          widget.newSneaker.getAvailableStocks.length,
-          totalNewSneakerPrice);
+          widget.newSneaker.getAvailableStocks.length, totalNewSneakerPrice);
 
       SneakerManager().addNewSneakerToList(widget.newSneaker);
       ManagementAPI().addSneaker(SneakerManager().accessToken,

@@ -18,7 +18,7 @@ import '../models/sneaker.dart';
 * */
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
-  final String _url = "https://invest-manager-app.herokuapp.com";
+  final String _url = "http://192.168.0.43:3000";
   Dio dio = new Dio();
 
   factory ManagementAPI() {
@@ -67,8 +67,7 @@ class ManagementAPI {
           .then((val) {
         final res = json.decode(val.data);
         // final res = val.data;
-        SneakerManager().userID = res['msg']
-            ["_id"]; // can move to sneaker manager to do some process parseing
+        SneakerManager().userID = res['msg']["userID"]; // can move to sneaker manager to do some process parseing
       });
     } on DioError catch (e) {
       rethrow;
