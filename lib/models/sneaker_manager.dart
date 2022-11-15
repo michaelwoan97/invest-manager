@@ -16,6 +16,7 @@ class SneakerManager with ChangeNotifier {
   late String _accessToken;
   late String _refreshToken;
   late bool _isTotalCalculated;
+  late bool _fetchedSneakers;
 
   factory SneakerManager() {
     return _instance;
@@ -29,6 +30,7 @@ class SneakerManager with ChangeNotifier {
     _refreshToken = "";
     _userID = "";
     _isTotalCalculated = false;
+    _fetchedSneakers = false;
   }
 
   bool get isTotalCalculated => _isTotalCalculated;
@@ -75,6 +77,12 @@ class SneakerManager with ChangeNotifier {
     _userID = value;
   }
 
+  bool get fetchedSneakers => _fetchedSneakers;
+
+  set fetchedSneakers(bool value) {
+    _fetchedSneakers = value;
+  }
+
   void addNewSneakerToList(Sneaker newSneaker) {
     _arrSneakers.add(newSneaker);
     notifyListeners();
@@ -114,25 +122,63 @@ class SneakerManager with ChangeNotifier {
     int removeIndex = 0;
 
     if (totalAvaiProducts != 0 && totalSoldProducts != 0.0) {
+      // loop through list and delete the element
       for (var i = 0; i < _arrSneakers.length; i++) {
+        // check whether the ids are matched
         if (_arrSneakers[i].getID == sneakerID) {
-          if (_arrSneakers[i].getID == sneakerID) {
-            // minus total product and price
-            totalMinusProduct = _arrSneakers[i].getAvailableStocks.isNotEmpty
-                ? _arrSneakers[i].getAvailableStocks.length
-                : 0;
-            if (_arrSneakers[i].getAvailableStocks.isNotEmpty) {
-              for (var stock in _arrSneakers[i].getAvailableStocks) {
-                if (stock.getSneakerSoldPrice.isEmpty) {
-                  continue;
-                }
-                totalMinusSold += double.parse(stock.getSneakerSoldPrice);
+          // minus total product and price
+          totalMinusProduct = _arrSneakers[i].getAvailableStocks.isNotEmpty
+              ? _arrSneakers[i].getAvailableStocks.length
+              : 0;
+          if (_arrSneakers[i].getAvailableStocks.isNotEmpty) {
+            for (var stock in _arrSneakers[i].getAvailableStocks) {
+              if (stock.getSneakerSoldPrice.isEmpty) {
+                continue;
               }
+              totalMinusSold += double.parse(stock.getSneakerSoldPrice);
             }
-
-            removeIndex = i;
-            break;
           }
+
+          removeIndex = i;
+          break;
+        }
+      }
+
+      // update
+      _arrSneakers.removeAt(removeIndex);
+      deleteTotalAvaiSoldProducts(totalMinusProduct, totalMinusSold);
+    } else if (totalAvaiProducts == 0 && totalSoldProducts == 0.0) {
+      // loop through list and delete the element
+      for (var i = 0; i < _arrSneakers.length; i++) {
+        // check whether the ids are matched
+        if (_arrSneakers[i].getID == sneakerID) {
+          removeIndex = i;
+          break;
+        }
+      }
+
+      // update
+      _arrSneakers.removeAt(removeIndex);
+      deleteTotalAvaiSoldProducts(totalMinusProduct, totalMinusSold);
+    } else if (totalAvaiProducts != 0 && totalSoldProducts == 0.0) {
+      // loop through list and delete the element
+      for (var i = 0; i < _arrSneakers.length; i++) {
+        // check whether the ids are matched
+        if (_arrSneakers[i].getID == sneakerID) {
+          // minus total product
+          totalMinusProduct = _arrSneakers[i].getAvailableStocks.isNotEmpty
+              ? _arrSneakers[i].getAvailableStocks.length
+              : 0;
+          if (_arrSneakers[i].getAvailableStocks.isNotEmpty) {
+            for (var stock in _arrSneakers[i].getAvailableStocks) {
+              if (stock.getSneakerSoldPrice.isEmpty) {
+                continue;
+              }
+              totalMinusSold += double.parse(stock.getSneakerSoldPrice);
+            }
+          }
+          removeIndex = i;
+          break;
         }
       }
 

@@ -100,7 +100,6 @@ class _AddStockState extends State<AddStock> {
           sneaker.notifyWithoutUpdateData();
         } else {
           sneaker.updateImgURLNotify(result);
-          widget.newSneaker.setImgUrl = result;
         }
       }
       print("image read as bytes: " + convertedImage);
@@ -114,7 +113,13 @@ class _AddStockState extends State<AddStock> {
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments == null ||
         (ModalRoute.of(context)!.settings.arguments as List).isEmpty) {
-      widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
+      // check whether image is available
+      if(result != null){
+        widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '', sImageUrl: result);
+      } else {
+        widget.newSneaker = Sneaker(sID: uuid.v1(), sName: '');
+      }
+
     } else {
       final sneakerData = ModalRoute.of(context)!.settings.arguments as List;
 

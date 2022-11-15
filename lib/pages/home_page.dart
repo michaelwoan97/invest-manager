@@ -138,7 +138,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Widget _title(BuildContext context) {
     return Text('Home',
         style: MediaQuery.of(context).size.width > kTabletBreakPoint
@@ -416,9 +415,13 @@ class _HomePageState extends State<HomePage> {
             }
 
             if (snapshot.hasData) {
-              List<Sneaker> sneakers = snapshot.data!;
-              // add list to singleton provider
-              sneakerManager.setListSneaker = sneakers;
+              // check whether the app has fetched sneakers for the first time
+              if (!SneakerManager().fetchedSneakers) {
+                List<Sneaker> sneakers = snapshot.data!;
+                // add list to singleton provider
+                sneakerManager.setListSneaker = sneakers;
+                SneakerManager().fetchedSneakers = true;
+              }
 
               // check whether the total is calculated so it would be not
               if (!SneakerManager().isTotalCalculated) {

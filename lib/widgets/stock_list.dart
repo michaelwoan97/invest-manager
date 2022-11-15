@@ -36,6 +36,12 @@ class StockList extends StatefulWidget {
 
 class _StockListState extends State<StockList> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final sneakersData = Provider.of<SneakerManager>(context);
     widget.arrSneakers = sneakersData.getListSneaker;
@@ -122,20 +128,20 @@ class _StockListState extends State<StockList> {
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
                                             leading: CustomCircleAvatar(
-                                              imgUrl:
-                                                  widget.arrSneakers[index].getImgUrl,
+                                              imgUrl: widget
+                                                  .arrSneakers[index].getImgUrl,
                                               placeholderImg:
                                                   "assets/images/default_img.png",
                                             ),
                                             title: Text(
-                                              widget.arrSneakers[index].getSneakerName,
+                                              widget.arrSneakers[index]
+                                                  .getSneakerName,
                                               style: TextStyle(
                                                   fontSize: kMobileBodyText),
                                             ),
                                             subtitle: Text('QTY: ' +
                                                 widget.arrSneakers[index]
-                                                    .getAvailableStocks
-                                                    .length
+                                                    .getAvailableStocks.length
                                                     .toString()),
                                             trailing: Icon(Icons.edit),
                                           ),
@@ -226,20 +232,20 @@ class _StockListState extends State<StockList> {
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
                                             leading: CustomCircleAvatar(
-                                              imgUrl:
-                                              widget.arrSneakers[index].getImgUrl,
+                                              imgUrl: widget
+                                                  .arrSneakers[index].getImgUrl,
                                               placeholderImg:
-                                              "assets/images/default_img.png",
+                                                  "assets/images/default_img.png",
                                             ),
                                             title: Text(
-                                              widget.arrSneakers[index].getSneakerName,
+                                              widget.arrSneakers[index]
+                                                  .getSneakerName,
                                               style: TextStyle(
                                                   fontSize: kDesktopBodyText),
                                             ),
                                             subtitle: Text('QTY: ' +
                                                 widget.arrSneakers[index]
-                                                    .getAvailableStocks
-                                                    .length
+                                                    .getAvailableStocks.length
                                                     .toString()),
                                             trailing: Icon(Icons.edit),
                                           ),
