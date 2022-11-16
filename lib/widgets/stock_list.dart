@@ -128,7 +128,7 @@ class _StockListState extends State<StockList> {
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
                                             leading: CustomCircleAvatar(
-                                              imgUrl: widget
+                                              images: widget
                                                   .arrSneakers[index].getImgUrl,
                                               placeholderImg:
                                                   "assets/images/default_img.png",
@@ -233,7 +233,7 @@ class _StockListState extends State<StockList> {
                                           builder: (ctx, sneaker, _) =>
                                               ListTile(
                                             leading: CustomCircleAvatar(
-                                              imgUrl: widget
+                                              images: widget
                                                   .arrSneakers[index].getImgUrl,
                                               placeholderImg:
                                                   "assets/images/default_img.png",

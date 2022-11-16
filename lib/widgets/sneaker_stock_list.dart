@@ -20,7 +20,7 @@ class SneakerStockList extends StatefulWidget {
   late Sneaker _newSneaker;
   late List<SneakerDetail> _sneakerAvailable;
   late Scenarios scenario;
-  late bool isCopied = false;
+
 
   SneakerStockList({required Scenarios scenarioProcessing, Key? key}) {
     scenario = scenarioProcessing;
@@ -32,6 +32,7 @@ class SneakerStockList extends StatefulWidget {
 
 class _SneakerStockListState extends State<SneakerStockList> {
   late GlobalKey<FormState> _formKey;
+  late bool isCopied = false;
   String sIsSold = 'No';
 
   // controllers
@@ -614,9 +615,9 @@ class _SneakerStockListState extends State<SneakerStockList> {
     // if editting tem
     if (widget.scenario == Scenarios.edit) {
       // check whether it has been copy the current list of stock list info
-      if (!widget.isCopied) {
+      if (isCopied == false) {
         widget._newSneaker.createCoptyOfStockList();
-        widget.isCopied = true;
+        isCopied = true;
       }
       widget._sneakerAvailable = widget._newSneaker.getCopiedOfArrAvailable;
     } else {

@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     SneakerManager().totalAvaiProducts = 0;
     SneakerManager().totalSoldProducts = 0.0;
     SneakerManager().isTotalCalculated = false;
+    SneakerManager().fetchedSneakers = false;
     await AuthService()
         .logOut(SneakerManager().refreshToken, SneakerManager().userID);
   }
