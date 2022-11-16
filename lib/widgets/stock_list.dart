@@ -203,6 +203,7 @@ class _StockListState extends State<StockList> {
                                     SneakerManager().deleteSneaker(
                                         widget.arrSneakers[index].getID);
 
+
                                     // Scaffold
                                     //     .of(context)
                                     //     .showSnackBar(SnackBar(content: Text("$item dismissed")));
