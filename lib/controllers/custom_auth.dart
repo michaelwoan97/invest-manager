@@ -12,7 +12,7 @@ import 'package:invest_manager/models/sneaker_manager.dart';
 * */
 class AuthService {
   Dio dio = new Dio();
-  final String _url = "http://192.168.0.43:3000";
+  final String _url = "http://10.1.5.163:3333";
 
   login(name,password) async{
     print("$_url/authenticate");

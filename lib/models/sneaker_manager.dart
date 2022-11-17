@@ -17,6 +17,7 @@ class SneakerManager with ChangeNotifier {
   late String _refreshToken;
   late bool _isTotalCalculated;
   late bool _fetchedSneakers;
+  late bool _isNoCamera;
 
   factory SneakerManager() {
     return _instance;
@@ -31,6 +32,7 @@ class SneakerManager with ChangeNotifier {
     _userID = "";
     _isTotalCalculated = false;
     _fetchedSneakers = false;
+    _isNoCamera = false;
   }
 
   bool get isTotalCalculated => _isTotalCalculated;
@@ -81,6 +83,13 @@ class SneakerManager with ChangeNotifier {
 
   set fetchedSneakers(bool value) {
     _fetchedSneakers = value;
+  }
+
+
+  bool get isNoCamera => _isNoCamera;
+
+  set isNoCamera(bool value) {
+    _isNoCamera = value;
   }
 
   void addNewSneakerToList(Sneaker newSneaker) {

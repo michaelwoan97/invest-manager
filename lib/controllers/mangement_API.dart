@@ -18,7 +18,7 @@ import '../models/sneaker.dart';
 * */
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
-  final String _url = "http://192.168.0.43:3000";
+  final String _url = "http://10.1.5.163:3333";
   Dio dio = new Dio();
 
   factory ManagementAPI() {
