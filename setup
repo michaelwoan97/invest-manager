@@ -1,0 +1,10 @@
+Front end set up:
+Download the project
+Flutter Pub Get
+    then so on if needed
+change the connection urls in controller dir if needed
+
+backend set up
+download the project
+npm install
+might change the port if another server is running

@@ -202,7 +202,7 @@ class _AddStockState extends State<AddStock> {
                                       Spacer(
                                         flex: 3,
                                       ),
-                                      if (kIsWeb) ...[
+                                      if (kIsWeb && SneakerManager().isNoCamera) ...[
                                         Expanded(
                                           flex: 3,
                                           child: ElevatedButton(

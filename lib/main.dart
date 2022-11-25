@@ -30,8 +30,8 @@ Future<void> main() async {
     final firstCamera = cameras.first;
 
     // WidgetsFlutterBinding.ensureInitialized();
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+    // WidgetsFlutterBinding.ensureInitialized();
+    // await Firebase.initializeApp();
     runApp(MyApp(
       camera: firstCamera,
     ));
@@ -80,7 +80,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => SneakerManager(),
+      create: (ctx) {
+        SneakerManager();
+      },
       child: MaterialApp(
         navigatorKey: navigatorKey,
         navigatorObservers: [MyRouteObserver()],
@@ -122,7 +124,10 @@ class _MyAppNoCamState extends State<MyAppNoCam> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => SneakerManager(),
+      create: (ctx) {
+        SneakerManager();
+        SneakerManager().isNoCamera = true;
+      },
       child: MaterialApp(
         navigatorKey: navigatorKey,
         navigatorObservers: [MyRouteObserver()],
