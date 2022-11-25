@@ -10,6 +10,7 @@ import 'package:path/path.dart';
 import '../models/sneaker.dart';
 
 //https://invest-manager-app.herokuapp.com
+//https://web-production-1f5d.up.railway.app
 //http://http://192.168.0.43:3000
 
 /*
@@ -18,7 +19,7 @@ import '../models/sneaker.dart';
 * */
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
-  final String _url = "http://192.168.0.43:3000";
+  final String _url = "https://web-production-1f5d.up.railway.app";
   Dio dio = new Dio();
 
   factory ManagementAPI() {
