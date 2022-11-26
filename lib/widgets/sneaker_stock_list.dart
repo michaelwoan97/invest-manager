@@ -708,20 +708,18 @@ class _SneakerStockListState extends State<SneakerStockList> {
             )
           ],
           Consumer<Sneaker>(
-            builder: (context, sneaker, _) => Container(
-              child: RawMaterialButton(
-                onPressed: () {
-                  _showAddStockDialog();
-                },
-                elevation: 2.0,
-                fillColor: Theme.of(context).primaryColor,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                // padding: EdgeInsets.all(15.0),
-                shape: CircleBorder(),
+            builder: (context, sneaker, _) => RawMaterialButton(
+              onPressed: () {
+                _showAddStockDialog();
+              },
+              elevation: 2.0,
+              fillColor: Theme.of(context).primaryColor,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
+              // padding: EdgeInsets.all(15.0),
+              shape: CircleBorder(),
             ),
           )
         ],

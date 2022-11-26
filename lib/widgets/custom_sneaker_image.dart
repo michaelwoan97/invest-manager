@@ -127,7 +127,7 @@ class _CustomSneakerImageState extends State<CustomSneakerImage> {
       return Container(
           height: MediaQuery.of(context).size.height * 0.2,
           decoration: BoxDecoration(
-              image: DecorationImage(image: MemoryImage(widget.decodeImage!))));
+              image: DecorationImage(image: MemoryImage(widget.decodeImage!), fit: BoxFit.fitWidth)));
     }
   }
 }

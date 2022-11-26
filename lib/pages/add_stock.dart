@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:invest_manager/controllers/mangement_API.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 import 'package:invest_manager/pages/take_picture_page.dart';
@@ -77,6 +78,39 @@ class _AddStockState extends State<AddStock> {
     );
   }
 
+  _uploadImgWeb(Sneaker sneaker) async {
+    final ImagePicker _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if(image != null){
+      var f = await image.readAsBytes();
+      Uint8List bytes = Uint8List.fromList(f);
+      String convertedImage = base64Encode(bytes);
+
+      if (convertedImage.isNotEmpty) {
+        result = convertedImage;
+        // check scenario
+        if (widget.scenarios == Scenarios.edit) {
+          // using result variables update temporarily the image
+          // taken from camera so not update anywhere else
+          sneaker.notifyWithoutUpdateData();
+        } else {
+          sneaker.updateImgURLNotify(result);
+        }
+      }
+      print("image read as bytes: " + convertedImage);
+    }
+  }
+
+  _takeImageMobile(Sneaker sneaker) async{
+    result =
+    await Navigator.of(context)
+        .pushNamed(
+        TakePictureScreen
+            .routeName);
+    result = result[0].toString();
+    _processNewImages(
+        sneaker, result);
+  }
   void _processNewImages(Sneaker sneaker, String filePath) async {
     if (filePath.isEmpty) {
       print("File not existed!!!");
@@ -162,8 +196,8 @@ class _AddStockState extends State<AddStock> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 20),
-                      height: MediaQuery.of(context).size.height * 0.2,
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      height: MediaQuery.of(context).size.height * 0.33,
                       width: double.infinity,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,17 +245,14 @@ class _AddStockState extends State<AddStock> {
                                         )
                                       ] else ...[
                                         Expanded(
-                                          flex: 3,
+                                          flex: 10,
                                           child: ElevatedButton(
-                                              onPressed: () async {
-                                                result =
-                                                    await Navigator.of(context)
-                                                        .pushNamed(
-                                                            TakePictureScreen
-                                                                .routeName);
-                                                result = result[0].toString();
-                                                _processNewImages(
-                                                    sneaker, result);
+                                              onPressed: (){
+                                                if(!kIsWeb){
+                                                  _takeImageMobile(sneaker);
+                                                } else {
+                                                  _uploadImgWeb(sneaker);
+                                                }
                                               },
                                               child: Icon(Icons.camera)),
                                         )
