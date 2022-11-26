@@ -154,6 +154,13 @@ class _StockListState extends State<StockList> {
                 ),
               ),
             )
+          ] else...[
+            Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Center(
+                child: Text("Add sneakers to your list!!!"),
+              ),
+            )
           ]
         ],
       ),
@@ -202,7 +209,6 @@ class _StockListState extends State<StockList> {
                                         widget.arrSneakers[index].getID);
                                     SneakerManager().deleteSneaker(
                                         widget.arrSneakers[index].getID);
-
 
                                     // Scaffold
                                     //     .of(context)
@@ -257,6 +263,13 @@ class _StockListState extends State<StockList> {
                             )),
                   ),
                 ),
+              ),
+            )
+          ] else ...[
+            Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Center(
+                child: Text("Add sneakers to your list!!!"),
               ),
             )
           ]
