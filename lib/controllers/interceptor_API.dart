@@ -15,6 +15,8 @@ enum TokenErrorType{
   failedToRegenerateAccessToken
 }
 
+const webUrl = 'https://invest-manager-server.onrender.com';
+
 /*
 * class: InterceptorAPI
 * purpose: This class used for intercepting all the outgoing requests to check whether they needed to be adjusted before
@@ -24,7 +26,7 @@ enum TokenErrorType{
 class InterceptorAPI extends Interceptor{
   final Dio _dio;
   final _sneakerManager = SneakerManager();
-  static final String _url = "https://web-production-1f5d.up.railway.app";
+  static const String _url = webUrl;
 
   InterceptorAPI(this._dio);
 

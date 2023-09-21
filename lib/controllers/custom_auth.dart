@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_manager/models/sneaker_manager.dart';
 
+const testApi = 'http://localhost:3333';
+const webUrl = 'https://invest-manager-server.onrender.com';
+
 /*
 * class: AuthService
 * purpose: This class used for authenticating users by using custom server
@@ -12,7 +15,7 @@ import 'package:invest_manager/models/sneaker_manager.dart';
 * */
 class AuthService {
   Dio dio = new Dio();
-  final String _url = "https://web-production-1f5d.up.railway.app";
+  final String _url = webUrl;
 
 
   login(name,password) async{

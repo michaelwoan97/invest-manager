@@ -11,15 +11,17 @@ import '../models/sneaker.dart';
 
 //https://invest-manager-app.herokuapp.com
 //https://web-production-1f5d.up.railway.app
-//http://http://192.168.0.43:3000
+//http://192.168.0.43:3000
 
+const testApi = 'http://localhost:3333';
+const webUrl = 'https://invest-manager-server.onrender.com';
 /*
 * class: ManagementAPI
 * purpose: This class used for making api requests to the invest manager server
 * */
 class ManagementAPI {
   static final ManagementAPI _instance = ManagementAPI._internal();
-  final String _url = "https://web-production-1f5d.up.railway.app";
+  final String _url = webUrl;
   Dio dio = new Dio();
 
   factory ManagementAPI() {
